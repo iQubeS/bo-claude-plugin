@@ -41,3 +41,11 @@ Manage projects through the BO Project module. Projects are organized by departm
 - Budget fields support the tenant's currency
 - Status transitions follow configured workflows
 - QCPs are defined per project type and enforced at stage gates
+
+## Reference Documentation
+For detailed user guides:
+- `$SKILL_DIR/../../docs/brukermanual/prosjekt-introduksjon.md`
+- `$SKILL_DIR/../../docs/brukermanual/prosjekt-prosjekter.md`
+- `$SKILL_DIR/../../docs/brukermanual/prosjekt-arbeidsrom.md`
+- `$SKILL_DIR/../../docs/brukermanual/prosjekt-prosjektplan.md`
+- `$SKILL_DIR/../../docs/brukermanual/prosjekt-portefolje.md`

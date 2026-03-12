@@ -48,3 +48,10 @@ The BO HR module manages employee lifecycle, organizational structure, absence t
 - Employee IDs are GUIDs in BO, linked to Entra ID object IDs
 - Multi-tenant: each customer tenant has isolated HR data
 - SPFx web parts are deployed to tenant app catalog
+
+## Reference Documentation
+For detailed user guides:
+- `$SKILL_DIR/../../docs/brukermanual/personell-introduksjon.md`
+- `$SKILL_DIR/../../docs/brukermanual/personell-personell.md`
+- `$SKILL_DIR/../../docs/brukermanual/personell-arbeidsrom.md`
+- `$SKILL_DIR/../../docs/brukermanual/personell-ressursplanlegger.md`

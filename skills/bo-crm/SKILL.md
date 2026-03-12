@@ -67,3 +67,11 @@ You have access to these BO CRM operations via MCP:
 - Company and contact IDs are GUIDs
 - Lead values are in the tenant's currency (typically NOK)
 - Timeline events support rich text in description field
+
+## Reference Documentation
+For detailed user guides and screenshots, see:
+- `$SKILL_DIR/../../docs/brukermanual/crm-introduksjon.md`
+- `$SKILL_DIR/../../docs/brukermanual/crm-bedrifter.md`
+- `$SKILL_DIR/../../docs/brukermanual/crm-kontakter.md`
+- `$SKILL_DIR/../../docs/brukermanual/crm-muligheter.md`
+- `$SKILL_DIR/../../docs/brukermanual/crm-kontrakter.md`

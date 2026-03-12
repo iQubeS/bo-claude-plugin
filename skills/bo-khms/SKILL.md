@@ -53,3 +53,12 @@ Quality, Health, Safety, and Environment management through BO. Core entity: NCR
 - Audit trail: all changes are logged with timestamp and user
 - Reports can be generated for management review
 - Data retention follows configured policies per tenant
+
+## Reference Documentation
+For detailed user guides:
+- `$SKILL_DIR/../../docs/brukermanual/khms-introduksjon.md`
+- `$SKILL_DIR/../../docs/brukermanual/khms-qdms.md`
+- `$SKILL_DIR/../../docs/brukermanual/khms-rapportering.md`
+- `$SKILL_DIR/../../docs/brukermanual/khms-rapporteringskort.md`
+- `$SKILL_DIR/../../docs/brukermanual/khms-bpm.md`
+- `$SKILL_DIR/../../docs/brukermanual/khms-risikostyring.md`
