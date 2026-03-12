@@ -1,0 +1,18 @@
+# Never commit secrets
+.env
+.env.*
+*.key
+*.pem
+*.secret
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/

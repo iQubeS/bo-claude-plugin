@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "bo-customer": {
+      "command": "npx",
+      "args": ["@business-online/mcp-customer"],
+      "env": {
+        "BO_MCP_TOKEN": "${BO_MCP_TOKEN}"
+      }
+    },
+    "bo-leads": {
+      "command": "npx",
+      "args": ["@business-online/mcp-leads"],
+      "env": {
+        "BO_MCP_TOKEN": "${BO_MCP_TOKEN}"
+      }
+    },
+    "bo-projects": {
+      "command": "npx",
+      "args": ["@business-online/mcp-projects"],
+      "env": {
+        "BO_MCP_TOKEN": "${BO_MCP_TOKEN}"
+      }
+    },
+    "bo-ncr": {
+      "command": "npx",
+      "args": ["@business-online/mcp-ncr"],
+      "env": {
+        "BO_MCP_TOKEN": "${BO_MCP_TOKEN}"
+      }
+    }
+  }
+}
