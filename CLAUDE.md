@@ -11,10 +11,8 @@ This plugin integrates Business Online (BO/iQS Online) with Claude Code, providi
 - `/bo:bo-guide` — Platform overview and architecture
 
 ## Setup
-1. Set `BO_MCP_TOKEN` environment variable (get from your BO admin)
-2. MCP servers connect automatically when the plugin is enabled
+MCP servers are configured on the Claude tenant — no local token setup needed. Just install the plugin.
 
 ## Security
-- Never commit tokens or API keys
-- All data is tenant-scoped
+- All data is tenant-scoped via remote MCP servers
 - Confirm before creating/modifying records

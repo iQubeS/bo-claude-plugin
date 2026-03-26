@@ -18,33 +18,14 @@ A Claude Code plugin that connects to Business Online's MCP servers, giving Clau
 
 ### Prerequisites
 - [Claude Code](https://code.claude.com) v1.0.33+
-- A Business Online account with API access
-- `BO_MCP_TOKEN` from your BO administrator
+- BO MCP servers configured on your Claude tenant
 
-### Install from directory
+### Install from GitHub
 ```bash
-claude --plugin-dir /path/to/bo-claude-plugin
+claude plugin install github:iQubeS/bo-claude-plugin
 ```
 
-### Install from GitHub (when published)
-```bash
-# In Claude Code:
-/plugin install github:vidarvisjon/bo-claude-plugin
-```
-
-## Configuration
-
-1. Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Add your BO MCP token:
-   ```
-   BO_MCP_TOKEN=your-actual-token-here
-   ```
-
-3. The plugin will automatically connect to BO's MCP servers when loaded.
+MCP servers are configured as remote MCPs on the Claude tenant — no local token setup needed.
 
 ## Usage
 
@@ -69,11 +50,10 @@ Or just ask Claude naturally:
 bo-claude-plugin/
 ├── .claude-plugin/
 │   └── plugin.json         # Plugin manifest
-├── .mcp.json               # MCP server connections (BO + M365)
 ├── skills/
 │   ├── bo-crm/SKILL.md     # CRM module
 │   ├── bo-project/SKILL.md # Project module
-│   ├── bo-hr/SKILL.md      # HR module
+│   ├── bo-hr/SKILL.md      # HR module (guidance only)
 │   ├── bo-khms/SKILL.md    # QHSE module
 │   └── bo-guide/SKILL.md   # Platform guide
 ├── agents/
@@ -81,29 +61,25 @@ bo-claude-plugin/
 ├── commands/
 │   └── status.md           # /bo:status command
 ├── CLAUDE.md               # Plugin instructions for Claude
-├── .env.example            # Environment template
 └── README.md
 ```
 
 ## MCP Servers
 
-The plugin connects to 4 BO MCP servers (45 tools total):
+The plugin uses 4 BO MCP servers (45 tools) configured as remote MCPs on the Claude tenant:
 
 | Server | Tools | Scope |
 |--------|-------|-------|
 | Customer | 15 | Companies, contacts, QCPs, timeline |
 | Leads | 13 | Leads, MEDDIC, pipeline, QCPs, timeline |
 | Projects | 13 | Projects, departments, types, QCPs, timeline |
-| NCR | 4 | NCR cards (list, get, create) |
+| NCR | 4 | NCR cards (list, get, create, update) |
 
 ## Security
 
-⚠️ **Never commit API tokens or secrets to this repository.**
-
-- Use `.env` for local tokens (gitignored)
-- `BO_MCP_TOKEN` authenticates against your BO tenant
-- All data is tenant-isolated
+- All data is tenant-scoped via remote MCP servers
 - The plugin confirms before creating or modifying records
+- No tokens or secrets are stored in this repository
 
 ## License
 
