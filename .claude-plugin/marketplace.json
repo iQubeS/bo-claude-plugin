@@ -1,0 +1,21 @@
+{
+  "name": "bo-plugins",
+  "owner": {
+    "name": "Business Online AS",
+    "email": "support@bo.no"
+  },
+  "metadata": {
+    "description": "Business Online plugins for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "bo",
+      "source": ".",
+      "description": "Business Online (BO/iQS Online) — CRM, Project, HR, and QHSE modules",
+      "version": "0.1.0",
+      "author": {
+        "name": "Business Online AS"
+      }
+    }
+  ]
+}
