@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "bo",
-      "source": ".",
+      "source": "./",
       "description": "Business Online (BO/iQS Online) — CRM, Project, HR, and QHSE modules",
       "version": "0.1.0",
       "author": {
