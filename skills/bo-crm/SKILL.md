@@ -70,8 +70,8 @@ You have access to these BO CRM operations via MCP:
 
 ## Reference Documentation
 For detailed user guides and screenshots, see:
-- `$SKILL_DIR/../../docs/brukermanual/crm-introduksjon.md`
-- `$SKILL_DIR/../../docs/brukermanual/crm-bedrifter.md`
-- `$SKILL_DIR/../../docs/brukermanual/crm-kontakter.md`
-- `$SKILL_DIR/../../docs/brukermanual/crm-muligheter.md`
-- `$SKILL_DIR/../../docs/brukermanual/crm-kontrakter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-bedrifter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-kontakter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-muligheter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-kontrakter.md`

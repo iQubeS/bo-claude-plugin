@@ -12,6 +12,7 @@ Quality, Health, Safety, and Environment management through BO. Core entity: NCR
 - **List NCRs**: `retrieve_all_ncrs` — Filter by status, category, date range, responsible person. Supports pagination.
 - **Get NCR details**: `retrieve_specific_ncr_card` — Full NCR with description, root cause, corrective actions, attachments
 - **Create NCR**: `create_ncr_card` — Report new non-conformance with category, severity, description, responsible person
+- **Update NCR**: `update_specific_ncr_card` — Update status, assign responsible, add root cause, corrective actions, close NCR
 
 ## NCR Workflow
 1. **Reported**: Initial registration with description and category
@@ -42,6 +43,12 @@ Quality, Health, Safety, and Environment management through BO. Core entity: NCR
 3. Set severity and category
 4. Follow up with timeline events
 
+### NCR Lifecycle Management
+1. `retrieve_specific_ncr_card` to review current state
+2. `update_specific_ncr_card` to progress through workflow stages
+3. Update root cause, corrective actions, and responsible person as investigation progresses
+4. Close NCR when corrective actions are verified
+
 ## Integration with Other Modules
 - NCRs can link to **Projects** (quality issues on project deliverables)
 - NCRs can link to **Companies** (customer complaints, supplier issues)
@@ -56,9 +63,9 @@ Quality, Health, Safety, and Environment management through BO. Core entity: NCR
 
 ## Reference Documentation
 For detailed user guides:
-- `$SKILL_DIR/../../docs/brukermanual/khms-introduksjon.md`
-- `$SKILL_DIR/../../docs/brukermanual/khms-qdms.md`
-- `$SKILL_DIR/../../docs/brukermanual/khms-rapportering.md`
-- `$SKILL_DIR/../../docs/brukermanual/khms-rapporteringskort.md`
-- `$SKILL_DIR/../../docs/brukermanual/khms-bpm.md`
-- `$SKILL_DIR/../../docs/brukermanual/khms-risikostyring.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-qdms.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-rapportering.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-rapporteringskort.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-bpm.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-risikostyring.md`

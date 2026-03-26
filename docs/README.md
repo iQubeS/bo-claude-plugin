@@ -50,10 +50,10 @@ Platform overview, access, intranet, "Min side" (personal page), resources
 
 Skills reference these docs via:
 ```markdown
-$SKILL_DIR/../../docs/brukermanual/<filename>.md
+${CLAUDE_SKILL_DIR}/../../docs/brukermanual/<filename>.md
 ```
 
-Claude Code resolves `$SKILL_DIR` to the skill's absolute path, making relative references work correctly.
+Claude Code resolves `${CLAUDE_SKILL_DIR}` to the skill's absolute path, making relative references work correctly.
 
 ## Updating Documentation
 

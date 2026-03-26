@@ -6,6 +6,10 @@ description: Business Online HR/Personnel module guidance — employee managemen
 
 The BO HR module manages employee lifecycle, organizational structure, absence tracking, and personnel documents. It integrates with M365 for identity and Teams/Outlook for communication.
 
+## Important: No MCP Tools Yet
+
+This module does **not** have MCP server integration. There are no API tools available for reading or writing HR data programmatically. This skill provides guidance and documentation only. For HR operations, users must work directly in the BO SharePoint interface.
+
 ## Module Overview
 
 ### Core Features
@@ -51,7 +55,7 @@ The BO HR module manages employee lifecycle, organizational structure, absence t
 
 ## Reference Documentation
 For detailed user guides:
-- `$SKILL_DIR/../../docs/brukermanual/personell-introduksjon.md`
-- `$SKILL_DIR/../../docs/brukermanual/personell-personell.md`
-- `$SKILL_DIR/../../docs/brukermanual/personell-arbeidsrom.md`
-- `$SKILL_DIR/../../docs/brukermanual/personell-ressursplanlegger.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-personell.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-arbeidsrom.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-ressursplanlegger.md`

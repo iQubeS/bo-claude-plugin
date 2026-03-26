@@ -44,8 +44,8 @@ Manage projects through the BO Project module. Projects are organized by departm
 
 ## Reference Documentation
 For detailed user guides:
-- `$SKILL_DIR/../../docs/brukermanual/prosjekt-introduksjon.md`
-- `$SKILL_DIR/../../docs/brukermanual/prosjekt-prosjekter.md`
-- `$SKILL_DIR/../../docs/brukermanual/prosjekt-arbeidsrom.md`
-- `$SKILL_DIR/../../docs/brukermanual/prosjekt-prosjektplan.md`
-- `$SKILL_DIR/../../docs/brukermanual/prosjekt-portefolje.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/prosjekt-introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/prosjekt-prosjekter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/prosjekt-arbeidsrom.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/prosjekt-prosjektplan.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/prosjekt-portefolje.md`
