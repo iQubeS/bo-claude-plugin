@@ -1,10 +1,47 @@
 ---
 description: Work with Business Online CRM — companies, contacts, leads, pipeline, MEDDIC qualification, and timeline events. Auto-invoked when working with customer data, sales pipeline, or lead management.
+argument-hint: "[company name, contact name, or lead to look up]"
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  # Customer server (15 tools)
+  - mcp__claude_ai_Business_Online_Customer__create_company
+  - mcp__claude_ai_Business_Online_Customer__create_company_timeline_event
+  - mcp__claude_ai_Business_Online_Customer__create_contact
+  - mcp__claude_ai_Business_Online_Customer__get_all_company_types
+  - mcp__claude_ai_Business_Online_Customer__retrieve_all_company_qcps
+  - mcp__claude_ai_Business_Online_Customer__retrieve_companies
+  - mcp__claude_ai_Business_Online_Customer__retrieve_company_by_id
+  - mcp__claude_ai_Business_Online_Customer__retrieve_company_qcp
+  - mcp__claude_ai_Business_Online_Customer__retrieve_company_timeline_event
+  - mcp__claude_ai_Business_Online_Customer__retrieve_company_timeline_events
+  - mcp__claude_ai_Business_Online_Customer__retrieve_contact_info
+  - mcp__claude_ai_Business_Online_Customer__retrieve_contacts
+  - mcp__claude_ai_Business_Online_Customer__update_company
+  - mcp__claude_ai_Business_Online_Customer__update_company_timeline_event
+  - mcp__claude_ai_Business_Online_Customer__update_contact
+  # Leads server (13 tools)
+  - mcp__claude_ai_Business_Online_Leads__collect_meddic_data
+  - mcp__claude_ai_Business_Online_Leads__create_lead
+  - mcp__claude_ai_Business_Online_Leads__create_lead_timeline_event
+  - mcp__claude_ai_Business_Online_Leads__get_all_lead_types
+  - mcp__claude_ai_Business_Online_Leads__retrieve_all_lead_qcps
+  - mcp__claude_ai_Business_Online_Leads__retrieve_all_leads
+  - mcp__claude_ai_Business_Online_Leads__retrieve_lead
+  - mcp__claude_ai_Business_Online_Leads__retrieve_lead_qcp
+  - mcp__claude_ai_Business_Online_Leads__retrieve_lead_timeline_event
+  - mcp__claude_ai_Business_Online_Leads__retrieve_lead_timeline_events
+  - mcp__claude_ai_Business_Online_Leads__retrieve_leads_dashboard
+  - mcp__claude_ai_Business_Online_Leads__update_lead
+  - mcp__claude_ai_Business_Online_Leads__update_lead_timeline_event
 ---
 
 # Business Online CRM
 
 Business Online (BO) is a cloud CRM/Project/HR/QHSE platform built on Microsoft 365. This skill covers the CRM module.
+
+If the user provided an argument (`$ARGUMENTS`), treat it as a search query: look up companies, contacts, or leads matching that name and present the results.
 
 ## Capabilities
 
@@ -68,10 +105,18 @@ You have access to these BO CRM operations via MCP:
 - Lead values are in the tenant's currency (typically NOK)
 - Timeline events support rich text in description field
 
+## When MCP Calls Fail
+
+If a Customer or Leads tool call fails:
+- **Timeout or connection error**: Tell the user which server (Customer or Leads) is unavailable. Suggest waiting a moment and retrying.
+- **Not found (404)**: The ID may be wrong — ask the user to verify the company/contact/lead ID.
+- **Validation error**: Show the error message and explain which fields need correction.
+- If only one server is down, you can still use the other — Customer and Leads are independent services.
+
 ## Reference Documentation
 For detailed user guides and screenshots, see:
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-introduksjon.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-bedrifter.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-kontakter.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-muligheter.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm-kontrakter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm/introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm/bedrifter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm/kontakter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm/muligheter.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/crm/kontrakter.md`

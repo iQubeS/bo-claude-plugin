@@ -1,5 +1,10 @@
 ---
 description: Business Online HR/Personnel module guidance — employee management, onboarding, absence tracking, and organizational structure. Use when working with HR data, employee records, or personnel processes.
+argument-hint: "[HR topic, process, or question]"
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
 ---
 
 # Business Online HR (Personnel)
@@ -55,7 +60,7 @@ This module does **not** have MCP server integration. There are no API tools ava
 
 ## Reference Documentation
 For detailed user guides:
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-introduksjon.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-personell.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-arbeidsrom.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell-ressursplanlegger.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell/introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell/personell.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell/personell-arbeidsrom.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/personell/ressursplanlegger.md`

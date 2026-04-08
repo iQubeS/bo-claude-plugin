@@ -1,0 +1,6 @@
+{
+  "agent": {
+    "model": "sonnet",
+    "effort": "high"
+  }
+}

@@ -1,10 +1,10 @@
-# BO Plugin for Claude Code
+# BO Plugin for Claude
 
-> Bring Business Online (BO/iQS Online) into your Claude Code workflow — CRM, Projects, HR, and QHSE at your fingertips.
+> Bring Business Online (BO) into your Claude workflow — CRM, Projects, HR, and QHSE at your fingertips.
 
 ## What is this?
 
-A Claude Code plugin that connects to Business Online's MCP servers, giving Claude direct access to your business data. Ask Claude to check your pipeline, create NCR reports, look up customers, or review project status — all from your editor.
+A Claude plugin that connects to Business Online's MCP servers, giving Claude direct access to your business data. Ask Claude to check your pipeline, create NCR reports, look up customers, or review project status — all from your editor.
 
 ## Features
 
@@ -27,6 +27,17 @@ claude plugin install github:iQubeS/bo-claude-plugin
 
 MCP servers are configured as remote MCPs on the Claude tenant — no local token setup needed.
 
+### Setting Up Auto-Sync (Webhook)
+
+To keep the plugin automatically updated when changes are pushed to this repo:
+
+1. Go to your Claude plugin settings and find the `bo` plugin
+2. Click **"Configure webhook"** — this uses the Claude GitHub App to create a webhook on the repo
+3. The first time, you may need to **approve a new GitHub permission** for the Claude GitHub App
+4. Once enabled, any push to the default branch will automatically sync plugin changes to your Claude tenant
+
+> **Private repos**: This works with private GitHub repos. The Claude GitHub App must have access to the repo — configure this under GitHub `Settings → Integrations → GitHub Apps → Claude → Configure → Repository access`.
+
 ## Usage
 
 ```
@@ -39,28 +50,36 @@ MCP servers are configured as remote MCPs on the Claude tenant — no local toke
 ```
 
 Or just ask Claude naturally:
-- "Show me the sales pipeline"
-- "Create an NCR for the quality issue on project X"
-- "What's the status of our active projects?"
-- "Look up Acme Corp and their recent activity"
+- "Vis meg salgspipelinen"
+- "Opprett et avvik for kvalitetsproblemet på prosjekt X"
+- "Hva er status på aktive prosjekter?"
+- "Slå opp Acme Corp og vis siste aktivitet"
 
 ## Architecture
 
 ```
 bo-claude-plugin/
 ├── .claude-plugin/
-│   └── plugin.json         # Plugin manifest
+│   ├── plugin.json          # Plugin manifest
+│   └── marketplace.json     # Marketplace distribution config
 ├── skills/
-│   ├── bo-crm/SKILL.md     # CRM module
-│   ├── bo-project/SKILL.md # Project module
-│   ├── bo-hr/SKILL.md      # HR module (guidance only)
-│   ├── bo-khms/SKILL.md    # QHSE module
-│   └── bo-guide/SKILL.md   # Platform guide
+│   ├── bo-crm/SKILL.md      # CRM module (28 tools)
+│   ├── bo-project/SKILL.md  # Project module (13 tools)
+│   ├── bo-hr/SKILL.md       # HR module (guidance only)
+│   ├── bo-khms/SKILL.md     # QHSE module (4 tools)
+│   └── bo-guide/SKILL.md    # Platform guide
 ├── agents/
-│   └── bo-assistant.md     # BO specialist agent
+│   └── bo-assistant.md      # BO specialist agent (45 tools)
 ├── commands/
-│   └── status.md           # /bo:status command
-├── CLAUDE.md               # Plugin instructions for Claude
+│   └── status.md            # /bo:status dashboard command
+├── docs/
+│   └── brukermanual/        # Norwegian user manual (63 files)
+├── .claude/
+│   └── rules/               # Module-specific Claude rules
+├── CLAUDE.md                 # Plugin instructions for Claude
+├── CHANGELOG.md              # Version history
+├── LICENSE                   # Proprietary license
+├── settings.json             # Default agent configuration
 └── README.md
 ```
 
@@ -78,6 +97,7 @@ The plugin uses 4 BO MCP servers (45 tools) configured as remote MCPs on the Cla
 ## Security
 
 - All data is tenant-scoped via remote MCP servers
+- Each skill has explicit `allowed-tools` restricting access to only its relevant MCP tools
 - The plugin confirms before creating or modifying records
 - No tokens or secrets are stored in this repository
 

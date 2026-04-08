@@ -4,66 +4,30 @@ This directory contains reference documentation for the Business Online plugin.
 
 ## Brukermanual (User Manual)
 
-The `brukermanual/` directory contains 54 markdown files scraped from https://docs.business-online.no/ covering all BO modules:
+The `brukermanual/` directory contains the complete BO user manual organized by module. See [brukermanual/README.md](brukermanual/README.md) for the full table of contents.
 
-### CRM (5 files)
-- `crm-introduksjon.md` — CRM module overview
-- `crm-bedrifter.md` — Companies/customers/suppliers
-- `crm-kontakter.md` — Contacts
-- `crm-muligheter.md` — Opportunities/leads/pipeline
-- `crm-kontrakter.md` — Contracts
+### Structure
 
-### Prosjekt (5 files)
-- `prosjekt-introduksjon.md` — Project module overview
-- `prosjekt-prosjekter.md` — Project management
-- `prosjekt-arbeidsrom.md` — Project workspaces
-- `prosjekt-prosjektplan.md` — Project plans
-- `prosjekt-portefolje.md` — Portfolio view
+Files are organized hierarchically by module:
 
-### KHMS/QHSE (12 files)
-- `khms-introduksjon.md` — QHSE module overview
-- `khms-qdms.md` — Quality document management
-- `khms-rapportering.md` — Reporting/NCR
-- `khms-bpm.md` — Business process management
-- `khms-risikostyring.md` — Risk management
-- And 7 more detailed guides
+| Directory | Content |
+|-----------|---------|
+| `brukermanual/crm/` | CRM — companies, contacts, opportunities, contracts |
+| `brukermanual/prosjekt/` | Project management, workspaces, portfolio |
+| `brukermanual/khms/` | QHSE — QDMS, reporting, BPM, risk management |
+| `brukermanual/personell/` | HR — employees, workspaces, resource planning |
+| `brukermanual/ekstrafunksjoner/` | Add-ons — Outlook, document management, certificates |
+| `brukermanual/administrasjon/` | Admin — users, global attributes, QCP config |
+| `brukermanual/komponenter/` | Shared components — QCP, timeline, info cards |
+| `brukermanual/ressurser/` | Resources and work processes |
 
-### Personell/HR (4 files)
-- `personell-introduksjon.md` — HR module overview
-- `personell-personell.md` — Employee management
-- `personell-arbeidsrom.md` — Employee workspaces
-- `personell-ressursplanlegger.md` — Resource planning
+Each module directory has an `_index.md` category index. General articles (overview, access, intranet, personal page) sit directly under `brukermanual/`.
 
-### Ekstrafunksjoner (6 files)
-Add-on features like Outlook integration, document management, certificates, supplier evaluation, quote builder
-
-### Administrasjon (10 files)
-Configuration and admin guides for global attributes, QCP, users, workspaces, etc.
-
-### Komponenter (6 files)
-Shared components: QCP, timelines, info cards, files, key contacts, approvals
-
-### Generelt (6 files)
-Platform overview, access, intranet, "Min side" (personal page), resources
-
-## Usage in Skills
+### Usage in Skills
 
 Skills reference these docs via:
 ```markdown
-${CLAUDE_SKILL_DIR}/../../docs/brukermanual/<filename>.md
+${CLAUDE_SKILL_DIR}/../../docs/brukermanual/<module>/<filename>.md
 ```
 
-Claude Code resolves `${CLAUDE_SKILL_DIR}` to the skill's absolute path, making relative references work correctly.
-
-## Updating Documentation
-
-To refresh the user manual:
-```bash
-python3 /tmp/fetch-bo-docs-clean.py
-```
-
-This uses r.jina.ai to extract clean markdown from the GitBook-based docs site.
-
-## Size
-
-Total: ~424 KB across 54 files (average 7.8 KB per file)
+`${CLAUDE_SKILL_DIR}` resolves at runtime to the skill's absolute path.

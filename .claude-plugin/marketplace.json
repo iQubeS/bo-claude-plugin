@@ -2,10 +2,12 @@
   "name": "bo-plugins",
   "owner": {
     "name": "Business Online AS",
-    "email": "support@bo.no"
+    "email": "support@business-online.no"
   },
   "metadata": {
-    "description": "Business Online plugins for Claude Code"
+    "description": "Business Online plugins for Claude",
+    "version": "0.1.0",
+    "repository": "https://github.com/iQubeS/bo-claude-plugin"
   },
   "plugins": [
     {
@@ -15,7 +17,9 @@
       "version": "0.1.0",
       "author": {
         "name": "Business Online AS"
-      }
+      },
+      "license": "Proprietary",
+      "homepage": "https://business-online.no"
     }
   ]
 }

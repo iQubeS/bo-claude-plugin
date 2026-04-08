@@ -1,10 +1,22 @@
 ---
 description: Business Online QHSE/KHMS module — Non-Conformance Reports (NCR/avvik), quality management, HSE incidents, audits, and corrective actions. Auto-invoked for NCR management, quality tracking, and HSE compliance.
+argument-hint: "[NCR ID or search term]"
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  # NCR server (4 tools)
+  - mcp__claude_ai_Business_Online_Nonconformance__create_ncr_card
+  - mcp__claude_ai_Business_Online_Nonconformance__retrieve_all_ncrs
+  - mcp__claude_ai_Business_Online_Nonconformance__retrieve_specific_ncr_card
+  - mcp__claude_ai_Business_Online_Nonconformance__update_specific_ncr_card
 ---
 
 # Business Online QHSE (KHMS)
 
 Quality, Health, Safety, and Environment management through BO. Core entity: NCR (Non-Conformance Report / Avvik).
+
+If the user provided an argument (`$ARGUMENTS`), treat it as an NCR ID or search term: look up matching NCR cards and present the results.
 
 ## Capabilities via MCP
 
@@ -61,11 +73,21 @@ Quality, Health, Safety, and Environment management through BO. Core entity: NCR
 - Reports can be generated for management review
 - Data retention follows configured policies per tenant
 
+## When MCP Calls Fail
+
+If an NCR tool call fails:
+- **Timeout or connection error**: Tell the user the NCR service is unavailable. Suggest waiting a moment and retrying.
+- **Not found (404)**: The NCR ID may be wrong — ask the user to verify it, or list open NCRs with `retrieve_all_ncrs`.
+- **Validation error**: Show the error message. Common issues: missing required fields (category, severity, description) when creating NCRs.
+- NCR is the smallest MCP server (4 tools). If it's down, offer to help with CRM or Projects in the meantime.
+
 ## Reference Documentation
 For detailed user guides:
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-introduksjon.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-qdms.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-rapportering.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-rapporteringskort.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-bpm.md`
-- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms-risikostyring.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/introduksjon.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/qdms.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/rapportering.md` — Prosedyreveiledning for KHMS-rapportering (implementeringssjekkliste)
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/rapportering/khms-rapporteringskort.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/rapportering/khms-arbeidsrom.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/rapportering/anonym-rapportering.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/bpm.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/khms/risikostyring.md`

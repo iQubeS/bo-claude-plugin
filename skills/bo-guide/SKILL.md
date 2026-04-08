@@ -1,5 +1,10 @@
 ---
 description: Business Online platform overview, architecture, and user guide. Use when users ask about BO capabilities, how modules connect, M365 integration, or need general platform guidance.
+argument-hint: "[module name or platform question]"
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
 ---
 
 # Business Online — Platform Guide
@@ -85,7 +90,7 @@ BO exposes 45 tools across 4 MCP servers:
 - **Projects**: 13 tools (projects, departments, types, QCPs, timeline)
 - **NCR**: 4 tools (NCR cards CRUD)
 
-MCP servers run on Azure Container Apps (Norway East) and require a `BO_MCP_TOKEN` for authentication.
+MCP servers run on Azure Container Apps (Norway East). Authentication is handled automatically via the Claude tenant configuration — no token setup required.
 
 ## Multi-Tenant Architecture
 - Each customer gets an isolated tenant
@@ -99,3 +104,13 @@ MCP servers run on Azure Container Apps (Norway East) and require a `BO_MCP_TOKE
 - Industries: Oil & gas, maritime, construction, consulting, manufacturing
 - Need integrated CRM + Project + HR in their existing M365 environment
 - Value: No separate system — everything lives in SharePoint/Teams
+
+## Reference Documentation
+For platform-level guides (not covered by module-specific skills):
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/business-online.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/oversikt.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/tilgang.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/administrasjon/innledning.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/komponenter/qcp-kvalitetskontrollplan.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/komponenter/tidslinje.md`
+- `${CLAUDE_SKILL_DIR}/../../docs/brukermanual/ekstrafunksjoner/introduksjon.md`
