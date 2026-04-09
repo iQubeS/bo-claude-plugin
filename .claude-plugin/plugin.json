@@ -7,13 +7,7 @@
     "url": "https://business-online.no"
   },
   "homepage": "https://business-online.no",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iQubeS/bo-claude-plugin"
-  },
-  "bugs": {
-    "url": "https://github.com/iQubeS/bo-claude-plugin/issues"
-  },
+  "repository": "https://github.com/iQubeS/bo-claude-plugin",
   "license": "Proprietary",
   "keywords": [
     "business-online",
@@ -25,11 +19,15 @@
   ],
   "userConfig": {
     "BO_COMPANY_NAME": {
+      "title": "Bedriftsnavn",
       "description": "Navnet på bedriften din (vises i dashboards og rapporter)",
+      "type": "string",
       "required": false
     },
     "BO_LANGUAGE": {
+      "title": "Språk",
       "description": "Foretrukket språk for svar (no = norsk, en = english)",
+      "type": "string",
       "required": false,
       "default": "no"
     }
