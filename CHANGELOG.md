@@ -4,6 +4,12 @@ All notable changes to the BO Plugin for Claude are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [0.1.1] - 2026-04-09
+
+### Fixed
+- plugin.json validation: `repository` must be string, not object
+- userConfig entries require `type` and `title` fields
+
 ## [0.1.0] - 2026-04-08
 
 ### Added

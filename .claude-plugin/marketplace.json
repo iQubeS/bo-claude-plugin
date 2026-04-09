@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Business Online plugins for Claude",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "repository": "https://github.com/iQubeS/bo-claude-plugin"
   },
   "plugins": [
@@ -14,7 +14,7 @@
       "name": "bo",
       "source": "./",
       "description": "Business Online (BO/iQS Online) — CRM, Project, HR, and QHSE modules",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Business Online AS"
       },
