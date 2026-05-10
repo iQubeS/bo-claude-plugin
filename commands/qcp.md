@@ -154,11 +154,183 @@ You've worked through the categories above for the activities described. The use
 
 ## Phase 4: Structure — build the QCP template
 
-(See full content below.)
+Now you have a list of justified activities and a domain classification. Map them into BO's QCP model: phases → process_details (sjekkpunkter) → triggers / dependencies / highlights / links / work_files.
+
+### Live artifact instructions
+
+After EACH structural change (phase added, phase renamed, checkpoint added/removed/renamed, trigger added, dependency added), regenerate the live artifact using the template at `@assets/qcp/artifact-template.tsx`.
+
+How to regenerate:
+1. Take the template file as your starting point.
+2. Replace the `INITIAL_QCP` constant with the current in-progress QCP state (as JSON).
+3. Emit the result as an artifact (use the `application/vnd.ant.react` artifact type).
+4. Use a stable identifier so it updates in place rather than creating new artifacts each time.
+
+DO NOT regenerate after pure prose refinements (changing description text, fixing a typo). Only structural changes.
+
+### Structural questions to ask
+
+Pace the structuring. Don't dump 5 phases at the user — go phase by phase, validating each with them.
+
+For each phase:
+
+> "La oss kalle den første fasen [proposed name]. Den dekker [activities A, B, C] fra det vi snakket om. Er det riktig, eller foreslår du en annen gruppering?"
+
+For each checkpoint:
+
+> "Innenfor [phase] har vi [checkpoint X]. Trenger noen å lese et styrende dokument først? (= link / arbeidsfil) Skal en annen prosjekt-status oppdateres når dette er ferdig? (= trigger) Skal noen varsles? (= highlight)"
+
+For dependencies:
+
+> "[Checkpoint Y] krever at [Checkpoint X] er ferdig først. Skal det være en hard sperre (BO viser feilmelding hvis Y forsøkes før X) eller bare en anbefaling?"
+
+For optional steps:
+
+> "[Checkpoint Z] er ikke alltid relevant — for eksempel hvis prosessen ikke involverer personopplysninger. Skal det være mulig å markere det som N/A?"
+
+### What to extract for each checkpoint
+
+When proposing a checkpoint, fill in (or ask about) ALL of these fields per the schema:
+
+- **title** (required, ≤200 chars)
+- **description** (required, may be empty string '' but NOT undefined)
+- **sort_order** (required, ≥1, unique within phase)
+- **na** (boolean — can the workspace owner mark this N/A?)
+- **comment_mandatory** (boolean — must the user write a comment when completing?)
+- **links** (zero or more — external URLs or governing-document references)
+- **work_files** (zero or more — governing documents copied into workspace)
+- **triggers** (zero or more — Choice or DateTime field updates on the workspace)
+- **trigger_forms** (zero or more — open form to create related items)
+- **dependencies** (zero or more — internal references to other phase+checkpoint titles)
+- **highlight** (REQUIRED object — `add_to_timeline: bool` AND `send_notification: null OR { email, display_name? }`)
+
+Default values when the user doesn't specify:
+- `na: false`, `comment_mandatory: false`
+- `links: []`, `work_files: []`, `triggers: []`, `trigger_forms: []`, `dependencies: []`
+- `highlight: { add_to_timeline: false, send_notification: null }`
+
+NEVER ship a checkpoint with missing required fields.
+
+### Trigger types
+
+The schema has TWO trigger shapes (oneOf):
+
+**Choice trigger** — sets a choice field to a specific value:
+```json
+{
+  "action_status": "Completed",
+  "field_type": "Choice",
+  "list_name": "ProjectGeneral",
+  "field_name": "Status",
+  "value": "Approved"
+}
+```
+
+**DateTime trigger** — sets a date field to (today + days_offset):
+```json
+{
+  "action_status": "Started",
+  "field_type": "DateTime",
+  "list_name": "ProjectGeneral",
+  "field_name": "PlannedStartDate",
+  "days_offset": 0
+}
+```
+
+Don't mix them. The schema rejects `value + days_offset` together.
+
+### Phase 4 ends when:
+
+Every activity from phase 3 is either (a) mapped into a checkpoint or (b) explicitly removed and noted in rationale. Every checkpoint has all required fields. The artifact reflects the final structure. The user can scroll through it and recognize their process.
 
 ## Phase 5: Validate & deliver
 
-(See full content below.)
+Run a 4-step validation pass before generating output files. Surface issues to the user; never silently emit invalid output.
+
+### Step 1: Schema check
+
+Validate the in-memory QCP state against `@assets/qcp/qcp-schema-v1.json`. Walk through it logically:
+
+- Top-level: `schema_version`, `exported_at`, `exported_from`, `qcp` all present?
+- `qcp.binding`: `list_name`, `column_name`, `column_value` all non-empty strings?
+- `qcp.phases`: at least 1, at most 100? Each has `title`, `sort_order` (≥1), `process_details`?
+- Each `process_details[]`: ALL required fields present (see phase 4 list)?
+- Each link: matches one of the `oneOf` shapes (external+url OR governing_document+doc_name)?
+- Each trigger: matches one of the `oneOf` shapes (Choice+value OR DateTime+days_offset)?
+- Each `highlight`: has BOTH `add_to_timeline` and `send_notification` (the latter being null or an object)?
+- All string fields within their max-length bounds (200 chars for most, 4000 for descriptions, 50000 for process detail descriptions)?
+
+If any check fails, surface the specific issue to the user:
+
+> "Schema-validering feilet: i fase 'Initiering' steg 'Forretningscase godkjent' mangler 'highlight'-feltet. Det er påkrevet — hvilken default vil du ha?"
+
+Repair before continuing. Never silently fix.
+
+### Step 2: Compliance check
+
+Based on the domain identified in phase 1 and the standards you flagged as relevant, walk through each requirement:
+
+- Domain = procurement, standards = ISO 9001 8.4: is there a supplier-qualification step? a contract-signing step? a periodic-review step?
+- Domain = HR, standards = GDPR: is there a privacy-notice step? a data-handling step?
+- Domain = IT, standards = ISO 27001: is there a security-review step? an access-grant step?
+
+For each gap, present as a NON-BLOCKING recommendation:
+
+> "[Recommendation, not blocker]: Prosessen oppfyller ISO 9001 8.4 grunnleggende, men har ingen periodisk re-evaluering av leverandøren. ISO 9001 8.4.2 krever dokumentert oppfølging. Vil du legge til en sjekkpunkt?"
+
+User decides. If skipped, log it in rationale section 6 ("Recommendations Not Included").
+
+### Step 3: Scope check
+
+Look at what's been designed. Does it sensibly fit one QCP, or has it grown across multiple distinct processes?
+
+Signals it should be split:
+- Activities cross workspace types (e.g. starts in Companies, ends in ProjectGeneral)
+- Activities have clearly different owners (sales team for first half, delivery team for second half)
+- Activities span >5 phases or >25 total checkpoints
+
+If signals trigger:
+
+> "Det vi har designet ser ut til å spenne over to distinkte prosesser: 'salg' (fase 1–2) og 'leveranse' (fase 3–5). De vil få renere bindinger i BO som separate QCPer. Vil du at vi splitter dem? (Du kan kjøre `/bo:qcp` igjen for den andre.)"
+
+If user agrees: keep the first half here, suggest follow-up session for the rest. If user disagrees: continue as one QCP and note the concern in rationale section 6.
+
+### Step 4: Final artifact review
+
+Re-render the artifact one last time with the validated state. Ask the user to click through it:
+
+> "Her er det vi har bygget. Klikk gjennom fasene og sjekk at hver del matcher det du ser for deg. Er det noe som ser feil ut?"
+
+User confirms or asks for last edits.
+
+### Generate the two output files
+
+When the user confirms, produce:
+
+**File 1: `<title-slug>-v<major>.<minor>.qcp.json`**
+
+The validated QCP state, formatted as JSON with 2-space indentation. The user copies this from your output (or downloads if they have that capability).
+
+The `<title-slug>` is the title lowercased, non-alphanumerics replaced with `-`, leading/trailing `-` trimmed, capped at 80 chars, fallback to `qcp` if empty. (E.g. "Utviklingsprosess Æ Ø" → `utviklingsprosess----v1.0.qcp.json`.)
+
+**File 2: `<title-slug>-rationale.md`**
+
+Fill in `@assets/qcp/rationale-template.md` with:
+- Section 1: Purpose — paraphrase from phase 1.
+- Section 2: Standards considered — list of frameworks evaluated, applied/rejected with reason.
+- Section 3: Per-phase reasoning — one subsection per phase.
+- Section 4: Challenges raised — every challenge from phase 3 + user response.
+- Section 5: Compliance coverage — checklist from step 2 above.
+- Section 6: Recommendations not included — anything user explicitly skipped.
+- Section 7: Source trail — only present if migration mode.
+
+Output both files in your final message in fenced code blocks (```json and ```markdown). Tell the user how to use them:
+
+> "Her er filene. Lagre den første som `<filename>.qcp.json` og last den opp via Importer-knappen i QCPAdmin (Next). Lagre den andre som `<filename>.md` i deres prosess-dokumentasjon — den utdyper *hvorfor* prosessen er som den er, og er nyttig for revisorer og fremtidige eiere."
+
+### Phase 5 ends when:
+
+Both files have been generated and presented to the user. The session is complete.
 
 ## Migration mode: file handling
 
