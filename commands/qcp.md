@@ -98,7 +98,59 @@ Don't structure into phases yet. Don't propose phase boundaries. Don't ask "shou
 
 ## Phase 3: Challenge — proactive scrutiny
 
-(See full content below.)
+Goal: surface every cargo-cult, redundancy, missing control, and automation candidate. The user always has the final word, but you must raise the question.
+
+**Tone is critical.** Challenges are framed as questions, not assertions:
+
+- ❌ "Steg 5 er overflødig — fjern det."
+- ✅ "Steg 5 og steg 8 ser ut til å verifisere det samme. Er det bevisst dobbelt-sjekk eller historisk arv?"
+
+- ❌ "Du må ha en GDPR-sjekk her."
+- ✅ "Prosessen behandler personopplysninger her — har dere allerede en samtykke-rutine et annet sted, eller skal det være et sjekkpunkt i denne prosessen?"
+
+### Challenge categories — work through these systematically
+
+**1. Cargo-cult**
+For each step the user described, ask if it's still serving the original purpose. Listen for "vi har alltid gjort det sånn" — that's the signal.
+
+> "Du nevnte at HR sender rapport hver fredag. Til hvem går den? Hva brukes informasjonen til?"
+
+**2. Redundancy**
+Two steps that verify or capture the same thing.
+
+> "Steg 3 og steg 7 ser begge ut til å validere kvaliteten. Forskjellige kriterier, eller er det dobbelt-sjekk for trygghet?"
+
+**3. Missing controls (domain-driven)**
+Use your domain classification from phase 1. If domain is GDPR-relevant and no privacy step appeared:
+
+> "Dere behandler personopplysninger i denne prosessen, men jeg ser ingen sjekkpunkt som vurderer GDPR-krav (samtykke, lagringstid, sletting). Er det dekket et annet sted, eller skal vi inkludere det her?"
+
+If domain is procurement/ISO 9001-relevant and no supplier-qualification step:
+
+> "ISO 9001 8.4 krever dokumentert leverandør-vurdering før kontrakts-signering. Jeg ser ikke det her — bevisst eller glemt?"
+
+**4. Automation candidates (BO-specific)**
+Steps that change a status or set a date based on a previous status.
+
+> "Steg 'Sett prosjektstatus til Aktiv når kontrakten er signert' er en typisk BO-trigger. Vil du at det skal være en automatisk konsekvens av forrige steg, eller en manuell handling?"
+
+**5. Sequencing assumptions**
+Steps described in sequence that might be parallelizable.
+
+> "Du sa at A skal være ferdig før B. Er det en hard avhengighet (B trenger output fra A) eller bare måten dere har gjort det på?"
+
+**6. Approval-chain depth**
+Three or more sequential approvals raise eyebrows.
+
+> "A, B og C godkjenner i rekkefølge. Er det fordi de vurderer ulike kriterier, eller fordi det er trygt? Kan det være ett godkjenningsledd med klar mandat-fordeling?"
+
+### Capture, don't decide
+
+For each challenge you raise, capture **both your concern and the user's response** — these go into the rationale doc (section 4: "Challenges Raised in Design"). Even if the user keeps the step as-is, the *reasoning* is now documented and survives the session.
+
+### Phase 3 ends when:
+
+You've worked through the categories above for the activities described. The user can defend or remove each one. The list of activities is leaner and each remaining one has explicit justification.
 
 ## Phase 4: Structure — build the QCP template
 
