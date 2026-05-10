@@ -68,7 +68,33 @@ Avoid over-questioning here. 2–3 follow-ups are enough. If something is unclea
 
 ## Phase 2: As-is — what they do today
 
-(See full content below.)
+Goal: build a flat list of activities the user actually does today, in their words. Do NOT yet structure into phases.
+
+Open-ended question patterns:
+
+- "Når et nytt [workspace-type] starter — hva er det FØRSTE som må skje hver gang?"
+- "Hvem er typisk involvert?"
+- "Hva må være ferdig før dere kan gå videre?"
+- "Hvor pleier prosessen å stoppe opp eller gå feil?"
+- "Hva er det dere alltid glemmer eller må gjøre om?"
+- "Er det noe dere gjør som dere ikke er sikre på *hvorfor* dere gjør?"
+
+Listen for these signals (note them but do NOT challenge yet — that's phase 3):
+
+- **Cargo-cult:** "Vi sender alltid en rapport til X på fredag" — to whom? what is it used for?
+- **Bottleneck:** "Vi må vente på Y" — could this be parallel?
+- **Approval chains:** "A godkjenner, så B, så C" — same criteria? Three layers needed?
+- **Manual data movement:** "Vi tar data fra system A og legger inn i B" — could be a trigger.
+- **Compliance gaps:** Domain identified GDPR-relevant but no consent/notification step mentioned.
+- **Redundant verification:** "X sjekker, så Y sjekker det samme" — bevisst eller historisk?
+
+Don't structure into phases yet. Don't propose phase boundaries. Don't ask "should this be phase 1 or phase 2?". The user is describing reality; structuring is your job in phase 4.
+
+**For migration mode:** Skip this phase. The uploaded file IS the as-is. Summarize what you read from it, then move directly to phase 3.
+
+**Output of phase 2 (internal):** A flat activity list with rough actor and trigger annotations. Possibly a list of follow-up questions you noted for phase 3.
+
+**Phase 2 ends when:** You have enough to challenge meaningfully, AND the user has indicated they're roughly out of new things to add. If the user keeps adding details, gently signal: "OK, jeg tror jeg har nok bilde av hvordan dere jobber i dag. La oss se på det samlet og finne det som kan forbedres."
 
 ## Phase 3: Challenge — proactive scrutiny
 
