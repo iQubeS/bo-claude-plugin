@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-05-10T12:00:00Z",
+  "exported_from": {
+    "tenant_host": "calibration.example.no",
+    "web_part_version": "0.0.0"
+  },
+  "qcp": {
+    "title": "HR Onboarding",
+    "description": "Standardprosess for å ta imot nyansatte. Dekker første 90 dager.",
+    "version": { "major": 1, "minor": 0 },
+    "binding": {
+      "list_name": "Personnel",
+      "column_name": "EmploymentType",
+      "column_value": "Permanent"
+    },
+    "phases": [
+      {
+        "title": "Før første dag",
+        "sort_order": 1,
+        "process_details": [
+          {
+            "title": "Arbeidsavtale signert",
+            "description": "Sign avtalen elektronisk via DocuSign eller fysisk på første dag.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [
+              { "doc_name": "Mal-arbeidsavtale-fast.docx", "label": "Standard arbeidsavtale" }
+            ],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "IT-utstyr bestilt",
+            "description": "Laptop, telefon, tilganger til kjernesystemer (Microsoft 365, BO).",
+            "sort_order": 2,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Før første dag", "detail_title": "Arbeidsavtale signert" }
+            ],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": { "email": "it-support@example.no", "display_name": "IT-support" }
+            }
+          }
+        ]
+      },
+      {
+        "title": "Første uke",
+        "sort_order": 2,
+        "process_details": [
+          {
+            "title": "Velkomstsamtale med leder",
+            "description": "30-60-90-dager-plan gjennomgått. Forventninger avklart.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [
+              { "type": "external", "label": "30-60-90-mal", "url": "https://intranet.example.no/hr/30-60-90.pdf" }
+            ],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "Personvern-erklæring",
+            "description": "GDPR-relatert: ansatt informert om hvilke personopplysninger arbeidsgiver behandler. Signert kvittering arkivert.",
+            "sort_order": 2,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [
+              { "type": "governing_document", "label": "Personvernerklæring v3", "doc_name": "Personvernerklaering-ansatte-v3.pdf" }
+            ],
+            "work_files": [
+              { "doc_name": "Personvernerklaering-ansatte-v3.pdf", "label": "Personvernerklæring" }
+            ],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Første 90 dager",
+        "sort_order": 3,
+        "process_details": [
+          {
+            "title": "Prøvetidssamtale",
+            "description": "Strukturert samtale ved ca. 2,5 mnd. Status, tilbakemelding, justeringer.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Første uke", "detail_title": "Velkomstsamtale med leder" }
+            ],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
