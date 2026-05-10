@@ -32,7 +32,39 @@ If the user attaches files at the start (BPMN, Word, PDF, screenshots), enter **
 
 ## Phase 1: Domain & context
 
-(See full content below.)
+Open with a single question that lets the user answer freely:
+
+> "Hva slags prosess vil du designe? (For eksempel: HR-onboarding, prosjektgjennomføring, innkjøp, en kvalitetskontroll, en intern godkjenningsflyt.) Beskriv kort hva prosessen handler om."
+
+When the user answers, classify the domain internally. Use this lookup to select which standards/frameworks are relevant:
+
+| Domain signal in user's answer | Relevant standards | Explicitly NOT relevant |
+|---|---|---|
+| salg, lead, kunde-akkvisisjon, sales pipeline | MEDDIC (already in BO), BANT, Challenger Sale, customer-specific RFP requirements | ISO 9001 (unless customer mandates it in contract) |
+| prosjekt, leveranse, EPC, gjennomføring | PMI/PMBOK, PRINCE2, stage-gate, kunde-specific contract requirements | None usually — most apply contextually |
+| HR onboarding, ansettelse, ny ansatt | 30-60-90-mal, GDPR (personopplysninger) | ISO 9001 is overkill for HR |
+| HR offboarding, sluttetterkommelse, oppsigelse | Tilgangs-revokering, GDPR, sikkerhets-best-practice | Heavy quality standards |
+| innkjøp, leverandør, supplier, anskaffelse | ISO 9001 (8.4), ISO 37001 (anti-korrupsjon), KYC, supplier-kvalifisering | GDPR (unless personopplysninger handled) |
+| kvalitet, QHSE, HMS | ISO 9001, ISO 14001 (miljø), ISO 45001 (HSE), NS-EN, internkontrollforskriften | None — this is the home turf |
+| IT, change, endrings-håndtering, IT-drift | ITIL, ISO 27001, NSM-veiledere | Generic ISO 9001 unless org has it |
+| finans, regnskap, godkjenning | NRS, god regnskapsskikk, intern kontroll, SOX (børsnoterte) | GDPR unless personopplysninger handled |
+| compliance, GDPR, personvern | Personvernforordningen, Datatilsynets veiledninger | Process-quality standards |
+| produksjon, manufacturing | ISO 9001, sektor-spesifikk (ISO 13485 medisinsk, IATF 16949 bil) | Generic frameworks |
+
+After classifying, ask 1–2 follow-up questions to confirm the relevant context:
+
+- "Er dere ISO 9001-sertifisert (eller på vei mot det)? Det avgjør hvor formelt vi behøver å designe prosessen."
+- "Behandler prosessen personopplysninger? (Det utløser GDPR-krav.)"
+- "Er det offentlig sektor / kommunal / privat? (Påvirker hvilke ramme-vilkår som gjelder.)"
+- "Hvor stor er bedriften? (Liten oppstart, mid-marked, eller enterprise? Påvirker hvor mye formalisme er forholdsmessig.)"
+
+Avoid over-questioning here. 2–3 follow-ups are enough. If something is unclear later, ask then.
+
+**Important:** Do NOT bring up standards proactively yet. Wait for phase 3. The classification is internal.
+
+**Important:** **Norwegian regulatory frameworks always take precedence over generic ISO when both apply to a Norwegian customer.** If the user says they're a Norwegian construction firm, NS-EN 1090 matters more than abstract ISO 9001. If they're public-sector, internkontrollforskriften is the binding constraint.
+
+**Output of phase 1 (internal):** A note in your reasoning of (a) the domain classification, (b) the standards/frameworks that ARE relevant, (c) the standards that are NOT relevant. You'll reference these in phases 3 and 5.
 
 ## Phase 2: As-is — what they do today
 
