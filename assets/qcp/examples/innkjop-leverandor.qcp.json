@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-05-10T12:00:00Z",
+  "exported_from": {
+    "tenant_host": "calibration.example.no",
+    "web_part_version": "0.0.0"
+  },
+  "qcp": {
+    "title": "Leverandør-kvalifisering",
+    "description": "Prosess for å kvalifisere nye leverandører iht. ISO 9001 8.4 og intern policy. Dekker due diligence, kontrakts-vilkår og periodisk revidering.",
+    "version": { "major": 1, "minor": 0 },
+    "binding": {
+      "list_name": "Companies",
+      "column_name": "CompanyType",
+      "column_value": "Supplier"
+    },
+    "phases": [
+      {
+        "title": "Innledende vurdering",
+        "sort_order": 1,
+        "process_details": [
+          {
+            "title": "Forretningsbehov dokumentert",
+            "description": "Hvorfor trenger vi denne leverandøren? Hva skal de levere? Volum og kritikalitet.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [
+              { "type": "external", "label": "ISO 9001:2015 8.4.1", "url": "https://www.iso.org/standard/62085.html" }
+            ],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Due diligence",
+        "sort_order": 2,
+        "process_details": [
+          {
+            "title": "Bedriftsopplysninger verifisert",
+            "description": "Org.nummer, Brønnøysund-status, antall ansatte, finansiell stabilitet.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [
+              { "type": "external", "label": "Brønnøysund-registrene", "url": "https://www.brreg.no/" }
+            ],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Innledende vurdering", "detail_title": "Forretningsbehov dokumentert" }
+            ],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "Anti-korrupsjon screening",
+            "description": "Sjekk mot sanksjonslister og PEP-databaser. ISO 37001-relatert. Dokumenter resultat.",
+            "sort_order": 2,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [
+              { "type": "governing_document", "label": "Anti-korrupsjon-policy v2", "doc_name": "Anti-korrupsjon-policy-v2.pdf" }
+            ],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": { "email": "compliance@example.no", "display_name": "Compliance" }
+            }
+          },
+          {
+            "title": "ISO/sertifiseringer dokumentert",
+            "description": "Krev kopi av ISO 9001-sertifikat (eller likeverdig) for kvalitetskritiske leveranser. Verifiseres mot utstedende organ.",
+            "sort_order": 3,
+            "na": true,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Kontrakts-fase",
+        "sort_order": 3,
+        "process_details": [
+          {
+            "title": "Rammeavtale signert",
+            "description": "Inkluderer SLA, prisstruktur, leveringsvilkår, oppsigelsesvilkår.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [
+              { "doc_name": "Mal-rammeavtale-leverandør.docx", "label": "Rammeavtale-mal" }
+            ],
+            "triggers": [
+              {
+                "action_status": "Completed",
+                "field_type": "Choice",
+                "list_name": "Companies",
+                "field_name": "Status",
+                "value": "Active"
+              }
+            ],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Due diligence", "detail_title": "Bedriftsopplysninger verifisert" },
+              { "phase_title": "Due diligence", "detail_title": "Anti-korrupsjon screening" }
+            ],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "Databehandler-avtale (DPA) hvis relevant",
+            "description": "Påkrevet hvis leverandøren behandler personopplysninger på våre vegne. GDPR art. 28.",
+            "sort_order": 2,
+            "na": true,
+            "comment_mandatory": false,
+            "links": [
+              { "type": "external", "label": "Datatilsynet om databehandler-avtaler", "url": "https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/databehandleravtaler/" }
+            ],
+            "work_files": [
+              { "doc_name": "Mal-DPA-databehandler.docx", "label": "DPA-mal" }
+            ],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Aktiv leverandør",
+        "sort_order": 4,
+        "process_details": [
+          {
+            "title": "Periodisk re-evaluering planlagt",
+            "description": "Sett dato for neste full revurdering (typisk årlig). ISO 9001 8.4.2 krever dokumentert oppfølging.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [],
+            "triggers": [
+              {
+                "action_status": "Completed",
+                "field_type": "DateTime",
+                "list_name": "Companies",
+                "field_name": "NextReviewDate",
+                "days_offset": 365
+              }
+            ],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Kontrakts-fase", "detail_title": "Rammeavtale signert" }
+            ],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

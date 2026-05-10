@@ -15,6 +15,7 @@ There is nothing to build, install, or configure locally. The connection to BO r
 - Check project status, budgets, and milestones
 - Create and follow up on NCR reports (avvik/quality deviations)
 - Get a dashboard overview across all modules (`/bo:status`)
+- Design new QCP (Quality Control Plan) templates with `/bo:qcp` — guided business-process consultation that produces a `.qcp.json` ready for upload into QCPAdmin (Next). Supports both greenfield design and migration from existing process docs (BPMN, Word, PDF, screenshots).
 - Ask questions about how Business Online works (HR, onboarding, processes)
 
 ## How the Plugin Is Organized

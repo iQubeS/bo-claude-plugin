@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "exported_at": "2026-05-10T12:00:00Z",
+  "exported_from": {
+    "tenant_host": "calibration.example.no",
+    "web_part_version": "0.0.0"
+  },
+  "qcp": {
+    "title": "Utviklingsprosjekt",
+    "description": "Standard prosjektgjennomføring for utviklingsoppdrag. Stage-gate-modell tilpasset BO.",
+    "version": { "major": 1, "minor": 0 },
+    "binding": {
+      "list_name": "ProjectGeneral",
+      "column_name": "ProjectType",
+      "column_value": "Utvikling"
+    },
+    "phases": [
+      {
+        "title": "Initiering",
+        "sort_order": 1,
+        "process_details": [
+          {
+            "title": "Forretningscase godkjent",
+            "description": "Kost-nytte-vurdering presentert og godkjent av styringsgruppe.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [
+              { "type": "external", "label": "Mal: Forretningscase", "url": "https://intranet.example.no/maler/forretningscase.docx" }
+            ],
+            "work_files": [],
+            "triggers": [
+              {
+                "action_status": "Completed",
+                "field_type": "Choice",
+                "list_name": "ProjectGeneral",
+                "field_name": "Status",
+                "value": "Approved"
+              }
+            ],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "Prosjektleder tildelt",
+            "description": "Ressurs-allokering bekreftet av avdelingsleder.",
+            "sort_order": 2,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Initiering", "detail_title": "Forretningscase godkjent" }
+            ],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Planlegging",
+        "sort_order": 2,
+        "process_details": [
+          {
+            "title": "Prosjektplan utarbeidet",
+            "description": "Tidslinje, milepæler, avhengigheter dokumentert.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [
+              { "doc_name": "Mal-prosjektplan.docx", "label": "Prosjektplan-mal" }
+            ],
+            "triggers": [
+              {
+                "action_status": "Started",
+                "field_type": "DateTime",
+                "list_name": "ProjectGeneral",
+                "field_name": "PlannedStartDate",
+                "days_offset": 0
+              }
+            ],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Initiering", "detail_title": "Prosjektleder tildelt" }
+            ],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": null
+            }
+          },
+          {
+            "title": "Risikovurdering gjennomført",
+            "description": "Identifiser, vurder, og dokumenter mitigering for risiko-elementer.",
+            "sort_order": 2,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [],
+            "work_files": [
+              { "doc_name": "Risikoregister-mal.xlsx", "label": "Risikoregister" }
+            ],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Gjennomføring",
+        "sort_order": 3,
+        "process_details": [
+          {
+            "title": "Sprint-leveranser etter plan",
+            "description": "Kontinuerlig — oppdateres ved hver sprint-leveranse.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": false,
+            "links": [],
+            "work_files": [],
+            "triggers": [],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Planlegging", "detail_title": "Prosjektplan utarbeidet" }
+            ],
+            "highlight": {
+              "add_to_timeline": false,
+              "send_notification": null
+            }
+          }
+        ]
+      },
+      {
+        "title": "Avslutning",
+        "sort_order": 4,
+        "process_details": [
+          {
+            "title": "Sluttrapport levert",
+            "description": "Erfaringer, måloppnåelse, anbefalinger til fremtidige prosjekter.",
+            "sort_order": 1,
+            "na": false,
+            "comment_mandatory": true,
+            "links": [],
+            "work_files": [],
+            "triggers": [
+              {
+                "action_status": "Completed",
+                "field_type": "Choice",
+                "list_name": "ProjectGeneral",
+                "field_name": "Status",
+                "value": "Closed"
+              }
+            ],
+            "trigger_forms": [],
+            "dependencies": [
+              { "phase_title": "Gjennomføring", "detail_title": "Sprint-leveranser etter plan" }
+            ],
+            "highlight": {
+              "add_to_timeline": true,
+              "send_notification": { "email": "kvalitet@example.no", "display_name": "QA-koordinator" }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

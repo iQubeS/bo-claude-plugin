@@ -4,6 +4,28 @@ All notable changes to the BO Plugin for Claude are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] — 2026-05-10
+
+### Added
+- `/bo:qcp` slash command — guided business-process consultation that produces
+  a `.qcp.json` template (schema v1.0) and a `process-rationale.md` companion
+  document. Two modes: greenfield (consultative interview) and migration
+  (read existing process docs from BPMN/Word/PDF/screenshots).
+- `assets/qcp/` directory holding the schema (pinned to bo-qcp-admin@v0.2.0),
+  three calibration examples (HR, project-execution, procurement), the
+  React+Tailwind live-preview artifact template, and the rationale document
+  template.
+- `scripts/check-schema-sync.sh` — verifies the schema copy is in sync with
+  upstream bo-qcp-admin@v0.2.0.
+
+### Notes
+- Output files conform to the canonical QCP schema published in
+  `iQubeS/bo-qcp-admin@v0.2.0`. Upload via the Import button in QCPAdmin (Next).
+- The command runs Claude as a process consultant — it challenges legacy
+  thinking, references domain-relevant standards (ISO, GDPR, ITIL, etc.),
+  and explicitly avoids over-applying frameworks where they don't fit
+  (e.g. NOT bringing in ISO 9001 for HR-onboarding).
+
 ## [0.1.1] - 2026-04-09
 
 ### Fixed
