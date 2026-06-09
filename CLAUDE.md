@@ -16,6 +16,7 @@ There is nothing to build, install, or configure locally. The connection to BO r
 - Create and follow up on NCR reports (avvik/quality deviations)
 - Get a dashboard overview across all modules (`/bo:status`)
 - Design new QCP (Quality Control Plan) templates with `/bo:qcp` — guided business-process consultation that produces a `.qcp.json` ready for upload into QCPAdmin (Next). Supports both greenfield design and migration from existing process docs (BPMN, Word, PDF, screenshots).
+- Design new checklist/form templates with `/bo:checklist` — guided forms consultation that produces a `.checklist.json` ready for import into the Template Manager, plus an import-guide with the name/code/category/project-type metadata. Supports greenfield design and migration from existing forms (Word, PDF, Excel, photos of paper forms).
 - Ask questions about how Business Online works (HR, onboarding, processes)
 
 ## How the Plugin Is Organized
@@ -28,6 +29,8 @@ There is nothing to build, install, or configure locally. The connection to BO r
   - `bo-guide/` — General platform overview and architecture
 - `agents/bo-assistant.md` — A BO specialist persona that knows all modules
 - `commands/status.md` — The `/bo:status` dashboard command
+- `commands/qcp.md` — The `/bo:qcp` QCP-template design command (assets in `assets/qcp/`)
+- `commands/checklist.md` — The `/bo:checklist` checklist-template design command (assets in `assets/checklist/`)
 - `docs/brukermanual/` — 63 Norwegian user manual files organized by module. Skills reference these for detailed guidance.
 
 ## Data Connections
