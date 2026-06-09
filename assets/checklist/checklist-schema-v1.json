@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.business-online.no/checklist/v1.json",
+  "title": "Checklist Template File v1",
+  "description": "A reusable checklist/form template for Business Online Template Manager. The file is the bare fields array — the template's name, code, category, and applicable project types are entered by the user in Template Manager at import time and are NOT part of this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["fields"],
+  "properties": {
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": { "$ref": "#/definitions/field" }
+    }
+  },
+  "definitions": {
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "displayName", "section", "type", "required", "order"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^Q\\d+$",
+          "description": "Sequential field identifier: 'Q' + 1-based number (Q1, Q2, ...)."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400,
+          "description": "Internal name derived from displayName: lowercased, whitespace runs replaced by '_'. Other characters (?, /, parentheses, Norwegian å/ø/æ) are preserved."
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400,
+          "description": "Human-readable question/label shown to the person filling in the checklist."
+        },
+        "section": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Section header that groups consecutive fields. The checklist equivalent of a page/fieldset."
+        },
+        "type": {
+          "enum": [
+            "date",
+            "singletext",
+            "multiline",
+            "choice",
+            "multichoice",
+            "number",
+            "yesno",
+            "attachment",
+            "peoplepicker"
+          ],
+          "description": "Field input type. choice/multichoice require 'values'. multiline may set 'rows'. number may set 'min'/'max'. attachment is a standalone upload field. peoplepicker selects a person."
+        },
+        "required": { "type": "boolean" },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Global 1-based display order across the whole form (not per-section). Should be unique."
+        },
+        "placeholder": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Hint text. Available on all field types."
+        },
+        "defaultValue": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Default value, stored as a string for all types (e.g. \"0\" for a number). Available on all field types."
+        },
+        "allowAttachment": {
+          "type": "boolean",
+          "description": "When true, the person filling in the checklist may attach a file/photo to their answer. Distinct from the standalone 'attachment' field type."
+        },
+        "replicate": {
+          "type": "boolean",
+          "description": "When true, the field may be repeated by the user (e.g. one entry per location or per workstation)."
+        },
+        "values": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Allowed options for choice/multichoice fields, in display order."
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "description": "Visible row count for a multiline text field."
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum accepted value for a number field."
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum accepted value for a number field."
+        },
+        "links": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/link" },
+          "description": "Reference links shown alongside the field — external web pages or governing documents."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "enum": ["choice", "multichoice"] } } },
+          "then": { "required": ["values"] }
+        }
+      ]
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "External web URL. Empty string when this link is a governing document referenced via fileUrl."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400,
+          "description": "Human-readable label for the link."
+        },
+        "fileUrl": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Governing-document reference (a *.sharepoint.com/sites/*/GoverningDocumentLibrary/ URL). Empty string for external links."
+        }
+      }
+    }
+  }
+}

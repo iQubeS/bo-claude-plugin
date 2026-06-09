@@ -4,6 +4,30 @@ All notable changes to the BO Plugin for Claude are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-06-09
+
+### Added
+- `/bo:checklist` slash command — guided forms/data-collection consultation
+  that produces a `.checklist.json` template (schema v1) ready for import into
+  the Business Online Template Manager, plus an `import-guide.md` companion
+  carrying the four manual-entry fields (name, code, category, applicable
+  project types) and the design rationale. Two modes: greenfield (consultative
+  interview) and migration (read existing forms from Word/PDF/Excel/photos).
+- `assets/checklist/` directory holding the schema (authored from the canonical
+  checklist example, source of truth — no upstream sync), two calibration
+  examples (vernerunde HMS and ISO 9001 internrevisjon), the React+Tailwind
+  live-preview artifact template, and the import-guide document template.
+
+### Notes
+- The `.checklist.json` file contains only the `fields` array. Name, code,
+  category, and applicable project types are entered in Template Manager at
+  import — the command suggests them and hands the user a paste-ready block,
+  but never writes them into the file.
+- Nine field types are supported: date, singletext, multiline, choice,
+  multichoice, number, yesno, attachment, peoplepicker. The command fetches
+  live project types via the Projects MCP (`get_all_project_types`) and
+  detects SharePoint GoverningDocumentLibrary links as governing documents.
+
 ## [0.2.0] — 2026-05-10
 
 ### Added

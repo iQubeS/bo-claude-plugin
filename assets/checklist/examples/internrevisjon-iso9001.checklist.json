@@ -1,0 +1,214 @@
+{
+  "fields": [
+    {
+      "id": "Q1",
+      "name": "dato_for_revisjon",
+      "displayName": "Dato for revisjon",
+      "section": "Revisjonsinformasjon",
+      "type": "date",
+      "required": true,
+      "order": 1,
+      "placeholder": "Velg dato revisjonen gjennomføres"
+    },
+    {
+      "id": "Q2",
+      "name": "revisjonsleder",
+      "displayName": "Revisjonsleder",
+      "section": "Revisjonsinformasjon",
+      "type": "peoplepicker",
+      "required": true,
+      "order": 2,
+      "placeholder": "Velg ansvarlig revisor"
+    },
+    {
+      "id": "Q3",
+      "name": "reviderte_(auditee)",
+      "displayName": "Reviderte (auditee)",
+      "section": "Revisjonsinformasjon",
+      "type": "peoplepicker",
+      "required": false,
+      "order": 3,
+      "placeholder": "Velg person(er) som blir revidert"
+    },
+    {
+      "id": "Q4",
+      "name": "revidert_prosess_/_avdeling",
+      "displayName": "Revidert prosess / avdeling",
+      "section": "Revisjonsinformasjon",
+      "type": "singletext",
+      "required": true,
+      "order": 4,
+      "placeholder": "Hvilken prosess eller avdeling revideres?"
+    },
+    {
+      "id": "Q5",
+      "name": "type_revisjon",
+      "displayName": "Type revisjon",
+      "section": "Omfang og kriterier",
+      "type": "choice",
+      "required": true,
+      "order": 5,
+      "values": [
+        "Internrevisjon",
+        "Leverandørrevisjon",
+        "Oppfølgingsrevisjon"
+      ],
+      "placeholder": "Velg revisjonstype"
+    },
+    {
+      "id": "Q6",
+      "name": "hvilke_iso_9001-krav_er_omfattet?",
+      "displayName": "Hvilke ISO 9001-krav er omfattet?",
+      "section": "Omfang og kriterier",
+      "type": "multichoice",
+      "required": true,
+      "order": 6,
+      "values": [
+        "4. Organisasjonens kontekst",
+        "5. Lederskap",
+        "6. Planlegging",
+        "7. Støtte",
+        "8. Drift",
+        "9. Evaluering av ytelse",
+        "10. Forbedring"
+      ],
+      "placeholder": "Velg ett eller flere kapitler som revideres",
+      "links": [
+        {
+          "url": "https://www.iso.org/standard/62085.html",
+          "description": "ISO 9001:2015",
+          "fileUrl": ""
+        },
+        {
+          "url": "",
+          "description": "Prosedyre for internrevisjon",
+          "fileUrl": "https://iqubes2008.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-PRO-00012 Internrevisjon.pdf"
+        }
+      ]
+    },
+    {
+      "id": "Q7",
+      "name": "samsvar_med_dokumenterte_rutiner?",
+      "displayName": "Samsvar med dokumenterte rutiner?",
+      "section": "Funn",
+      "type": "choice",
+      "required": true,
+      "order": 7,
+      "values": [
+        "Fullt samsvar",
+        "Delvis samsvar",
+        "Ikke samsvar",
+        "Ikke vurdert"
+      ],
+      "placeholder": "Vurder praksis opp mot dokumenterte rutiner",
+      "allowAttachment": true
+    },
+    {
+      "id": "Q8",
+      "name": "kategorier_av_avvik_funnet",
+      "displayName": "Kategorier av avvik funnet",
+      "section": "Funn",
+      "type": "multichoice",
+      "required": false,
+      "order": 8,
+      "values": [
+        "Stort avvik",
+        "Mindre avvik",
+        "Observasjon",
+        "Forbedringsforslag"
+      ],
+      "placeholder": "Velg alle kategorier som er aktuelle"
+    },
+    {
+      "id": "Q9",
+      "name": "antall_avvik_funnet",
+      "displayName": "Antall avvik funnet",
+      "section": "Funn",
+      "type": "number",
+      "required": false,
+      "order": 9,
+      "defaultValue": "0",
+      "min": 0,
+      "max": 100,
+      "placeholder": "Oppgi totalt antall registrerte avvik"
+    },
+    {
+      "id": "Q10",
+      "name": "beskrivelse_av_funn",
+      "displayName": "Beskrivelse av funn",
+      "section": "Funn",
+      "type": "multiline",
+      "required": true,
+      "order": 10,
+      "placeholder": "Beskriv hvert funn med referanse til krav og bevis",
+      "rows": 4,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q11",
+      "name": "last_opp_objektive_bevis",
+      "displayName": "Last opp objektive bevis",
+      "section": "Funn",
+      "type": "attachment",
+      "required": false,
+      "order": 11,
+      "placeholder": "Foto, skjermbilder, dokumenter som underbygger funn"
+    },
+    {
+      "id": "Q12",
+      "name": "samlet_konklusjon",
+      "displayName": "Samlet konklusjon",
+      "section": "Oppsummering og oppfølging",
+      "type": "choice",
+      "required": true,
+      "order": 12,
+      "values": [
+        "Godkjent uten avvik",
+        "Godkjent med mindre avvik",
+        "Ikke godkjent – krever tiltak"
+      ],
+      "placeholder": "Velg samlet konklusjon for revisjonen"
+    },
+    {
+      "id": "Q13",
+      "name": "anbefalte_tiltak",
+      "displayName": "Anbefalte tiltak",
+      "section": "Oppsummering og oppfølging",
+      "type": "multiline",
+      "required": true,
+      "order": 13,
+      "placeholder": "List tiltak med ansvarlig og frist",
+      "rows": 3
+    },
+    {
+      "id": "Q14",
+      "name": "ansvarlig_for_oppfølging",
+      "displayName": "Ansvarlig for oppfølging",
+      "section": "Oppsummering og oppfølging",
+      "type": "peoplepicker",
+      "required": true,
+      "order": 14,
+      "placeholder": "Velg person som er ansvarlig for å lukke avvik"
+    },
+    {
+      "id": "Q15",
+      "name": "frist_for_lukking_av_avvik",
+      "displayName": "Frist for lukking av avvik",
+      "section": "Oppsummering og oppfølging",
+      "type": "date",
+      "required": false,
+      "order": 15,
+      "placeholder": "Sett frist for oppfølging av avvik"
+    },
+    {
+      "id": "Q16",
+      "name": "krever_oppfølgingsrevisjon?",
+      "displayName": "Krever oppfølgingsrevisjon?",
+      "section": "Oppsummering og oppfølging",
+      "type": "yesno",
+      "required": true,
+      "order": 16,
+      "placeholder": "Skal det planlegges en ny revisjon for å verifisere lukking?"
+    }
+  ]
+}

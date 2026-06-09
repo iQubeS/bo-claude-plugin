@@ -1,0 +1,493 @@
+{
+  "fields": [
+    {
+      "id": "Q1",
+      "name": "dato_for_vernerunde",
+      "displayName": "Dato for vernerunde",
+      "section": "Generell informasjon",
+      "type": "date",
+      "required": true,
+      "order": 1,
+      "placeholder": "Velg dato vernerunden gjennomføres"
+    },
+    {
+      "id": "Q2",
+      "name": "ansvarlig_verneombud",
+      "displayName": "Ansvarlig verneombud",
+      "section": "Generell informasjon",
+      "type": "singletext",
+      "required": true,
+      "order": 2,
+      "placeholder": "Fullt navn på verneombud som leder runden"
+    },
+    {
+      "id": "Q3",
+      "name": "deltakere_i_vernerunden",
+      "displayName": "Deltakere i vernerunden",
+      "section": "Generell informasjon",
+      "type": "multiline",
+      "required": true,
+      "order": 3,
+      "placeholder": "List opp alle deltakere med navn og rolle",
+      "rows": 3
+    },
+    {
+      "id": "Q4",
+      "name": "avdeling_/_lokasjon",
+      "displayName": "Avdeling / lokasjon",
+      "section": "Generell informasjon",
+      "type": "choice",
+      "required": true,
+      "order": 4,
+      "values": [
+        "Moseidveien 35",
+        "Strankaien 34",
+        "Nucleus Mall"
+      ],
+      "placeholder": "Moseidveien 35",
+      "replicate": true
+    },
+    {
+      "id": "Q5",
+      "name": "referanse_til_plantegning",
+      "displayName": "Referanse til plantegning",
+      "section": "Generell informasjon",
+      "type": "singletext",
+      "required": false,
+      "order": 5,
+      "links": [
+        {
+          "url": "https://iqubes2008.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/MGT-PRO-00003 Brann- og Evakueringsplan Moseidveien 35.pdf",
+          "description": "Brann- og Evakueringsplan Moseidveien 35",
+          "fileUrl": ""
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "name": "er_belysningen_tilstrekkelig_i_alle_arbeidsområder?",
+      "displayName": "Er belysningen tilstrekkelig i alle arbeidsområder?",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "choice",
+      "required": true,
+      "order": 6,
+      "values": [
+        "Tilfredsstillende",
+        "Delvis tilfredsstillende",
+        "Ikke tilfredsstillende",
+        "Ikke vurdert"
+      ],
+      "placeholder": "Vurder dagslys, takbelysning og arbeidslamper",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q7",
+      "name": "beskrivelse_av_eventuelle_belysningsmangler",
+      "displayName": "Beskrivelse av eventuelle belysningsmangler",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "multiline",
+      "required": false,
+      "order": 7,
+      "placeholder": "Beskriv hvor og hva som er utilfredsstillende",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q8",
+      "name": "er_temperaturen_i_lokalene_tilfredsstillende?",
+      "displayName": "Er temperaturen i lokalene tilfredsstillende?",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "choice",
+      "required": true,
+      "order": 8,
+      "values": [
+        "Tilfredsstillende",
+        "For varmt",
+        "For kaldt",
+        "Varierende"
+      ],
+      "placeholder": "Anbefalt temperatur: 20–22 °C på kontor",
+      "replicate": true
+    },
+    {
+      "id": "Q9",
+      "name": "målt_temperatur_(°c)",
+      "displayName": "Målt temperatur (°C)",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "number",
+      "required": false,
+      "order": 9,
+      "placeholder": "Registrer temperaturmåling i representative soner",
+      "min": 0,
+      "max": 50,
+      "replicate": true
+    },
+    {
+      "id": "Q10",
+      "name": "er_ventilasjon_og_luftkvalitet_akseptabel?",
+      "displayName": "Er ventilasjon og luftkvalitet akseptabel?",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "choice",
+      "required": true,
+      "order": 10,
+      "values": [
+        "God",
+        "Akseptabel",
+        "Dårlig, tiltak nødvendig",
+        "Ikke vurdert"
+      ],
+      "placeholder": "Vurder trekk, tørr luft, lukt eller støv",
+      "replicate": true
+    },
+    {
+      "id": "Q11",
+      "name": "er_støynivået_akseptabelt?",
+      "displayName": "Er støynivået akseptabelt?",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "choice",
+      "required": true,
+      "order": 11,
+      "values": [
+        "Lavt (akseptabelt)",
+        "Moderat (periodevis forstyrrende)",
+        "Høyt (tiltak nødvendig)"
+      ],
+      "placeholder": "Vurder støy fra ventilasjon, åpent landskap, utstyr",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q12",
+      "name": "kommentar_til_støyforhold",
+      "displayName": "Kommentar til støyforhold",
+      "section": "Fysisk arbeidsmiljø",
+      "type": "multiline",
+      "required": false,
+      "order": 12,
+      "placeholder": "Beskriv støykilder og berørte områder",
+      "rows": 3
+    },
+    {
+      "id": "Q13",
+      "name": "er_arbeidsstasjoner_ergonomisk_tilrettelagt?",
+      "displayName": "Er arbeidsstasjoner ergonomisk tilrettelagt?",
+      "section": "Ergonomi og arbeidsutstyr",
+      "type": "choice",
+      "required": true,
+      "order": 13,
+      "values": [
+        "Alle stasjoner OK",
+        "Mindre mangler",
+        "Vesentlige mangler",
+        "Ikke vurdert"
+      ],
+      "placeholder": "Sjekk hev/senk-pult, stol, skjermhøyde, mus/tastatur",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q14",
+      "name": "antall_arbeidsstasjoner_med_mangler",
+      "displayName": "Antall arbeidsstasjoner med mangler",
+      "section": "Ergonomi og arbeidsutstyr",
+      "type": "number",
+      "required": false,
+      "order": 14,
+      "defaultValue": "0",
+      "placeholder": "Oppgi antall plasser som trenger utbedring",
+      "replicate": true
+    },
+    {
+      "id": "Q15",
+      "name": "er_det_tilgang_til_ergonomisk_utstyr_ved_behov?",
+      "displayName": "Er det tilgang til ergonomisk utstyr ved behov?",
+      "section": "Ergonomi og arbeidsutstyr",
+      "type": "yesno",
+      "required": true,
+      "order": 15,
+      "placeholder": "F.eks. støtteputer, fotskamler, dokumentholdere",
+      "replicate": true
+    },
+    {
+      "id": "Q16",
+      "name": "kommentarer_til_ergonomi",
+      "displayName": "Kommentarer til ergonomi",
+      "section": "Ergonomi og arbeidsutstyr",
+      "type": "multiline",
+      "required": false,
+      "order": 16,
+      "placeholder": "Beskriv konkrete funn og eventuelle tiltak",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q17",
+      "name": "er_rømningsveier_frie_og_tydelig_merket?",
+      "displayName": "Er rømningsveier frie og tydelig merket?",
+      "section": "Brann og rømning",
+      "type": "choice",
+      "required": true,
+      "order": 17,
+      "values": [
+        "Alle frie og merket",
+        "Delvis blokkert/mangler merking",
+        "Alvorlige avvik"
+      ],
+      "placeholder": "Sjekk at skilt lyser og dører lar seg åpne",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q18",
+      "name": "er_brannslukningsapparater_tilgjengelige_og_kontrollert?",
+      "displayName": "Er brannslukningsapparater tilgjengelige og kontrollert?",
+      "section": "Brann og rømning",
+      "type": "choice",
+      "required": true,
+      "order": 18,
+      "values": [
+        "Alle kontrollert og OK",
+        "Utgått service / mangler",
+        "Ikke tilgjengelig"
+      ],
+      "placeholder": "Sjekk plombering, trykk og siste servicedato",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q19",
+      "name": "dato_for_siste_brannøvelse",
+      "displayName": "Dato for siste brannøvelse",
+      "section": "Brann og rømning",
+      "type": "date",
+      "required": true,
+      "order": 19,
+      "placeholder": "Oppgi dato for forrige gjennomført brannøvelse"
+    },
+    {
+      "id": "Q20",
+      "name": "er_branninstruksen_synlig_og_oppdatert?",
+      "displayName": "Er branninstruksen synlig og oppdatert?",
+      "section": "Brann og rømning",
+      "type": "yesno",
+      "required": true,
+      "order": 20,
+      "placeholder": "Skal henge ved inngangsparti og på hvert etasjeplan",
+      "allowAttachment": true
+    },
+    {
+      "id": "Q21",
+      "name": "kommentarer_til_brann-_og_rømningsforhold",
+      "displayName": "Kommentarer til brann- og rømningsforhold",
+      "section": "Brann og rømning",
+      "type": "multiline",
+      "required": false,
+      "order": 21,
+      "placeholder": "Beskriv avvik eller forbedringsforslag",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q22",
+      "name": "finnes_det_oppdatert_stoffkartotek_tilgjengelig?",
+      "displayName": "Finnes det oppdatert stoffkartotek tilgjengelig?",
+      "section": "Kjemikalier og stoffkartotek",
+      "type": "choice",
+      "required": true,
+      "order": 22,
+      "values": [
+        "Ja, oppdatert og tilgjengelig",
+        "Delvis oppdatert",
+        "Nei, mangler eller utdatert"
+      ],
+      "placeholder": "Åpne stoffkartoteket via lenken for å verifisere",
+      "replicate": true,
+      "links": [
+        {
+          "url": "https://www.arbeidstilsynet.no/risikofylt-arbeid/kjemikalier/stoffkartotek/",
+          "description": "Stoffkartotek",
+          "fileUrl": ""
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "name": "er_kjemikalier_lagret_forskriftsmessig?",
+      "displayName": "Er kjemikalier lagret forskriftsmessig?",
+      "section": "Kjemikalier og stoffkartotek",
+      "type": "choice",
+      "required": true,
+      "order": 23,
+      "values": [
+        "Forskriftsmessig",
+        "Delvis avvik",
+        "Alvorlige avvik"
+      ],
+      "placeholder": "Sjekk merking, ventilasjon og oppbevaringsbetingelser",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q24",
+      "name": "er_sikkerhetsdatablader_(sds)_tilgjengelig_for_alle_stoffer?",
+      "displayName": "Er sikkerhetsdatablader (SDS) tilgjengelig for alle stoffer?",
+      "section": "Kjemikalier og stoffkartotek",
+      "type": "yesno",
+      "required": true,
+      "order": 24,
+      "placeholder": "SDS skal være tilgjengelig digitalt eller fysisk på arbeidsplassen",
+      "links": [
+        {
+          "url": "https://www.arbeidstilsynet.no/risikofylt-arbeid/kjemikalier/stoffkartotek/sikkerhetsdatablad/",
+          "description": "Sikkerhetsdatablad",
+          "fileUrl": ""
+        }
+      ]
+    },
+    {
+      "id": "Q25",
+      "name": "er_verneutstyr_for_håndtering_av_kjemikalier_tilgjengelig?",
+      "displayName": "Er verneutstyr for håndtering av kjemikalier tilgjengelig?",
+      "section": "Kjemikalier og stoffkartotek",
+      "type": "choice",
+      "required": true,
+      "order": 25,
+      "values": [
+        "Alt tilgjengelig",
+        "Delvis mangler",
+        "Ikke tilgjengelig"
+      ],
+      "placeholder": "Hansker, vernebriller, åndedrettsvern ved behov",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q26",
+      "name": "kommentarer_til_kjemikaliehåndtering",
+      "displayName": "Kommentarer til kjemikaliehåndtering",
+      "section": "Kjemikalier og stoffkartotek",
+      "type": "multiline",
+      "required": false,
+      "order": 26,
+      "placeholder": "Beskriv funn knyttet til merking, lagring eller mangler",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q27",
+      "name": "er_generell_orden_og_renhold_tilfredsstillende?",
+      "displayName": "Er generell orden og renhold tilfredsstillende?",
+      "section": "Orden, renhold og fellesarealer",
+      "type": "choice",
+      "required": true,
+      "order": 27,
+      "values": [
+        "Tilfredsstillende",
+        "Delvis tilfredsstillende",
+        "Ikke tilfredsstillende"
+      ],
+      "placeholder": "Vurder kontorplasser, fellesrom, korridor og kjøkken",
+      "allowAttachment": true,
+      "replicate": true
+    },
+    {
+      "id": "Q28",
+      "name": "er_avfallshåndtering_og_kildesortering_ivaretatt?",
+      "displayName": "Er avfallshåndtering og kildesortering ivaretatt?",
+      "section": "Orden, renhold og fellesarealer",
+      "type": "choice",
+      "required": true,
+      "order": 28,
+      "values": [
+        "Godt ivaretatt",
+        "Delvis mangler",
+        "Ikke ivaretatt"
+      ],
+      "placeholder": "Sjekk at sorteringsbeholdere finnes og er merket",
+      "replicate": true
+    },
+    {
+      "id": "Q29",
+      "name": "er_sanitærfasiliteter_rene_og_utstyrt?",
+      "displayName": "Er sanitærfasiliteter rene og utstyrt?",
+      "section": "Orden, renhold og fellesarealer",
+      "type": "yesno",
+      "required": true,
+      "order": 29,
+      "placeholder": "Toalett, garderobe, dusj – sjekk såpe, papir, tilstand",
+      "replicate": true
+    },
+    {
+      "id": "Q30",
+      "name": "kommentarer_til_orden_og_renhold",
+      "displayName": "Kommentarer til orden og renhold",
+      "section": "Orden, renhold og fellesarealer",
+      "type": "multiline",
+      "required": false,
+      "order": 30,
+      "placeholder": "Beskriv problemområder og forbedringsforslag",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q31",
+      "name": "total_vurdering_av_hms-tilstand",
+      "displayName": "Total vurdering av HMS-tilstand",
+      "section": "Oppsummering og tiltak",
+      "type": "choice",
+      "required": true,
+      "order": 31,
+      "values": [
+        "Tilfredsstillende",
+        "Mindre avvik – tiltak planlegges",
+        "Alvorlige"
+      ],
+      "placeholder": "Velg: Tilfredsstillende / Mindre avvik / Alvorlige avvik",
+      "replicate": true
+    },
+    {
+      "id": "Q32",
+      "name": "beskrivelse_av_identifiserte_avvik",
+      "displayName": "Beskrivelse av identifiserte avvik",
+      "section": "Oppsummering og tiltak",
+      "type": "multiline",
+      "required": true,
+      "order": 32,
+      "placeholder": "Oppsummer alle avvik funnet i vernerunden",
+      "rows": 3,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q33",
+      "name": "prioriterte_tiltak",
+      "displayName": "Prioriterte tiltak",
+      "section": "Oppsummering og tiltak",
+      "type": "multiline",
+      "required": true,
+      "order": 33,
+      "placeholder": "List tiltak med ansvarlig person og frist",
+      "rows": 3
+    },
+    {
+      "id": "Q34",
+      "name": "frist_for_lukking_av_avvik",
+      "displayName": "Frist for lukking av avvik",
+      "section": "Oppsummering og tiltak",
+      "type": "date",
+      "required": true,
+      "order": 34,
+      "placeholder": "Sett samlet frist for oppfølging av alle avvik"
+    },
+    {
+      "id": "Q35",
+      "name": "last_opp_bilder_eller_dokumentasjon",
+      "displayName": "Last opp bilder eller dokumentasjon",
+      "section": "Oppsummering og tiltak",
+      "type": "singletext",
+      "required": false,
+      "order": 35,
+      "placeholder": "Legg ved foto av avvik, skader, mangler etc."
+    }
+  ]
+}
