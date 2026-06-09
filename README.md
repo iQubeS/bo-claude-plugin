@@ -42,12 +42,23 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 ```
 /bo:status              # Quick platform overview
+/bo:qcp                 # Design a QCP (Quality Control Plan) template → .qcp.json
+/bo:checklist           # Design a checklist/form template → .checklist.json
 /bo:bo-crm              # CRM operations guide
 /bo:bo-project          # Project management guide
 /bo:bo-hr               # HR module guide
 /bo:bo-khms             # QHSE/NCR guide
 /bo:bo-guide            # Full platform overview
 ```
+
+### Design commands
+
+Two guided consultants turn a conversation into an import-ready template:
+
+- **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `.qcp.json` (plus a process-rationale doc) ready to upload via **Import QCP** in QCPAdmin (Next).
+- **`/bo:checklist`** — a forms/data-collection consultant. It interviews you about a checklist or form, challenges weak questions and wrong field types, and produces a `.checklist.json` (plus an import-guide with the name/code/category/project-type metadata) ready to import into the **Template Manager**.
+
+Both support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists — and render a live preview of the template as you build it.
 
 Or just ask Claude naturally:
 - "Vis meg salgspipelinen"
@@ -71,9 +82,15 @@ bo-claude-plugin/
 ├── agents/
 │   └── bo-assistant.md      # BO specialist agent (45 tools)
 ├── commands/
-│   └── status.md            # /bo:status dashboard command
+│   ├── status.md            # /bo:status dashboard command
+│   ├── qcp.md               # /bo:qcp — QCP template designer
+│   └── checklist.md         # /bo:checklist — checklist template designer
+├── assets/
+│   ├── qcp/                 # QCP schema, examples, artifact & rationale templates
+│   └── checklist/           # Checklist schema, examples, artifact & import-guide templates
 ├── docs/
-│   └── brukermanual/        # Norwegian user manual (63 files)
+│   ├── brukermanual/        # Norwegian user manual (63 files)
+│   └── qa/                  # Manual QA logs for the design commands
 ├── .claude/
 │   └── rules/               # Module-specific Claude rules
 ├── CLAUDE.md                 # Plugin instructions for Claude
