@@ -4,6 +4,19 @@ All notable changes to the BO Plugin for Claude are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] — 2026-06-18
+
+### Fixed
+- `/bo:checklist` link export now sets both `url` and `fileUrl` to the same
+  canonical URL on every link. This compensates for a validation rule in the
+  importing Template Manager that requires both fields to be non-empty —
+  previously external links left `fileUrl` empty (and governing documents left
+  `url` empty), which failed import. External vs governing document is still
+  recovered from the URL pattern (the `GoverningDocumentLibrary` path), so no
+  information is lost. Updated the schema (both fields now required,
+  `minLength: 1`), the command instructions, the two calibration examples, and
+  the live-preview artifact's link badges.
+
 ## [0.3.0] — 2026-06-09
 
 ### Added

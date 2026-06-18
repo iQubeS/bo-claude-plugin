@@ -117,12 +117,13 @@
     "link": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["description"],
+      "required": ["url", "description", "fileUrl"],
       "properties": {
         "url": {
           "type": "string",
+          "minLength": 1,
           "maxLength": 2000,
-          "description": "External web URL. Empty string when this link is a governing document referenced via fileUrl."
+          "description": "The link's canonical URL — set to the SAME value as fileUrl: the web address for an external link, or the *.sharepoint.com/sites/*/GoverningDocumentLibrary/ address for a governing document. Both url and fileUrl must be non-empty; the importing system rejects links where either is blank."
         },
         "description": {
           "type": "string",
@@ -132,8 +133,9 @@
         },
         "fileUrl": {
           "type": "string",
+          "minLength": 1,
           "maxLength": 2000,
-          "description": "Governing-document reference (a *.sharepoint.com/sites/*/GoverningDocumentLibrary/ URL). Empty string for external links."
+          "description": "Mirror of url — set to the same value. External vs governing document is recovered from the URL pattern (the GoverningDocumentLibrary path), not from which field is populated. Both url and fileUrl must be non-empty."
         }
       }
     }

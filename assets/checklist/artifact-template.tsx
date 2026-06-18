@@ -239,7 +239,11 @@ function Badges({ field }: { field: Field }) {
     items.push({ label: 'Kan repeteres', tone: 'bg-purple-50 text-purple-700' });
   }
   if (field.links && field.links.length > 0) {
-    const gov = field.links.filter((l) => l.fileUrl).length;
+    // url and fileUrl are always set to the same value; external vs governing
+    // document is recovered from the URL pattern, not from which field is set.
+    const isGoverning = (l: Link) =>
+      /\.sharepoint\.com\/sites\/.*\/GoverningDocumentLibrary\//i.test(l.fileUrl || l.url || '');
+    const gov = field.links.filter(isGoverning).length;
     const ext = field.links.length - gov;
     if (ext > 0) items.push({ label: `${ext} ekstern lenke`, tone: 'bg-blue-50 text-blue-700' });
     if (gov > 0)

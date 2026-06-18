@@ -246,18 +246,22 @@ Template Manager may regenerate `id`/`name`/`order` on import, so emit them best
 
 ### Links: external vs governing document
 
-A field may carry reference links. There are two shapes inside the same object `{ url, description, fileUrl }`:
+A field may carry reference links. Each link is an object `{ url, description, fileUrl }`.
 
-- **External link** — a public web page. Put the address in `url`, leave `fileUrl` empty:
+**Always set both `url` and `fileUrl` to the SAME canonical URL.** The importing system validates that both fields are non-empty and rejects a link where either is blank — so never leave one empty; mirror the one real URL into both.
+
+- **External link** — a public web page. Use the web address in both fields:
   ```json
-  { "url": "https://www.arbeidstilsynet.no/...", "description": "Stoffkartotek", "fileUrl": "" }
+  { "url": "https://www.arbeidstilsynet.no/...", "description": "Stoffkartotek", "fileUrl": "https://www.arbeidstilsynet.no/..." }
   ```
-- **Governing document** — a link whose address matches `*.sharepoint.com/sites/*/GoverningDocumentLibrary/`. Put it in `fileUrl`, leave `url` empty:
+- **Governing document** — a link whose address matches `*.sharepoint.com/sites/*/GoverningDocumentLibrary/`. Use the SharePoint address in both fields:
   ```json
-  { "url": "", "description": "Prosedyre for internrevisjon", "fileUrl": "https://contoso.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-PRO-00012 Internrevisjon.pdf" }
+  { "url": "https://contoso.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-PRO-00012 Internrevisjon.pdf", "description": "Prosedyre for internrevisjon", "fileUrl": "https://contoso.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-PRO-00012 Internrevisjon.pdf" }
   ```
 
-When the user hands you a link that matches the GoverningDocumentLibrary pattern, classify it as a governing document AND **check with the user that the document is still current and not outdated** before including it.
+You still classify external vs governing by the URL pattern — that distinction is recoverable from the address itself (the GoverningDocumentLibrary path), and it drives one behavior: when a link matches the GoverningDocumentLibrary pattern, **check with the user that the document is still current and not outdated** before including it.
+
+> **Why both fields carry the same value:** this compensates for a validation rule in the importing system that requires both `url` and `fileUrl` to be set. It is intentional — do not "fix" it by emptying one field.
 
 ### Phase 4 ends when:
 
@@ -277,7 +281,7 @@ Validate the in-memory checklist against `@assets/checklist/checklist-schema-v1.
 - `number` fields: `min`/`max` numeric if present; `defaultValue` a string if present?
 - `multiline` fields: `rows` an integer if present?
 - All `order` values unique? `id`s unique?
-- Each link matches one shape (external `url` OR governing `fileUrl`), with a `description`?
+- Each link has BOTH `url` and `fileUrl` set to the same URL, plus a `description`? (Neither may be empty — the importing system rejects blank fields.)
 
 If any check fails, surface the specific issue and repair before continuing. Never silently fix:
 
