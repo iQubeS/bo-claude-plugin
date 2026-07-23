@@ -74,13 +74,13 @@ bo-claude-plugin/
 │   ├── plugin.json          # Plugin manifest
 │   └── marketplace.json     # Marketplace distribution config
 ├── skills/
-│   ├── bo-crm/SKILL.md      # CRM module (28 tools)
-│   ├── bo-project/SKILL.md  # Project module (13 tools)
+│   ├── bo-crm/SKILL.md      # CRM module (29 tools)
+│   ├── bo-project/SKILL.md  # Project module (15 tools)
 │   ├── bo-hr/SKILL.md       # HR module (guidance only)
 │   ├── bo-khms/SKILL.md     # QHSE module (4 tools)
 │   └── bo-guide/SKILL.md    # Platform guide
 ├── agents/
-│   └── bo-assistant.md      # BO specialist agent (45 tools)
+│   └── bo-assistant.md      # BO specialist agent (48 tools)
 ├── commands/
 │   ├── status.md            # /bo:status dashboard command
 │   ├── qcp.md               # /bo:qcp — QCP template designer
@@ -102,13 +102,13 @@ bo-claude-plugin/
 
 ## MCP Servers
 
-The plugin uses 4 BO MCP servers (45 tools) configured as remote MCPs on the Claude tenant:
+The plugin uses 4 BO MCP servers (48 tools) configured as remote MCPs on the Claude tenant:
 
 | Server | Tools | Scope |
 |--------|-------|-------|
-| Customer | 15 | Companies, contacts, QCPs, timeline |
-| Leads | 13 | Leads, MEDDIC, pipeline, QCPs, timeline |
-| Projects | 13 | Projects, departments, types, QCPs, timeline |
+| CRM | 15 | Companies, contacts, QCPs, timeline |
+| Leads | 14 | Leads, pipeline overview, QCPs, timeline |
+| Projects | 15 | Projects, departments, types, QCPs, timeline |
 | NCR | 4 | NCR cards (list, get, create, update) |
 
 ## Security

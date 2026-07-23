@@ -4,6 +4,42 @@ All notable changes to the BO Plugin for Claude are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- Re-paired all MCP tool references after the BO MCP servers were redeployed
+  with new URLs (2026-07-23). Server renames: `Business_Online_Customer` →
+  `Business_Online_CRM`, `Business_Online_Nonconformance` →
+  `Business_Online_NCR`. Tool renames across servers:
+  - CRM: `retrieve_companies` → `retrieve_all_companies`, `retrieve_contacts` →
+    `retrieve_all_contacts`, `retrieve_contact_info` → `retrieve_contact`,
+    `update_company` → `update_company_by_id`
+  - Leads: `retrieve_all_leads` → `retrieve_leads`, `retrieve_leads_dashboard` →
+    `retrieve_leads_overview`, `get_all_lead_types` → `get_lead_types`,
+    `retrieve_all_lead_qcps` → `retrieve_lead_qcps`
+  - Projects: `retrieve_all_projects` → `retrieve_projects`,
+    `retrieve_projects_dashboard` → `retrieve_projects_overview`,
+    `get_all_departments` → `get_departments`, `get_all_project_types` →
+    `get_project_types`, `retrieve_all_project_qcps` → `retrieve_project_qcps`
+  - NCR: `create_ncr_card` → `create_ncr`, `retrieve_all_ncrs` →
+    `retrieve_ncrs`, `retrieve_specific_ncr_card` → `retrieve_ncr`,
+    `update_specific_ncr_card` → `update_ncr`
+  Updated files: `agents/bo-assistant.md`, `skills/bo-crm`, `skills/bo-project`,
+  `skills/bo-khms`, `skills/bo-guide`, `commands/status.md`,
+  `commands/checklist.md`, `CLAUDE.md`, `README.md`.
+
+### Added
+- Four new company-scoped lookup tools now allowed: Leads
+  `retrieve_lead_by_company` / `retrieve_leads_by_company` and Projects
+  `retrieve_project_by_company` / `retrieve_projects_by_company`.
+  Total tool count is now 48 (was 45): CRM 15, Leads 14, Projects 15, NCR 4.
+
+### Removed
+- `collect_meddic_data` (Leads) no longer exists on the server and has no
+  replacement — lead details carry no MEDDIC structure. MEDDIC qualification
+  is now applied conversationally from `retrieve_lead` + timeline events;
+  `skills/bo-crm` documents the new approach.
+
 ## [0.3.0] — 2026-06-09
 
 ### Added

@@ -24,7 +24,7 @@ Business Online (BO / iQS Online) is a cloud-based business platform built on Mi
 │    CRM | Projects | HR | QHSE | DMS             │
 ├─────────────────────────────────────────────────┤
 │              BO API Layer                        │
-│    REST APIs + MCP Servers (45 tools)            │
+│    REST APIs + MCP Servers (48 tools)            │
 ├─────────────────────────────────────────────────┤
 │           Azure Infrastructure                   │
 │    Container Apps | Functions | Logic Apps        │
@@ -84,10 +84,10 @@ BO is designed as a **SharePoint-native** application:
 
 ## MCP Integration
 
-BO exposes 45 tools across 4 MCP servers:
-- **Customer**: 15 tools (companies, contacts, QCPs, timeline)
-- **Leads**: 13 tools (leads, MEDDIC, pipeline, QCPs, timeline)
-- **Projects**: 13 tools (projects, departments, types, QCPs, timeline)
+BO exposes 48 tools across 4 MCP servers:
+- **CRM**: 15 tools (companies, contacts, QCPs, timeline)
+- **Leads**: 14 tools (leads, pipeline overview, QCPs, timeline)
+- **Projects**: 15 tools (projects, departments, types, QCPs, timeline)
 - **NCR**: 4 tools (NCR cards CRUD)
 
 MCP servers run on Azure Container Apps (Norway East). Authentication is handled automatically via the Claude tenant configuration — no token setup required.

@@ -35,13 +35,13 @@ There is nothing to build, install, or configure locally. The connection to BO r
 
 ## Data Connections
 
-Claude connects to BO through 4 cloud services (45 tools total):
+Claude connects to BO through 4 cloud services (48 tools total):
 
 | Service | What it covers | Tools |
 |---------|---------------|-------|
-| Customer | Companies, contacts, quality checkpoints, activity log | 15 |
-| Leads | Sales leads, MEDDIC qualification, pipeline, activity log | 13 |
-| Projects | Projects, departments, types, quality checkpoints, activity log | 13 |
+| CRM | Companies, contacts, quality checkpoints, activity log | 15 |
+| Leads | Sales leads, pipeline overview, quality checkpoints, activity log | 14 |
+| Projects | Projects, departments, types, quality checkpoints, activity log | 15 |
 | NCR | Non-conformance reports — list, view, create, update | 4 |
 
 All connections are pre-configured on the Claude tenant. No API keys or tokens are needed locally.

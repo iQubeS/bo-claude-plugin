@@ -1,0 +1,265 @@
+{
+  "fields": [
+    {
+      "id": "Q1",
+      "name": "dato_minimal",
+      "displayName": "Dato (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "date",
+      "required": true,
+      "order": 1
+    },
+    {
+      "id": "Q2",
+      "name": "singletext_minimal",
+      "displayName": "Enkel tekst (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "singletext",
+      "required": false,
+      "order": 2
+    },
+    {
+      "id": "Q3",
+      "name": "multiline_minimal",
+      "displayName": "Flerlinjet tekst (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "multiline",
+      "required": false,
+      "order": 3
+    },
+    {
+      "id": "Q4",
+      "name": "choice_minimal",
+      "displayName": "Enkeltvalg (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "choice",
+      "required": true,
+      "order": 4,
+      "values": ["Ja", "Nei", "Ikke vurdert"]
+    },
+    {
+      "id": "Q5",
+      "name": "multichoice_minimal",
+      "displayName": "Flervalg (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "multichoice",
+      "required": false,
+      "order": 5,
+      "values": ["Alternativ A", "Alternativ B", "Alternativ C"]
+    },
+    {
+      "id": "Q6",
+      "name": "number_minimal",
+      "displayName": "Tall (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "number",
+      "required": false,
+      "order": 6
+    },
+    {
+      "id": "Q7",
+      "name": "yesno_minimal",
+      "displayName": "Ja/Nei (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "yesno",
+      "required": true,
+      "order": 7
+    },
+    {
+      "id": "Q8",
+      "name": "attachment_minimal",
+      "displayName": "Vedlegg (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "attachment",
+      "required": false,
+      "order": 8
+    },
+    {
+      "id": "Q9",
+      "name": "peoplepicker_minimal",
+      "displayName": "Personvelger (minimal)",
+      "section": "Felttyper – minimal",
+      "type": "peoplepicker",
+      "required": false,
+      "order": 9
+    },
+    {
+      "id": "Q10",
+      "name": "singletext_med_placeholder_og_default",
+      "displayName": "Enkel tekst med placeholder og default",
+      "section": "Valgfrie egenskaper",
+      "type": "singletext",
+      "required": false,
+      "order": 10,
+      "placeholder": "Skriv noe her",
+      "defaultValue": "Forhåndsutfylt verdi"
+    },
+    {
+      "id": "Q11",
+      "name": "multiline_med_rows_og_allowattachment",
+      "displayName": "Flerlinjet med rows og vedlegg tillatt",
+      "section": "Valgfrie egenskaper",
+      "type": "multiline",
+      "required": false,
+      "order": 11,
+      "placeholder": "Beskriv funn",
+      "rows": 5,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q12",
+      "name": "number_kun_min",
+      "displayName": "Tall med kun min",
+      "section": "Valgfrie egenskaper",
+      "type": "number",
+      "required": false,
+      "order": 12,
+      "min": 0
+    },
+    {
+      "id": "Q13",
+      "name": "number_kun_max",
+      "displayName": "Tall med kun max",
+      "section": "Valgfrie egenskaper",
+      "type": "number",
+      "required": false,
+      "order": 13,
+      "max": 100
+    },
+    {
+      "id": "Q14",
+      "name": "number_min_max_og_default",
+      "displayName": "Tall med min, max og default",
+      "section": "Valgfrie egenskaper",
+      "type": "number",
+      "required": false,
+      "order": 14,
+      "min": -10,
+      "max": 50,
+      "defaultValue": "0"
+    },
+    {
+      "id": "Q15",
+      "name": "choice_med_replicate_allowattachment_default",
+      "displayName": "Enkeltvalg med replicate, vedlegg og default",
+      "section": "Valgfrie egenskaper",
+      "type": "choice",
+      "required": true,
+      "order": 15,
+      "values": ["Tilfredsstillende", "Delvis", "Ikke tilfredsstillende", "Ikke vurdert"],
+      "placeholder": "Vurder tilstanden",
+      "defaultValue": "Ikke vurdert",
+      "replicate": true,
+      "allowAttachment": true
+    },
+    {
+      "id": "Q16",
+      "name": "multichoice_med_replicate",
+      "displayName": "Flervalg med replicate",
+      "section": "Valgfrie egenskaper",
+      "type": "multichoice",
+      "required": false,
+      "order": 16,
+      "values": ["Hjelm", "Vernebriller", "Hørselvern", "Vernesko", "Hansker"],
+      "replicate": true
+    },
+    {
+      "id": "Q17",
+      "name": "date_med_placeholder_og_default",
+      "displayName": "Dato med placeholder og default",
+      "section": "Valgfrie egenskaper",
+      "type": "date",
+      "required": false,
+      "order": 17,
+      "placeholder": "Velg dato",
+      "defaultValue": "2026-01-01"
+    },
+    {
+      "id": "Q18",
+      "name": "yesno_med_allowattachment_og_default",
+      "displayName": "Ja/Nei med vedlegg og default",
+      "section": "Valgfrie egenskaper",
+      "type": "yesno",
+      "required": false,
+      "order": 18,
+      "defaultValue": "Ja",
+      "allowAttachment": true
+    },
+    {
+      "id": "Q19",
+      "name": "attachment_med_placeholder_og_replicate",
+      "displayName": "Vedlegg med placeholder og replicate",
+      "section": "Valgfrie egenskaper",
+      "type": "attachment",
+      "required": false,
+      "order": 19,
+      "placeholder": "Last opp foto av avvik",
+      "replicate": true
+    },
+    {
+      "id": "Q20",
+      "name": "peoplepicker_med_placeholder_og_replicate",
+      "displayName": "Personvelger med placeholder og replicate",
+      "section": "Valgfrie egenskaper",
+      "type": "peoplepicker",
+      "required": false,
+      "order": 20,
+      "placeholder": "Velg ansvarlig(e)",
+      "replicate": true
+    },
+    {
+      "id": "Q21",
+      "name": "singletext_med_ekstern_lenke",
+      "displayName": "Felt med ekstern lenke",
+      "section": "Lenker",
+      "type": "singletext",
+      "required": false,
+      "order": 21,
+      "links": [
+        {
+          "url": "https://www.arbeidstilsynet.no/",
+          "description": "Arbeidstilsynet",
+          "fileUrl": ""
+        }
+      ]
+    },
+    {
+      "id": "Q22",
+      "name": "singletext_med_styrende_dokument",
+      "displayName": "Felt med styrende dokument",
+      "section": "Lenker",
+      "type": "singletext",
+      "required": false,
+      "order": 22,
+      "links": [
+        {
+          "url": "",
+          "description": "Prosedyre for vernerunde",
+          "fileUrl": "https://contoso.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-PRO-00001 Vernerunde.pdf"
+        }
+      ]
+    },
+    {
+      "id": "Q23",
+      "name": "choice_med_flere_lenker",
+      "displayName": "Enkeltvalg med flere lenker (ekstern + styrende)",
+      "section": "Lenker",
+      "type": "choice",
+      "required": false,
+      "order": 23,
+      "values": ["OK", "Avvik"],
+      "links": [
+        {
+          "url": "https://lovdata.no/",
+          "description": "Lovdata",
+          "fileUrl": ""
+        },
+        {
+          "url": "",
+          "description": "Internkontrollhåndbok",
+          "fileUrl": "https://contoso.sharepoint.com/sites/QHSE/GoverningDocumentLibrary/QSE-MAN-00001 Internkontroll.pdf"
+        }
+      ]
+    }
+  ]
+}

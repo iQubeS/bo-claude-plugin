@@ -5,18 +5,20 @@ allowed-tools:
   - Read
   - Grep
   - Glob
-  # Projects server (13 tools)
+  # Projects server (15 tools)
   - mcp__claude_ai_Business_Online_Projects__create_project
   - mcp__claude_ai_Business_Online_Projects__create_project_timeline_event
-  - mcp__claude_ai_Business_Online_Projects__get_all_departments
-  - mcp__claude_ai_Business_Online_Projects__get_all_project_types
-  - mcp__claude_ai_Business_Online_Projects__retrieve_all_project_qcps
-  - mcp__claude_ai_Business_Online_Projects__retrieve_all_projects
+  - mcp__claude_ai_Business_Online_Projects__get_departments
+  - mcp__claude_ai_Business_Online_Projects__get_project_types
   - mcp__claude_ai_Business_Online_Projects__retrieve_project
+  - mcp__claude_ai_Business_Online_Projects__retrieve_project_by_company
   - mcp__claude_ai_Business_Online_Projects__retrieve_project_qcp
+  - mcp__claude_ai_Business_Online_Projects__retrieve_project_qcps
   - mcp__claude_ai_Business_Online_Projects__retrieve_project_timeline_event
   - mcp__claude_ai_Business_Online_Projects__retrieve_project_timeline_events
-  - mcp__claude_ai_Business_Online_Projects__retrieve_projects_dashboard
+  - mcp__claude_ai_Business_Online_Projects__retrieve_projects
+  - mcp__claude_ai_Business_Online_Projects__retrieve_projects_by_company
+  - mcp__claude_ai_Business_Online_Projects__retrieve_projects_overview
   - mcp__claude_ai_Business_Online_Projects__update_project
   - mcp__claude_ai_Business_Online_Projects__update_project_timeline_event
 ---
@@ -30,15 +32,16 @@ If the user provided an argument (`$ARGUMENTS`), treat it as a search query: loo
 ## Capabilities
 
 ### Projects
-- **List/search projects**: `retrieve_all_projects` (search by name, filter by status)
+- **List/search projects**: `retrieve_projects` (search by name, filter by status)
+- **Projects for a company**: `retrieve_projects_by_company` / `retrieve_project_by_company`
 - **Get project details**: `retrieve_project` (full project with budget, status, team)
 - **Create project**: `create_project` (name, projectTypeId, departmentId, dates, budget)
 - **Update project**: `update_project` (status changes, budget updates, reassignment)
-- **Dashboard**: `retrieve_projects_dashboard` (overview: active, on-hold, completed)
+- **Dashboard**: `retrieve_projects_overview` (filter by activity, department, dates, progress)
 
 ### Organization
-- **Departments**: `get_all_departments` (organizational units)
-- **Project types**: `get_all_project_types` (categories with department mapping)
+- **Departments**: `get_departments` (organizational units)
+- **Project types**: `get_project_types` (categories with department mapping)
 
 ### Timeline & QCPs
 - **Timeline events**: CRUD operations for project milestones, updates, meetings
@@ -47,13 +50,13 @@ If the user provided an argument (`$ARGUMENTS`), treat it as a search query: loo
 ## Patterns
 
 ### Project Status Report
-1. `retrieve_projects_dashboard` for high-level overview
+1. `retrieve_projects_overview` for high-level overview
 2. Filter active projects, check for overdue milestones
 3. Drill into specific projects with `retrieve_project`
 4. Review recent timeline events for progress updates
 
 ### New Project Setup
-1. `get_all_departments` + `get_all_project_types` to find correct categorization
+1. `get_departments` + `get_project_types` to find correct categorization
 2. `create_project` with all required fields
 3. Create initial timeline event documenting project kickoff
 
@@ -67,8 +70,8 @@ If the user provided an argument (`$ARGUMENTS`), treat it as a search query: loo
 
 If a Projects tool call fails:
 - **Timeout or connection error**: Tell the user the Projects service is unavailable. Suggest waiting a moment and retrying.
-- **Not found (404)**: The project ID may be wrong — ask the user to verify it, or search by name with `retrieve_all_projects`.
-- **Validation error**: Show the error message. Common issues: missing departmentId or projectTypeId when creating projects — use `get_all_departments` and `get_all_project_types` to find valid values.
+- **Not found (404)**: The project ID may be wrong — ask the user to verify it, or search by name with `retrieve_projects`.
+- **Validation error**: Show the error message. Common issues: missing departmentId or projectTypeId when creating projects — use `get_departments` and `get_project_types` to find valid values.
 
 ## Reference Documentation
 For detailed user guides:
