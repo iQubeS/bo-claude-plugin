@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ## [Unreleased]
 
 ### Changed
+- `/bo:status` now computes exact dashboard numbers: the new `*_overview`
+  endpoints return paginated rows (not aggregates), so the command pages
+  leads/NCRs with `limit=100` and sums client-side, and reads per-activity
+  project counts from `totalCount` using `limit=1` filtered calls. NCR
+  open-count is computed client-side (`status != "Closed"`) since
+  `retrieve_ncrs` has no server-side status filter.
 - Re-paired all MCP tool references after the BO MCP servers were redeployed
   with new URLs (2026-07-23). Server renames: `Business_Online_Customer` →
   `Business_Online_CRM`, `Business_Online_Nonconformance` →
