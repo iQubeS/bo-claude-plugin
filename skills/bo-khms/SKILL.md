@@ -6,10 +6,10 @@ allowed-tools:
   - Grep
   - Glob
   # NCR server (4 tools)
-  - mcp__claude_ai_Business_Online_Nonconformance__create_ncr_card
-  - mcp__claude_ai_Business_Online_Nonconformance__retrieve_all_ncrs
-  - mcp__claude_ai_Business_Online_Nonconformance__retrieve_specific_ncr_card
-  - mcp__claude_ai_Business_Online_Nonconformance__update_specific_ncr_card
+  - mcp__claude_ai_Business_Online_NCR__create_ncr
+  - mcp__claude_ai_Business_Online_NCR__retrieve_ncr
+  - mcp__claude_ai_Business_Online_NCR__retrieve_ncrs
+  - mcp__claude_ai_Business_Online_NCR__update_ncr
 ---
 
 # Business Online QHSE (KHMS)
@@ -21,10 +21,10 @@ If the user provided an argument (`$ARGUMENTS`), treat it as an NCR ID or search
 ## Capabilities via MCP
 
 ### NCR Cards
-- **List NCRs**: `retrieve_all_ncrs` — Filter by status, category, date range, responsible person. Supports pagination.
-- **Get NCR details**: `retrieve_specific_ncr_card` — Full NCR with description, root cause, corrective actions, attachments
-- **Create NCR**: `create_ncr_card` — Report new non-conformance with category, severity, description, responsible person
-- **Update NCR**: `update_specific_ncr_card` — Update status, assign responsible, add root cause, corrective actions, close NCR
+- **List NCRs**: `retrieve_ncrs` — Filter by type (typeRegistration), project, company, lead, department, or search term. Supports pagination.
+- **Get NCR details**: `retrieve_ncr` — Full NCR with description, root cause, corrective actions, attachments
+- **Create NCR**: `create_ncr` — Report new non-conformance; requires title + typeRegistration (Customer Feedback, Non-Conformance, Observation, Improvements, Supplier Deviation)
+- **Update NCR**: `update_ncr` — Update status, assign responsible, add root cause, corrective actions, close NCR
 
 ## NCR Workflow
 1. **Reported**: Initial registration with description and category
@@ -44,20 +44,20 @@ If the user provided an argument (`$ARGUMENTS`), treat it as an NCR ID or search
 ## Patterns
 
 ### NCR Dashboard Review
-1. `retrieve_all_ncrs` with status filter for open NCRs
+1. `retrieve_ncrs` with type filter (or search) for open NCRs
 2. Group by category and severity for trend analysis
 3. Identify overdue NCRs (investigation or corrective action past due)
 4. Drill into specific NCRs for detail
 
 ### Incident Reporting
-1. `create_ncr_card` with incident details
+1. `create_ncr` with incident details
 2. Assign responsible person for investigation
 3. Set severity and category
 4. Follow up with timeline events
 
 ### NCR Lifecycle Management
-1. `retrieve_specific_ncr_card` to review current state
-2. `update_specific_ncr_card` to progress through workflow stages
+1. `retrieve_ncr` to review current state
+2. `update_ncr` to progress through workflow stages
 3. Update root cause, corrective actions, and responsible person as investigation progresses
 4. Close NCR when corrective actions are verified
 
@@ -77,8 +77,8 @@ If the user provided an argument (`$ARGUMENTS`), treat it as an NCR ID or search
 
 If an NCR tool call fails:
 - **Timeout or connection error**: Tell the user the NCR service is unavailable. Suggest waiting a moment and retrying.
-- **Not found (404)**: The NCR ID may be wrong — ask the user to verify it, or list open NCRs with `retrieve_all_ncrs`.
-- **Validation error**: Show the error message. Common issues: missing required fields (category, severity, description) when creating NCRs.
+- **Not found (404)**: The NCR ID may be wrong — ask the user to verify it, or list open NCRs with `retrieve_ncrs`.
+- **Validation error**: Show the error message. Common issues: missing required fields (title, typeRegistration) when creating NCRs.
 - NCR is the smallest MCP server (4 tools). If it's down, offer to help with CRM or Projects in the meantime.
 
 ## Reference Documentation

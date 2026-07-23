@@ -1,6 +1,6 @@
 ---
 description: Design a reusable checklist/form template through guided consultation. Produces a .checklist.json ready for import into Business Online Template Manager, plus an import-guide.md companion with the name/code/category/project-type metadata.
-allowed-tools: ["mcp__claude_ai_Business_Online_Projects__get_all_project_types"]
+allowed-tools: ["mcp__claude_ai_Business_Online_Projects__get_project_types"]
 ---
 
 # /bo:checklist — Checklist & Form Design Consultant
@@ -315,7 +315,7 @@ Help the user settle the four Template Manager fields:
 1. **Navn** — propose a clear name from the domain (e.g. "Vernerunde – kontor").
 2. **Kode** — propose a code following any pattern you've seen them use, else suggest a simple scheme (e.g. `CL-VR-001`). Tell them it's a suggestion.
 3. **Kategori** — the category list is tenant-specific, so you can't know it. Suggest a sensible category name and tell the user to pick the matching one from their own list.
-4. **Gjeldende prosjekttyper** — call `get_all_project_types` (Projects MCP) to list the real project types in their tenant, then ask which apply. If the tool is unavailable, ask the user to name the project types manually and note that they weren't verified.
+4. **Gjeldende prosjekttyper** — call `get_project_types` (Projects MCP) to list the real project types in their tenant, then ask which apply. If the tool is unavailable, ask the user to name the project types manually and note that they weren't verified.
 
 ### Step 5: Final artifact review
 
