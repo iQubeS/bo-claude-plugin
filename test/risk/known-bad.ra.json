@@ -1,0 +1,88 @@
+{
+  "$schema": "../../assets/risk/ra-template-import.schema-v1.json",
+  "version": 1,
+  "template": {
+    "name": "Testmal – kjente feil (RA)",
+    "description": "Testfikstur som med vilje utløser hver kontroll i scripts/check-ra-vocabulary.mjs. Filen er STRUKTURELT GYLDIG — ajv skal godkjenne den — men semantisk ødelagt: importen ville gått gjennom og etterlatt tomme kolonner og forsvunne scorer. Det er nettopp det pre-flight-sjekken finnes for å fange. Forventet: exit 1. Se test/risk/README.md for fasit."
+  },
+  "activities": [
+    {
+      "name": "Feil – vokabular som ikke resolver",
+      "description": "Norsk farekilde og norsk eksponeringsmål som manifestet ikke kjenner. Farekilder har ingen nameNb på referansetenanten, så norske ord treffer aldri; eksponeringsmål har det, men «Ansatte» er ikke ordet som er registrert.",
+      "effectCategories": ["Health"],
+      "risks": [
+        {
+          "event": "Gjenstand faller ned fra stillas over gangvei",
+          "cause": "Sparkelist mangler i to felt.",
+          "consequence": "Hodeskade på forbipasserende.",
+          "riskSource": "Fallende gjenstander",
+          "exposureTarget": "Ansatte",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+          ]
+        },
+        {
+          "event": "Verktøy mistet fra stillasplattform under demontering",
+          "cause": "Verktøy ikke sikret med line.",
+          "consequence": "Treffskade på personell under stillaset.",
+          "riskSource": "Fallende gjenstander",
+          "exposureTarget": "Personnel",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Dangerous or hazardous", "probability": "Probable" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Feil – nivåer som ikke finnes på aksen",
+      "description": "«Severe» er nivå 5 på Finance og Reputation, men finnes ikke på Health-stigen i det hele tatt. Ordinal 6 finnes ikke på en 5X5-matrise. Begge skal avvises, aldri klippes til nærmeste gyldige nivå.",
+      "effectCategories": ["Health", "Finance"],
+      "risks": [
+        {
+          "event": "Brann i kjemikalielager utløst av varmt arbeid",
+          "cause": "Sveising utført to meter fra åpne spann med løsemiddel.",
+          "consequence": "Brann med personskade og totaltap av lager.",
+          "riskSource": "Electrical",
+          "exposureTarget": "Personnel",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Severe", "probability": "Low probability" },
+            { "effectCategory": "Finance", "consequence": 6, "probability": "Probable" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Feil – ukjent kategori og kategori valgt via standard",
+      "description": "«HMS» er ikke en kategori manifestet kjenner. «ISO 31000» resolver, men både Finance og Reputation svarer til den standarden, så oppslaget avgjøres av rekkefølgen i manifestet og ikke av hva forfatteren mente.",
+      "effectCategories": ["HMS", "ISO 31000"],
+      "risks": [
+        {
+          "event": "Feilfakturering oppdaget av kunde før vi fanget den selv",
+          "cause": "Manuell overføring av timer mellom to systemer uten kontroll.",
+          "consequence": "Kreditnota og en samtale om rutinene våre.",
+          "riskSource": "Documentation and handover",
+          "exposureTarget": "Tjenesteleveranse",
+          "inherentScores": [
+            { "effectCategory": "ISO 31000", "consequence": "Moderate", "probability": "Probable" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Feil – aktivitet uten kategorier, og score utenfor listen",
+      "description": "Aktiviteten lister ingen effectCategories, så risikoene er ikke scorbare i verktøyet. Scoren peker dessuten på Environment, som aktiviteten ikke vurderes mot — importøren skriver den likevel, men ingen kolonne viser den.",
+      "risks": [
+        {
+          "event": "Utslipp av kjølevæske ved slangebrudd",
+          "cause": "Slange forbi anbefalt levetid, ikke omfattet av noe intervall.",
+          "consequence": "Kjølevæske til sluk.",
+          "riskSource": "Stored and residual energy",
+          "exposureTarget": "Miljø",
+          "inherentScores": [
+            { "effectCategory": "Environment", "consequence": "Critical", "probability": "Low probability" }
+          ]
+        }
+      ]
+    }
+  ]
+}

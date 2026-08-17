@@ -6,7 +6,42 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+### Added
+- `/bo:risk` slash command — guided risk-assessment consultation that produces a
+  `.ra.json` template (ra-template-import v1) ready for import into the Business Online
+  QHSE risk-assessment template manager, plus a `-rationale.md` companion recording the
+  scale calibration, the vocabulary mapping, and everything the source could not carry.
+  Two modes: migration (read an existing Excel register — the common case) and greenfield
+  (consultative hazard identification). Needs **no MCP tools**: the format carries its own
+  name and description, and the tenant vocabulary arrives as a file, so the command works
+  when the BO servers do not.
+- `assets/risk/` — the format schema vendored byte-identical from
+  `iQubeS/bo-ra@3f1140ab` (`docs/ra-template-import.schema.json`, blob `d98bdba6`), a
+  hand-authored schema for the vocabulary manifest (no upstream equivalent exists), the
+  two upstream calibration examples, the React+Tailwind live-preview artifact template,
+  the rationale document template, and `column-lexicon.md`.
+- `scripts/check-ra-vocabulary.mjs` — pre-flight check answering "will this import without
+  hand reconciliation?". Reimplements `normalise` / `similarity` / `resolveExact` /
+  `suggestMatch` / `resolveLevel` from `bo-ra:src/services/templateJson.ts` so unresolved
+  vocabulary and out-of-range levels surface before the file leaves the session, rather
+  than on the importer's reconciliation screen. Asserts the same property bo-ra's own
+  `templateJsonExamples.test.ts` asserts of its published example: zero reconciliation.
+- `test/risk/` — `all-features.ra.json` (every schema branch, expected exit 0) and
+  `known-bad.ra.json` (structurally valid, semantically broken, expected exit 1), plus a
+  README documenting the expected output of both checks.
+- `docs/qa/2026-08-17-bo-risk-command-qa.md` — four manual QA scenarios. Scenario 3
+  (no manifest) is a hard gate on merging.
+- Four new company-scoped lookup tools now allowed: Leads
+  `retrieve_lead_by_company` / `retrieve_leads_by_company` and Projects
+  `retrieve_project_by_company` / `retrieve_projects_by_company`.
+  Total tool count is now 48 (was 45): CRM 15, Leads 14, Projects 15, NCR 4.
+
 ### Changed
+- `scripts/check-schema-sync.sh` now covers **both** vendored schemas (qcp and ra) via a
+  table rather than hardcoded paths, and compares **git blob SHAs** instead of diffing
+  decoded text. The old approach piped upstream content through `echo`, which appended a
+  trailing newline the source file may not have — a latent false positive.
+
 - `/bo:status` now computes exact dashboard numbers: the new `*_overview`
   endpoints return paginated rows (not aggregates), so the command pages
   leads/NCRs with `limit=100` and sums client-side, and reads per-activity
@@ -34,17 +69,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   `skills/bo-khms`, `skills/bo-guide`, `commands/status.md`,
   `commands/checklist.md`, `CLAUDE.md`, `README.md`.
 
-### Added
-- Four new company-scoped lookup tools now allowed: Leads
-  `retrieve_lead_by_company` / `retrieve_leads_by_company` and Projects
-  `retrieve_project_by_company` / `retrieve_projects_by_company`.
-  Total tool count is now 48 (was 45): CRM 15, Leads 14, Projects 15, NCR 4.
-
 ### Removed
 - `collect_meddic_data` (Leads) no longer exists on the server and has no
   replacement — lead details carry no MEDDIC structure. MEDDIC qualification
   is now applied conversationally from `retrieve_lead` + timeline events;
   `skills/bo-crm` documents the new approach.
+
+### Notes
+- **No source workbook ships with the plugin.** Customer risk registers are not ours to
+  redistribute, so the spreadsheet knowledge lives in `assets/risk/column-lexicon.md` as a
+  written reference — sheet classification, Norwegian header variants, the drop list with
+  reasons, source-scale shapes, and a Norwegian-to-concept translation table. Migration
+  mode is exercised during manual QA against a register the tester already holds.
+- **The RA output file is deliberately bilingual.** Vocabulary must match the manifest, so
+  `riskSource` and `effectCategory` are English; prose belongs to the company, so `event`,
+  `cause`, `consequence` and `minimumPpe` stay Norwegian. §2 of the rationale template
+  exists so nobody "fixes" this and breaks resolution.
+- **Barriers and residual scores are out of scope by design**, not by omission: a residual
+  needs a recorded barrier to justify it, and barriers are what the importing company
+  decides rather than something a template should carry. Source `Tiltak` text is rescued
+  into rationale §9 for re-entry in the tool rather than discarded.
+- **The acceptance limit is deliberately never read**, even though a customer's workbook
+  almost always displays it as a coloured matrix. An author who can see where the line
+  falls scores the screen instead of the hazard. Neither the command nor the live preview
+  uses red/amber/green, and neither computes S×K.
+- `bo-ra` carries no tags or releases, so the RA schema is pinned to a commit. Swap for a
+  tag when one exists — `scripts/check-schema-sync.sh` has the pin in one place.
+- Three findings from reading the upstream resolver shaped the command: level labels must
+  be copied **verbatim including typos** (`"Not Dangerousor hazardous"` on Environment);
+  an effect category must be written by **name, never by standard** (Finance and
+  Reputation both declare ISO 31000, and array order silently decides); and the importer's
+  suggester is **blind to translation** — `Klemfare` scores 0.13 against `Crushing and
+  trapping`, below the 0.34 threshold, so a Norwegian register yields a list of unresolved
+  words with no suggestions attached.
 
 ## [0.3.0] — 2026-06-09
 

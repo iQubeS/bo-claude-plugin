@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.business-online.no/risk/ra-vocabulary-manifest-v1.json",
+  "title": "RA vocabulary manifest v1",
+  "description": "The words and scales a destination tenant actually uses, exported from the QHSE template manager with 'Copy vocabulary'. This file is INPUT to /bo:risk, never output: it is the dictionary an RA template is authored against, so that every risk source, exposure target, effect category and level label in the authored file resolves without hand reconciliation at import. Validating it catches the two silent failures worth catching — a truncated or half-pasted export, and a file that is not a manifest at all.",
+  "$comment": "AUTHORED HERE, NOT UPSTREAM. bo-ra publishes ra-template-import.schema.json for the authored template but no schema for the manifest, so this one is derived from the VocabularyManifest / ManifestCategory / ManifestAxisLevel / ManifestEntry interfaces in bo-ra@3f1140ab:src/services/templateJson.ts, plus the invariants asserted in bo-ra@3f1140ab:tests/templateJsonExamples.test.ts. It is deliberately strict (additionalProperties: false throughout) so a wrong file fails loudly rather than validating hollowly. If bo-ra ever adds a manifest field, this schema must be bumped by hand — scripts/check-schema-sync.sh does not cover it, because there is no upstream file to compare against.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "effectCategories", "riskSources", "exposureTargets"],
+  "properties": {
+    "version": {
+      "const": 1,
+      "description": "Manifest format version. Shares its number with the template import format (TEMPLATE_JSON_VERSION)."
+    },
+    "effectCategories": {
+      "type": "array",
+      "minItems": 1,
+      "description": "What a risk is scored against. Each carries the standard it answers to, the grid size, and both axes. The ladders differ per category — that difference is the entire reason this file exists.",
+      "items": { "$ref": "#/definitions/category" }
+    },
+    "riskSources": {
+      "type": "array",
+      "description": "What gives rise to the unwanted event. Only active entries are exported: offering an author a word the pickers will not show invites a value that resolves once and can never be chosen again.",
+      "items": { "$ref": "#/definitions/entry" }
+    },
+    "exposureTargets": {
+      "type": "array",
+      "description": "What is harmed.",
+      "items": { "$ref": "#/definitions/entry" }
+    }
+  },
+  "definitions": {
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "standard", "matrixType", "consequenceLevels", "probabilityLevels"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The category name, e.g. 'Health'. This is what an authored file should write — see the note on 'standard'."
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the category is assessed under, e.g. 'ISO 45001'. The importer accepts this as an alias for the name, but an authored file should NOT use it: two categories may share a standard (Finance and Reputation both declare ISO 31000 on the reference tenant) and resolution takes the first match, so the alias is ambiguous."
+        },
+        "matrixType": {
+          "type": "string",
+          "pattern": "^[0-9]+[Xx][0-9]+$",
+          "description": "Grid dimensions, e.g. '5X5', so an author does not assume 5x5 on a tenant that is not. A source scale of a different size is a professional judgement to map, never an arithmetic conversion."
+        },
+        "consequenceLevels": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The severity ladder for THIS category. Copy labels from here verbatim: matching forgives case and runs of whitespace, and nothing else.",
+          "items": { "$ref": "#/definitions/axisLevel" }
+        },
+        "probabilityLevels": {
+          "type": "array",
+          "minItems": 1,
+          "description": "The likelihood ladder for THIS category. Also per-category: on the reference tenant Opportunity runs 'Very low'..'Very high' while every other category runs 'Very low probability'..'Very high probability'.",
+          "items": { "$ref": "#/definitions/axisLevel" }
+        }
+      }
+    },
+    "axisLevel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "label", "descriptor"],
+      "properties": {
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Position on the axis. A level the destination axis does not have is refused at import, never clamped."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The rung's name, as the tool shows it. Quote this back in an authored file rather than a number: a label is a statement about meaning, a number is a statement about position."
+        },
+        "descriptor": {
+          "type": "string",
+          "description": "The explanatory text an assessor reads, e.g. '< 15.000 NOK'. May be empty — the Opportunity category on the reference tenant supplies none. This is the field to match a customer's own scale against when calibrating."
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The stable key, e.g. 'falling-or-shifting-load'. Resolves first, before either name."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The English name."
+        },
+        "nameNb": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The Norwegian name, where the company has supplied one. Optional and frequently absent — on the reference tenant every exposure target has one and no risk source does, so a Norwegian risk-source term will not resolve and must be written as the English name or the key."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "../../assets/risk/ra-template-import.schema-v1.json",
+  "version": 1,
+  "template": {
+    "name": "Testmal – full formatdekning (RA)",
+    "description": "Testfikstur, ikke en reell risikovurdering. Hver aktivitet dekker én del av ra-template-import-formatet: alle fem effektkategorier med etikett, ordinaler og nøkkelbaserte oppslag, minimale og maksimale risikoer, og en aktivitet uten risikoer. Innholdet er konstruert for dekning, ikke for faglig veiledning — bruk assets/risk/examples/ra-template.example.json som forbilde for reell forfatting."
+  },
+  "activities": [
+    {
+      "name": "Dekning – alle fem kategorier med etikett",
+      "description": "Én risiko per effektkategori, scoret med etikett fra kategoriens egen stige. Miljø-risikoen bruker manifestets skrivefeil «Not Dangerousor hazardous» med vilje: etiketter kopieres ordrett, ellers resolver de ikke.",
+      "effectCategories": ["Health", "Environment", "Finance", "Reputation", "Opportunity"],
+      "risks": [
+        {
+          "event": "Kutt i hånd ved arbeid med vinkelkutter",
+          "cause": "Beskyttelsesdeksel demontert for å komme til i et trangt hjørne.",
+          "consequence": "Dyp kuttskade i hånd eller underarm på operatøren.",
+          "riskSource": "Crushing and trapping",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Vernebriller, kuttbestandige hansker, ansiktsskjerm",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+          ]
+        },
+        {
+          "event": "Søl av avfettingsmiddel på verkstedgulv med sluk til overvann",
+          "cause": "Kanne satt ned uten oppsamlingskar under omfylling.",
+          "consequence": "Kjemikalie til overvannsnettet.",
+          "riskSource": "Stored and residual energy",
+          "exposureTarget": "Environment",
+          "minimumPpe": "Kjemikaliehansker, vernebriller",
+          "inherentScores": [
+            {
+              "effectCategory": "Environment",
+              "consequence": "Not Dangerousor hazardous",
+              "probability": "Low probability"
+            }
+          ]
+        },
+        {
+          "event": "Maskinhavari fordi feil smøremiddel er etterfylt",
+          "cause": "To kanner med tilnærmet like etiketter står ved siden av hverandre.",
+          "consequence": "Havari på hovedlager, uplanlagt stans og reservedelskjøp.",
+          "riskSource": "Documentation and handover",
+          "exposureTarget": "Equipment",
+          "inherentScores": [
+            { "effectCategory": "Finance", "consequence": "Significant", "probability": "Low probability" }
+          ]
+        },
+        {
+          "event": "Leveranse sendt ut uten signert sluttkontroll",
+          "cause": "Kontrollskjema utsatt til etter utsendelse under tidspress.",
+          "consequence": "Kunden mottar udokumentert leveranse og reklamerer.",
+          "riskSource": "Documentation and handover",
+          "exposureTarget": "Tjenesteleveranse",
+          "inherentScores": [
+            { "effectCategory": "Reputation", "consequence": "Moderate", "probability": "High probability" }
+          ]
+        },
+        {
+          "event": "Ledig kapasitet på maskinen kan selges som legearbeid",
+          "cause": "Planlagt serie avlyst, riggingen står allerede klar.",
+          "consequence": "Dekningsbidrag på timer som ellers ville stått ubrukt.",
+          "exposureTarget": "Tjenesteleveranse",
+          "inherentScores": [
+            { "effectCategory": "Opportunity", "consequence": "Exceptional", "probability": "Medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dekning – ordinaler og nøkkelbaserte oppslag",
+      "description": "Scorer angitt som tall i stedet for etikett, og vokabular slått opp via nøkkel («electrical», «personnel») og via norsk navn («Miljø»). Alt skal resolve; ordinalene skal gi en rådgivende advarsel, ikke en feil.",
+      "effectCategories": ["Health", "Environment"],
+      "risks": [
+        {
+          "event": "Berøring av spenningssatt del i tavle under feilsøking",
+          "cause": "Måling utført med spenning på fordi anlegget ikke kunne stanses.",
+          "consequence": "Strømgjennomgang med hjertepåvirkning.",
+          "riskSource": "electrical",
+          "exposureTarget": "personnel",
+          "minimumPpe": "Isolerende hansker, lysbuevernet tøy, vernebriller",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": 5, "probability": 2 }
+          ]
+        },
+        {
+          "event": "Overfylling av tank under mottak av spillolje",
+          "cause": "Nivåvarsler ute av drift, fylling overvåket manuelt.",
+          "consequence": "Spillolje til grunnen utenfor oppsamlingssonen.",
+          "riskSource": "stored-and-residual-energy",
+          "exposureTarget": "Miljø",
+          "inherentScores": [
+            { "effectCategory": "Environment", "consequence": "3", "probability": 3 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dekning – minimal og maksimal risiko",
+      "description": "Første risiko har bare «event», som er det eneste påkrevde feltet. Andre risiko har alle valgfrie felt satt, og scores mot to kategorier samtidig.",
+      "effectCategories": ["Health", "Finance"],
+      "risks": [
+        {
+          "event": "Snubling i kabel lagt over gangvei"
+        },
+        {
+          "event": "Fall fra arbeidsplattform ved skifte av lysarmatur",
+          "cause": "Rekkverk fjernet for å komme til, ikke satt tilbake før neste punkt.",
+          "consequence": "Fallskade mot betonggulv fra om lag tre meter.",
+          "riskSource": "falling-or-shifting-load",
+          "exposureTarget": "Personell",
+          "minimumPpe": "Hjelm med hakestropp, fallsikring, vernesko",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Very critical", "probability": "Low probability" },
+            { "effectCategory": "Finance", "consequence": "Minor", "probability": "Low probability" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dekning – aktivitet uten risikoer",
+      "description": "En aktivitet uten «risks» er gyldig i formatet. Den importeres som en tom aktivitet klar til å fylles i verktøyet, og kategoriene er satt så den er scorbar når noen legger inn en risiko.",
+      "effectCategories": ["Health"]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "../ra-template-import.schema.json",
+  "version": 1,
+  "template": {
+    "name": "Mechanical installation and commissioning at customer site",
+    "description": "Delivery, installation, energisation and handover of a skid-mounted unit on a customer site. Covers work from arrival of the transport to signed handover. Does not cover civil works, permanent electrical supply beyond the local isolator, or operator training."
+  },
+  "activities": [
+    {
+      "name": "Transport and offloading",
+      "description": "Receiving the unit on site and taking it off the vehicle with a mobile crane or forklift.",
+      "effectCategories": ["Health", "Finance"],
+      "risks": [
+        {
+          "event": "Load shifts or falls while being lifted from the trailer",
+          "cause": "Lashings released before the crane takes the weight, or lifting points used that were only rated for transport restraint.",
+          "consequence": "Crush injury to personnel working alongside the trailer, and damage to the unit.",
+          "riskSource": "Falling or shifting load",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Hard hat, hi-vis, safety boots, impact gloves",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Very critical", "probability": "Probable" },
+            { "effectCategory": "Finance", "consequence": "Moderate", "probability": "Low probability" }
+          ]
+        },
+        {
+          "event": "Person struck while guiding the load by hand",
+          "cause": "Banksman standing inside the swing radius to steady the unit instead of using a tagline.",
+          "consequence": "Crush or impact injury to hands and torso.",
+          "riskSource": "Crushing and trapping",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Hard hat, hi-vis, safety boots, impact gloves",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Positioning and mechanical installation",
+      "description": "Moving the unit onto its foundation, levelling it, and making the mechanical connections.",
+      "effectCategories": ["Health"],
+      "risks": [
+        {
+          "event": "Back or shoulder injury moving packaging and small components by hand",
+          "cause": "Repeated awkward lifts with no mechanical aid available at the working position.",
+          "consequence": "Musculoskeletal injury, potentially with lost time.",
+          "riskSource": "Ergonomics and manual handling",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Safety boots, gloves",
+          "inherentScores": [
+            {
+              "effectCategory": "Health",
+              "consequence": "Dangerous or hazardous",
+              "probability": "High probability"
+            }
+          ]
+        },
+        {
+          "event": "Fingers trapped between the unit and its foundation frame",
+          "cause": "Hands used to align the skid while it is being lowered.",
+          "consequence": "Crush injury or amputation.",
+          "riskSource": "Crushing and trapping",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Impact gloves, safety boots",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Energisation and functional testing",
+      "description": "First energisation from the local isolator, then proving the control loops and safety functions.",
+      "effectCategories": ["Health", "Environment"],
+      "risks": [
+        {
+          "event": "Arc flash during first energisation",
+          "cause": "Work carried out live because isolation was assumed rather than proven and locked off.",
+          "consequence": "Severe burns to the technician at the panel.",
+          "riskSource": "Electrical",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Arc-rated coverall, face shield, insulating gloves",
+          "inherentScores": [
+            {
+              "effectCategory": "Health",
+              "consequence": "Catastrophic",
+              "probability": "Low probability"
+            }
+          ]
+        },
+        {
+          "event": "Unexpected movement of an actuator during loop testing",
+          "cause": "Stored pneumatic or hydraulic pressure not bled down before somebody reached inside the guard.",
+          "consequence": "Impact or crush injury to the person inside the guarded area.",
+          "riskSource": "Stored and residual energy",
+          "exposureTarget": "Personnel",
+          "minimumPpe": "Hard hat, safety boots, impact gloves",
+          "inherentScores": [
+            { "effectCategory": "Health", "consequence": "Very critical", "probability": "Probable" }
+          ]
+        },
+        {
+          "event": "Spill of hydraulic oil during first fill and pressure test",
+          "cause": "Connection not fully made up, or a test hose failing at pressure over unbunded ground.",
+          "consequence": "Contamination of surface water and the customer's drainage.",
+          "riskSource": "Stored and residual energy",
+          "exposureTarget": "Environment",
+          "minimumPpe": "Chemical gloves, eye protection",
+          "inherentScores": [
+            {
+              "effectCategory": "Environment",
+              "consequence": "Dangerous or hazardous",
+              "probability": "Probable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Handover and documentation",
+      "description": "Completing the test record, handing over the as-built documentation, and demobilising.",
+      "effectCategories": ["Reputation", "Finance"],
+      "risks": [
+        {
+          "event": "Unit handed over without a complete and signed test record",
+          "cause": "Commissioning finished under schedule pressure, with the record left to be completed later off site.",
+          "consequence": "No evidence the safety functions were proven; dispute over scope at final acceptance, and a return visit at our own cost.",
+          "riskSource": "Documentation and handover",
+          "exposureTarget": "Service delivery",
+          "inherentScores": [
+            {
+              "effectCategory": "Reputation",
+              "consequence": "Moderate",
+              "probability": "High probability"
+            },
+            { "effectCategory": "Finance", "consequence": "Minor", "probability": "Probable" }
+          ]
+        }
+      ]
+    }
+  ]
+}

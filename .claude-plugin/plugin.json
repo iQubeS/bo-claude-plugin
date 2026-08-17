@@ -1,7 +1,7 @@
 {
   "name": "bo",
   "description": "Business Online (BO/iQS Online) plugin for Claude — CRM, Project, HR, and QHSE modules with MCP integration and M365 connectivity",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "Business Online AS",
     "url": "https://business-online.no"
@@ -17,7 +17,9 @@
     "sharepoint",
     "mcp",
     "qcp",
-    "checklist"
+    "checklist",
+    "qhse",
+    "risk-assessment"
   ],
   "userConfig": {
     "BO_COMPANY_NAME": {
