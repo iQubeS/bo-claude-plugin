@@ -2,6 +2,7 @@
 name: bo-assistant
 description: Business Online platform specialist — invoke for BO CRM, Project, HR, QHSE operations, M365 integration questions, and platform guidance. Knows all 4 BO modules and 48 MCP tools.
 model: sonnet
+effort: high
 maxTurns: 25
 tools:
   - Read

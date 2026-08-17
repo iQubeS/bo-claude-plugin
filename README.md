@@ -129,7 +129,6 @@ bo-claude-plugin/
 ├── CLAUDE.md                 # Plugin instructions for Claude
 ├── CHANGELOG.md              # Version history
 ├── LICENSE                   # Proprietary license
-├── settings.json             # Default agent configuration
 └── README.md
 ```
 
