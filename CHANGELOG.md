@@ -69,6 +69,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   `skills/bo-khms`, `skills/bo-guide`, `commands/status.md`,
   `commands/checklist.md`, `CLAUDE.md`, `README.md`.
 
+### Fixed
+- **Plugin validation failure: `'settings.json'.agent must be a non-empty string`.** The
+  root `settings.json` held `{"agent": {"model": "sonnet", "effort": "high"}}`, but a
+  plugin's `settings.json` supports only `agent` and `subagentStatusLine`, and `agent` is
+  the *name* of an agent to run as the main session agent — a string, never an object. The
+  file was rejected outright, so its `effort: high` had no effect. Removed it and moved the
+  intent to where the loader reads it: `agents/bo-assistant.md` already declared
+  `model: sonnet`, and now also declares `effort: high`. Setting `agent: "bo-assistant"`
+  instead would have been wrong — it would make the BO agent the main session agent for
+  everyone with the plugin enabled. Pre-existing since 49f47b5; unrelated to `/bo:risk`.
+
 ### Removed
 - `collect_meddic_data` (Leads) no longer exists on the server and has no
   replacement — lead details carry no MEDDIC structure. MEDDIC qualification
