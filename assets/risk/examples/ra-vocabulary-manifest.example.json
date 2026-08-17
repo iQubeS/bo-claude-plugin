@@ -1,0 +1,348 @@
+﻿{
+    "version":  1,
+    "effectCategories":  [
+                             {
+                                 "name":  "Reputation",
+                                 "standard":  "ISO 31000",
+                                 "matrixType":  "5X5",
+                                 "consequenceLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Negligible",
+                                                               "descriptor":  "Slight media attention. Litle stakeholder impact"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Minor",
+                                                               "descriptor":  "Local media attention. Minor stakeholder impact"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Moderate",
+                                                               "descriptor":  "Regional media covrage. Moderate stakeholder impact"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "Significant",
+                                                               "descriptor":  "National media. Substantial stakeholder impact"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Severe",
+                                                               "descriptor":  "International media coverage. Irreparable stakeholder impact"
+                                                           }
+                                                       ],
+                                 "probabilityLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Very low probability",
+                                                               "descriptor":  "Probability of occurrence cannot be distinguished from zero"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Low probability",
+                                                               "descriptor":  "Not Likely, but Possible"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Probable",
+                                                               "descriptor":  "Likely to occur sometime"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "High probability",
+                                                               "descriptor":  "Likely to occur several times"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Very high probability",
+                                                               "descriptor":  "Likely to occur repeatedly during activity"
+                                                           }
+                                                       ]
+                             },
+                             {
+                                 "name":  "Finance",
+                                 "standard":  "ISO 31000",
+                                 "matrixType":  "5X5",
+                                 "consequenceLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Negligible",
+                                                               "descriptor":  "\u003c 15.000 NOK"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Minor",
+                                                               "descriptor":  "15\u0027 – 250\u0027 NOK"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Moderate",
+                                                               "descriptor":  "250\u0027 – 1.000\u0027 NOK"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "Significant",
+                                                               "descriptor":  "1.000\u0027 – 5.000\u0027 NOK"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Severe",
+                                                               "descriptor":  "\u003e 5 mill. NOK"
+                                                           }
+                                                       ],
+                                 "probabilityLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Very low probability",
+                                                               "descriptor":  "Probability of occurrence cannot be distinguished from zero"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Low probability",
+                                                               "descriptor":  "Not Likely, but Possible"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Probable",
+                                                               "descriptor":  "Likely to occur sometime"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "High probability",
+                                                               "descriptor":  "Likely to occur several times"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Very high probability",
+                                                               "descriptor":  "Likely to occur repeatedly during activity"
+                                                           }
+                                                       ]
+                             },
+                             {
+                                 "name":  "Health",
+                                 "standard":  "ISO 45001",
+                                 "matrixType":  "5X5",
+                                 "consequenceLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Not Dangerous or hazardous",
+                                                               "descriptor":  "Insignificant personnel injury with no absencefrom work"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Dangerous or hazardous",
+                                                               "descriptor":  "Small personnel injury with absence from work less than one day and no permanent injury"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Critical",
+                                                               "descriptor":  "Serious personnel injury with permanent damage"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "Very critical",
+                                                               "descriptor":  "May result infatality for one person"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Catastrophic",
+                                                               "descriptor":  "May result in fatality plus several persons with critical injuries"
+                                                           }
+                                                       ],
+                                 "probabilityLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Very low probability",
+                                                               "descriptor":  "Less than one incident every 10 year"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Low probability",
+                                                               "descriptor":  "1 incident every 10 year or often"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Probable",
+                                                               "descriptor":  "1 incident every 5 year or often"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "High probability",
+                                                               "descriptor":  "1 incident every year or often"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Very high probability",
+                                                               "descriptor":  "1 incident every month or often"
+                                                           }
+                                                       ]
+                             },
+                             {
+                                 "name":  "Environment",
+                                 "standard":  "ISO 14001",
+                                 "matrixType":  "5X5",
+                                 "consequenceLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Not Dangerousor hazardous",
+                                                               "descriptor":  "No damage to the environment"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Dangerous or hazardous",
+                                                               "descriptor":  "Moderate damage (recovery time up to 1 month)"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Critical",
+                                                               "descriptor":  "Serious damage to the environment (recovery time up to 1 year)"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "Very critical",
+                                                               "descriptor":  "Critical damage to the environment (recovery time up to 10 years)"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Catastrophic",
+                                                               "descriptor":  "Very critical damage to the environment (recovery time more than 10 years)"
+                                                           }
+                                                       ],
+                                 "probabilityLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Very low probability",
+                                                               "descriptor":  "Less than one incident every 10 year"
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Low probability",
+                                                               "descriptor":  "1 incident every 10 year or often"
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Probable",
+                                                               "descriptor":  "1 incident every 5 year or often"
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "High probability",
+                                                               "descriptor":  "1 incident every year or often"
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Very high probability",
+                                                               "descriptor":  "1 incident every month or often"
+                                                           }
+                                                       ]
+                             },
+                             {
+                                 "name":  "Opportunity",
+                                 "standard":  "Opportunity",
+                                 "matrixType":  "5X5",
+                                 "consequenceLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Negligible",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Minor",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Moderate",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "Major",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Exceptional",
+                                                               "descriptor":  ""
+                                                           }
+                                                       ],
+                                 "probabilityLevels":  [
+                                                           {
+                                                               "level":  1,
+                                                               "label":  "Very low",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  2,
+                                                               "label":  "Low",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  3,
+                                                               "label":  "Medium",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  4,
+                                                               "label":  "High",
+                                                               "descriptor":  ""
+                                                           },
+                                                           {
+                                                               "level":  5,
+                                                               "label":  "Very high",
+                                                               "descriptor":  ""
+                                                           }
+                                                       ]
+                             }
+                         ],
+    "riskSources":  [
+                        {
+                            "key":  "falling-or-shifting-load",
+                            "name":  "Falling or shifting load"
+                        },
+                        {
+                            "key":  "crushing-and-trapping",
+                            "name":  "Crushing and trapping"
+                        },
+                        {
+                            "key":  "stored-and-residual-energy",
+                            "name":  "Stored and residual energy"
+                        },
+                        {
+                            "key":  "electrical",
+                            "name":  "Electrical"
+                        },
+                        {
+                            "key":  "ergonomics-and-manual-handling",
+                            "name":  "Ergonomics and manual handling"
+                        },
+                        {
+                            "key":  "documentation-and-handover",
+                            "name":  "Documentation and handover"
+                        }
+                    ],
+    "exposureTargets":  [
+                            {
+                                "key":  "personnel",
+                                "name":  "Personnel",
+                                "nameNb":  "Personell"
+                            },
+                            {
+                                "key":  "environment",
+                                "name":  "Environment",
+                                "nameNb":  "Miljø"
+                            },
+                            {
+                                "key":  "equipment",
+                                "name":  "Equipment",
+                                "nameNb":  "Utstyr"
+                            },
+                            {
+                                "key":  "service-delivery",
+                                "name":  "Service delivery",
+                                "nameNb":  "Tjenesteleveranse"
+                            }
+                        ]
+}

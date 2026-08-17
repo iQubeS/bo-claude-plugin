@@ -44,6 +44,7 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 /bo:status              # Quick platform overview
 /bo:qcp                 # Design a QCP (Quality Control Plan) template → .qcp.json
 /bo:checklist           # Design a checklist/form template → .checklist.json
+/bo:risk                # Design or migrate a risk assessment template → .ra.json
 /bo:bo-crm              # CRM operations guide
 /bo:bo-project          # Project management guide
 /bo:bo-hr               # HR module guide
@@ -53,12 +54,35 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 ### Design commands
 
-Two guided consultants turn a conversation into an import-ready template:
+Three guided consultants turn a conversation into an import-ready template:
 
 - **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `.qcp.json` (plus a process-rationale doc) ready to upload via **Import QCP** in QCPAdmin (Next).
 - **`/bo:checklist`** — a forms/data-collection consultant. It interviews you about a checklist or form, challenges weak questions and wrong field types, and produces a `.checklist.json` (plus an import-guide with the name/code/category/project-type metadata) ready to import into the **Template Manager**.
+- **`/bo:risk`** — a risk-assessment consultant. Most sessions start with a customer's Excel register: it reads the workbook, calibrates their scale against your tenant's, translates their vocabulary, challenges weak hazard entries, and produces a `.ra.json` (plus a rationale doc) ready to import into the **QHSE risk-assessment template manager**.
 
-Both support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists — and render a live preview of the template as you build it.
+All three support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists; Excel/CSV/Word/PDF registers for risk — and render a live preview of the template as you build it.
+
+#### `/bo:risk` needs one extra input
+
+Almost everything in a risk assessment is keyed to your tenant: effect categories, the
+consequence and probability ladders (which **differ per category**), risk sources and
+exposure targets. So the command asks for a **vocabulary manifest** — the `Copy vocabulary`
+export from your RA template manager — before it will author any of them. Without it the
+failure is silent: a word that nearly matches resolves to nothing and the risk imports
+with an empty column.
+
+Two things it deliberately will not do. It never reads the acceptance limit or the
+risk-band colours, even when your spreadsheet shows them, because an author who can see
+where the line falls scores the screen rather than the hazard. And it never imports
+barriers or residual scores — a residual needs a recorded barrier to justify it, and
+barriers are what *your* company decides. Barrier text from a source `Tiltak` column is
+preserved in the rationale document for re-entry in the tool rather than discarded.
+
+Before importing, you can check a file resolves cleanly:
+
+```bash
+node scripts/check-ra-vocabulary.mjs my-template.ra.json my-manifest.json
+```
 
 Or just ask Claude naturally:
 - "Vis meg salgspipelinen"
@@ -84,10 +108,19 @@ bo-claude-plugin/
 ├── commands/
 │   ├── status.md            # /bo:status dashboard command
 │   ├── qcp.md               # /bo:qcp — QCP template designer
-│   └── checklist.md         # /bo:checklist — checklist template designer
+│   ├── checklist.md         # /bo:checklist — checklist template designer
+│   └── risk.md              # /bo:risk — risk assessment template designer
 ├── assets/
 │   ├── qcp/                 # QCP schema, examples, artifact & rationale templates
-│   └── checklist/           # Checklist schema, examples, artifact & import-guide templates
+│   ├── checklist/           # Checklist schema, examples, artifact & import-guide templates
+│   └── risk/                # RA schemas (vendored + manifest), examples, artifact,
+│                            #   rationale template, Norwegian column lexicon
+├── scripts/
+│   ├── check-schema-sync.sh      # Vendored schemas still match upstream?
+│   └── check-ra-vocabulary.mjs   # Will this .ra.json import without reconciliation?
+├── test/
+│   ├── checklist/           # Schema-coverage fixture for /bo:checklist
+│   └── risk/                # Coverage + known-bad fixtures for /bo:risk
 ├── docs/
 │   ├── brukermanual/        # Norwegian user manual (63 files)
 │   └── qa/                  # Manual QA logs for the design commands
