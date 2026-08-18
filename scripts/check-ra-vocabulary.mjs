@@ -183,9 +183,24 @@ const ALLOWED = {
     'exposureTarget',
     'minimumPpe',
     'inherentScores',
+    'barriers',
   ],
   score: ['effectCategory', 'consequence', 'probability'],
+  barrier: ['name', 'type', 'description'],
 };
+
+/**
+ * Execution evidence, refused outright on an imported barrier.
+ *
+ * R28 splits a barrier in two: what the control *is* travels, but any claim that it is
+ * actually in place does not — that belongs to the project that adopts the template, not
+ * to whoever authored it. Naming these separately from "unknown property" matters,
+ * because an author who writes `status: "Implemented"` has made a category error rather
+ * than a typo, and the message should say which.
+ */
+const EVIDENCE_KEYS = ['status', 'verifiedDate', 'verifiedBy', 'documentReference'];
+
+const BARRIER_TYPES = ['Elimination', 'Substitution', 'Technical', 'Organisational', 'Ppe'];
 
 const isRecord = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
 
@@ -239,6 +254,39 @@ function structuralErrors(file) {
           `${rt}: only inherentScores are accepted. A residual score needs a barrier to justify it, and barriers are not imported.`
         );
       }
+      if (risk.barriers !== undefined && !Array.isArray(risk.barriers)) {
+        errors.push(`${rt}.barriers must be an array when present.`);
+      }
+      (Array.isArray(risk.barriers) ? risk.barriers : []).forEach((barrier, bi) => {
+        const bt = `${rt}.barriers[${bi}]`;
+        if (!isRecord(barrier)) {
+          errors.push(`${bt} must be an object.`);
+          return;
+        }
+        for (const k of EVIDENCE_KEYS) {
+          if (barrier[k] !== undefined) {
+            errors.push(
+              `${bt}.${k} cannot be set here. Every imported barrier arrives planned; whether a control is actually in place is recorded by the project that adopts the template (R28).`
+            );
+          }
+        }
+        // Evidence keys already got their own, better message above; reporting them a
+        // second time as "unknown property" would bury the reason they are refused.
+        unknownKeys(
+          Object.fromEntries(Object.entries(barrier).filter(([k]) => !EVIDENCE_KEYS.includes(k))),
+          ALLOWED.barrier,
+          bt,
+          errors
+        );
+        if (typeof barrier.name !== 'string' || barrier.name.trim() === '') {
+          errors.push(`${bt}.name is required; a barrier is a reference into the library.`);
+        }
+        if (barrier.type !== undefined && !BARRIER_TYPES.includes(barrier.type)) {
+          errors.push(
+            `${bt}.type ${JSON.stringify(barrier.type)} is not one of ${BARRIER_TYPES.join(', ')}.`
+          );
+        }
+      });
       (Array.isArray(risk.inherentScores) ? risk.inherentScores : []).forEach((score, si) => {
         const st = `${rt}.inherentScores[${si}]`;
         if (!isRecord(score)) {
@@ -333,12 +381,15 @@ const standardWarning = (value, hit, at) =>
     ? `${at} names its category by the standard ${q(value)}, which ${manifest.effectCategories.filter((c) => normalise(c.standard) === normalise(value)).length} categories share -- it resolves to ${q(hit.name)} by array order, not by intent. Write the category name.`
     : `${at} names its category by the standard ${q(value)} rather than ${q(hit.name)} -- the name is unambiguous, the standard may stop being so`;
 
+const library = manifest.barrierLibrary ?? [];
+const hasLibrary = Array.isArray(manifest.barrierLibrary);
 const sizes = [...new Set(manifest.effectCategories.map((c) => c.matrixType))].join(', ');
 mark(
   'ok',
   `manifest: ${manifest.effectCategories.length} categories (${sizes}), ` +
     `${(manifest.riskSources ?? []).length} risk sources, ` +
-    `${(manifest.exposureTargets ?? []).length} exposure targets`
+    `${(manifest.exposureTargets ?? []).length} exposure targets, ` +
+    `${hasLibrary ? `${library.length} barriers` : 'no barrierLibrary'}`
 );
 
 /* ---- Structure ---- */
@@ -359,7 +410,14 @@ const scoreCount = file.activities.reduce(
   (n, a) => n + (a.risks ?? []).reduce((m, r) => m + (r.inherentScores?.length ?? 0), 0),
   0
 );
-mark('ok', `template: ${activityCount} activities, ${riskCount} risks, ${scoreCount} scores`);
+const barrierCount = file.activities.reduce(
+  (n, a) => n + (a.risks ?? []).reduce((m, r) => m + (r.barriers?.length ?? 0), 0),
+  0
+);
+mark(
+  'ok',
+  `template: ${activityCount} activities, ${riskCount} risks, ${scoreCount} scores, ${barrierCount} barriers`
+);
 mark('ok', 'structure readable, no unknown keys, no residual score');
 
 /* ---- Vocabulary and levels ---- */
@@ -378,6 +436,10 @@ let ordinalLevels = 0;
 let blankRiskSource = 0;
 let blankExposureTarget = 0;
 let unscoredRisks = 0;
+let unbarrieredRisks = 0;
+let redundantTypes = 0;
+let ignoredDescriptions = 0;
+const proposedNew = new Set();
 
 file.activities.forEach((activity, ai) => {
   const at = `activities[${ai}]`;
@@ -415,6 +477,45 @@ file.activities.forEach((activity, ai) => {
 
     if ((risk.inherentScores ?? []).length === 0) unscoredRisks += 1;
 
+    const barriers = risk.barriers ?? [];
+    if (barriers.length === 0) unbarrieredRisks += 1;
+    // Two to four is the working range. A risk listing ten makes the actions view
+    // unusable, which is the opposite of what grouping barriers is for.
+    if (barriers.length > 4) {
+      warnings.push(
+        `${rt} lists ${barriers.length} barriers -- two to four is the working range; beyond that the actions view stops being usable`
+      );
+    }
+    barriers.forEach((barrier, bi) => {
+      const bt = `${rt}.barriers[${bi}]`;
+      const hit = resolveExact(barrier.name, library);
+      if (hit === undefined) {
+        bump('barrier', barrier.name);
+        proposedNew.add(normalise(barrier.name));
+        // A barrier the library does not hold needs a type, because adding it to the
+        // library needs one the library cannot supply.
+        if (barrier.type === undefined) {
+          warnings.push(
+            `${bt} proposes ${q(barrier.name)}, which the library does not hold, but supplies no type -- it would default to Organisational, which can never justify a severity reduction (R3)`
+          );
+        }
+        if (barrier.description === undefined) {
+          warnings.push(
+            `${bt} proposes ${q(barrier.name)} with no description -- if the manager adds it, the entry is created with none`
+          );
+        }
+        return;
+      }
+      // The library entry's own wording is what lands on the risk, so restating it here
+      // achieves nothing and invites two sentences for one control.
+      if (barrier.description !== undefined) {
+        ignoredDescriptions += 1;
+      }
+      if (barrier.type !== undefined && barrier.type === hit.suggestedType) {
+        redundantTypes += 1;
+      }
+    });
+
     (risk.inherentScores ?? []).forEach((score, si) => {
       const st = `${rt}.inherentScores[${si}]`;
       const hit = resolveExact(score.effectCategory, cats);
@@ -449,6 +550,7 @@ file.activities.forEach((activity, ai) => {
 const candidatesFor = (kind) => {
   if (kind === 'riskSource') return manifest.riskSources ?? [];
   if (kind === 'exposureTarget') return manifest.exposureTargets ?? [];
+  if (kind === 'barrier') return library;
   return cats;
 };
 
@@ -462,6 +564,14 @@ if (unresolved.length === 0) {
 } else {
   const uses = unresolved.reduce((n, u) => n + u.count, 0);
   mark('FAIL', `${unresolved.length} vocabulary term(s) do not resolve, across ${uses} use(s)`);
+  if (unresolved.some((u) => u.kind === 'barrier')) {
+    detail(
+      'note: an unresolved barrier is NOT created if left blank at reconciliation --'
+    );
+    detail(
+      '      unlike a risk source, whose risk still imports. There is no third option.'
+    );
+  }
   for (const u of unresolved) {
     detail(`${u.kind.padEnd(14)} ${q(u.value).padEnd(38)} ${u.count} use${u.count === 1 ? '' : 's'}`);
     detail(
@@ -494,6 +604,31 @@ if (blankExposureTarget > 0) {
 }
 if (unscoredRisks > 0) {
   warnings.push(`${unscoredRisks} risk(s) carry no inherentScores -- they import unscored`);
+}
+if (barrierCount > 0 && !hasLibrary) {
+  warnings.push(
+    `this manifest carries no barrierLibrary, so none of the ${barrierCount} barrier(s) can resolve -- re-export the vocabulary from a tenant with barrier support`
+  );
+}
+if (unbarrieredRisks > 0) {
+  warnings.push(
+    `${unbarrieredRisks} risk(s) carry no barriers -- legitimate, and the product reports an uncontrolled risk as a finding, but check it is a decision rather than an omission`
+  );
+}
+if (ignoredDescriptions > 0) {
+  warnings.push(
+    `${ignoredDescriptions} barrier(s) restate a description the library already holds -- the library's wording wins, so it is ignored (R24)`
+  );
+}
+if (redundantTypes > 0) {
+  warnings.push(
+    `${redundantTypes} barrier(s) set a type identical to the library's suggestedType -- omit it unless you mean to override`
+  );
+}
+if (proposedNew.size >= 5) {
+  warnings.push(
+    `${proposedNew.size} new library entries proposed -- each is a decision the manager makes one at a time, and a file proposing this many tends to be abandoned rather than reconciled`
+  );
 }
 
 if (warnings.length > 0) {

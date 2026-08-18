@@ -9,7 +9,10 @@
     {
       "name": "Transport and offloading",
       "description": "Receiving the unit on site and taking it off the vehicle with a mobile crane or forklift.",
-      "effectCategories": ["Health", "Finance"],
+      "effectCategories": [
+        "Health",
+        "Finance"
+      ],
       "risks": [
         {
           "event": "Load shifts or falls while being lifted from the trailer",
@@ -19,8 +22,24 @@
           "exposureTarget": "Personnel",
           "minimumPpe": "Hard hat, hi-vis, safety boots, impact gloves",
           "inherentScores": [
-            { "effectCategory": "Health", "consequence": "Very critical", "probability": "Probable" },
-            { "effectCategory": "Finance", "consequence": "Moderate", "probability": "Low probability" }
+            {
+              "effectCategory": "Health",
+              "consequence": "Very critical",
+              "probability": "Probable"
+            },
+            {
+              "effectCategory": "Finance",
+              "consequence": "Moderate",
+              "probability": "Low probability"
+            }
+          ],
+          "barriers": [
+            {
+              "name": "Permit to work"
+            },
+            {
+              "name": "Verified competence"
+            }
           ]
         },
         {
@@ -31,7 +50,19 @@
           "exposureTarget": "Personnel",
           "minimumPpe": "Hard hat, hi-vis, safety boots, impact gloves",
           "inherentScores": [
-            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+            {
+              "effectCategory": "Health",
+              "consequence": "Critical",
+              "probability": "Probable"
+            }
+          ],
+          "barriers": [
+            {
+              "name": "Toolbox talk"
+            },
+            {
+              "name": "Verified competence"
+            }
           ]
         }
       ]
@@ -39,7 +70,9 @@
     {
       "name": "Positioning and mechanical installation",
       "description": "Moving the unit onto its foundation, levelling it, and making the mechanical connections.",
-      "effectCategories": ["Health"],
+      "effectCategories": [
+        "Health"
+      ],
       "risks": [
         {
           "event": "Back or shoulder injury moving packaging and small components by hand",
@@ -54,6 +87,11 @@
               "consequence": "Dangerous or hazardous",
               "probability": "High probability"
             }
+          ],
+          "barriers": [
+            {
+              "name": "Toolbox talk"
+            }
           ]
         },
         {
@@ -64,7 +102,19 @@
           "exposureTarget": "Personnel",
           "minimumPpe": "Impact gloves, safety boots",
           "inherentScores": [
-            { "effectCategory": "Health", "consequence": "Critical", "probability": "Probable" }
+            {
+              "effectCategory": "Health",
+              "consequence": "Critical",
+              "probability": "Probable"
+            }
+          ],
+          "barriers": [
+            {
+              "name": "Physical guarding"
+            },
+            {
+              "name": "Verified competence"
+            }
           ]
         }
       ]
@@ -72,7 +122,10 @@
     {
       "name": "Energisation and functional testing",
       "description": "First energisation from the local isolator, then proving the control loops and safety functions.",
-      "effectCategories": ["Health", "Environment"],
+      "effectCategories": [
+        "Health",
+        "Environment"
+      ],
       "risks": [
         {
           "event": "Arc flash during first energisation",
@@ -87,6 +140,18 @@
               "consequence": "Catastrophic",
               "probability": "Low probability"
             }
+          ],
+          "barriers": [
+            {
+              "name": "Permit to work"
+            },
+            {
+              "name": "Verified competence"
+            },
+            {
+              "name": "Respiratory protection",
+              "type": "Ppe"
+            }
           ]
         },
         {
@@ -97,7 +162,19 @@
           "exposureTarget": "Personnel",
           "minimumPpe": "Hard hat, safety boots, impact gloves",
           "inherentScores": [
-            { "effectCategory": "Health", "consequence": "Very critical", "probability": "Probable" }
+            {
+              "effectCategory": "Health",
+              "consequence": "Very critical",
+              "probability": "Probable"
+            }
+          ],
+          "barriers": [
+            {
+              "name": "Mechanical interlock"
+            },
+            {
+              "name": "Walk the line before start-up"
+            }
           ]
         },
         {
@@ -113,6 +190,11 @@
               "consequence": "Dangerous or hazardous",
               "probability": "Probable"
             }
+          ],
+          "barriers": [
+            {
+              "name": "Walk the line before start-up"
+            }
           ]
         }
       ]
@@ -120,7 +202,10 @@
     {
       "name": "Handover and documentation",
       "description": "Completing the test record, handing over the as-built documentation, and demobilising.",
-      "effectCategories": ["Reputation", "Finance"],
+      "effectCategories": [
+        "Reputation",
+        "Finance"
+      ],
       "risks": [
         {
           "event": "Unit handed over without a complete and signed test record",
@@ -134,7 +219,16 @@
               "consequence": "Moderate",
               "probability": "High probability"
             },
-            { "effectCategory": "Finance", "consequence": "Minor", "probability": "Probable" }
+            {
+              "effectCategory": "Finance",
+              "consequence": "Minor",
+              "probability": "Probable"
+            }
+          ],
+          "barriers": [
+            {
+              "name": "Verified competence"
+            }
           ]
         }
       ]

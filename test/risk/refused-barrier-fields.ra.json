@@ -1,0 +1,55 @@
+{
+  "$schema": "../../assets/risk/ra-template-import.schema-v1.json",
+  "version": 1,
+  "template": {
+    "name": "Testmal – avviste barrierefelt (RA)",
+    "description": "Testfikstur for de barrierefeltene formatet nekter. I motsetning til known-bad.ra.json er denne STRUKTURELT UGYLDIG med vilje: ajv skal avvise den, og importøren ville avvist hele filen. R28 deler en barriere i to — hva kontrollen er reiser med malen, mens enhver påstand om at den faktisk er på plass tilhører prosjektet som tar malen i bruk. Forventet: ajv invalid, pre-flight exit 1."
+  },
+  "activities": [
+    {
+      "name": "Avviste felt på en barriere",
+      "description": "Hver barriere nedenfor setter noe formatet ikke godtar. Én av dem er nok til å avvise hele filen.",
+      "effectCategories": [
+        "Health"
+      ],
+      "risks": [
+        {
+          "event": "Klemskade ved arbeid på maskin uten energiisolering",
+          "cause": "Maskinen ikke frakoblet før inngrep i fareområdet.",
+          "consequence": "Klemskade på hånd eller arm hos operatøren.",
+          "riskSource": "Crushing and trapping",
+          "exposureTarget": "Personnel",
+          "barriers": [
+            {
+              "name": "Physical guarding",
+              "status": "Implemented"
+            },
+            {
+              "name": "Permit to work",
+              "verifiedDate": "2026-08-01"
+            },
+            {
+              "name": "Toolbox talk",
+              "verifiedBy": "Kari Nordmann"
+            },
+            {
+              "name": "Verified competence",
+              "documentReference": "QSE-PRO-00012"
+            },
+            {
+              "name": "Hearing protection",
+              "type": "Administrative"
+            }
+          ],
+          "inherentScores": [
+            {
+              "effectCategory": "Health",
+              "consequence": "Critical",
+              "probability": "Probable"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

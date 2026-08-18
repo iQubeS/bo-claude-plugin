@@ -74,6 +74,7 @@ user before parsing.
 | Utsatt for, Hvem/hva rammes, Berørt, Eksponert, Rammer | `risks[].exposureTarget` | Norwegian resolves here if the tenant supplied `nameNb`. |
 | Verneutstyr, PVU, Personlig verneutstyr, Påkrevd verneutstyr | `risks[].minimumPpe` | Belongs to the **event**, not the job: a chemical release and the noise beside it need different protection. |
 | S, K, Sannsynlighet, Konsekvensgrad, Alvorlighet, Frekvens | `inherentScores[]` | See §3 and §5. |
+| Tiltak, Barriere, Eksisterende tiltak, Risikoreduserende tiltak, Kompenserende tiltak | `risks[].barriers[]` | **Changed 2026-08-18.** Barriers now import. But a barrier is a *library reference*, not the source's sentence — see §4b. |
 
 ### Columns that do not cross
 
@@ -81,8 +82,7 @@ user before parsing.
 |---|---|---|
 | Nr, ID, Løpenummer, Ref | The format carries no identifiers; array order *is* the ordering, and the tool derives its own numbering. | Drop. Mention the count so nobody thinks rows went missing. |
 | Risikotall, Risikoverdi, RPN, R, S×K, Produkt | Derived from the score pair by the tool. | Drop. Use it only as a cross-check that you read S and K the right way round. |
-| Tiltak, Barriere, Eksisterende tiltak, Risikoreduserende tiltak, Foreslåtte tiltak, Kompenserende tiltak | Barriers are deliberately not importable: a template's value is the hazard identification, and barriers are what the importing company decides to do about it. | **Rescue, do not discard.** Carry the text into the rationale document as an appendix table so it can be re-entered as barriers in the tool. Never fold it into `cause` or `consequence`. |
-| Restrisiko, Risiko etter tiltak, S etter, K etter, Akseptabel restrisiko | A residual needs a recorded barrier to justify it, and barriers are not imported, so every imported residual would arrive unjustified. The format cannot express one at all. | Drop, and read §6 — their presence changes what the *inherent* scores mean. |
+| Restrisiko, Risiko etter tiltak, S etter, K etter, Akseptabel restrisiko | The format cannot express a residual at all. Barriers importing does not change this: they arrive **planned**, so a residual leaning on one would rest on nothing recorded and be flagged on sight (R5). | Drop, and read §6 — their presence changes what the *inherent* scores mean. |
 | Ansvarlig, Ansvar, Utført av, Frist, Dato (DD.MM.YYYY), Status, Oppfølging | A template is generic; these belong to a project instance. | Drop. Worth naming out loud — managers expect them to survive. |
 | Kommentar, Merknad | No field. | Usually drop; occasionally the text is really a `cause` in the wrong column. Read before dropping. |
 | Fargekoder, akseptkriterium, "uakseptabelt" | This is the acceptance limit. | Refuse. See §5. |
@@ -179,6 +179,63 @@ Check the manifest rather than assuming either way.
 
 ---
 
+## 4b. Barriers: the source's sentence is not the barrier
+
+Barriers were out of scope when this command was first written and are now in scope. The
+`Tiltak` column therefore has a destination — but **not** the one people expect.
+
+### A barrier is a reference, never free text
+
+`barriers[].name` keys into the manifest's `barrierLibrary`, and **that entry's own
+`description` is what lands on the risk**. The source's wording is used to *choose* the
+library entry, then discarded.
+
+That is deliberate (R24): the actions view groups identical barriers across risks and
+projects, so one control must be one sentence. A description invented per risk groups with
+nothing, and thirty risks each carrying their own phrasing of "toolbox talk" produce thirty
+ungroupable actions.
+
+So the job is translation, exactly as in §4:
+
+| Source `Tiltak` text | What to write |
+|---|---|
+| "Bruk av vernebriller og hansker" | `{ "name": "Personal protective equipment" }` — if the library holds it |
+| "Arbeidstillatelse skal foreligge" | `{ "name": "Permit to work" }` |
+| "Maskinen skal være avstengt og låst" | the library's isolation or interlock entry |
+| "Alle skal ha gjennomgått kurs" | `{ "name": "Verified competence" }` |
+
+Never paste the source sentence into `description`. Where the name resolves, that field is
+ignored entirely.
+
+### Choosing well
+
+- **Two to four barriers per risk is the working range.** A risk listing ten makes the
+  actions view unusable, which is the opposite of the point. A `Tiltak` cell containing six
+  comma-separated measures is usually two real controls and four restatements.
+- **Prefer controls higher up the hierarchy.** `suggestedType` ranks them: Elimination,
+  Substitution, Technical, Organisational, Ppe. A guard or an interlock says more than a
+  toolbox talk, and only the first three can ever justify a later severity reduction (R3).
+- **Do not reach for a barrier that is merely adjacent.** If the library holds nothing that
+  fits, either propose a new one with a `description` *and* a `type`, or leave the risk
+  without barriers. **A risk with no adequate control is a finding, and the product reports
+  it as one.** An invented barrier hides that, which is worse than the gap.
+- **Propose sparingly.** Every unresolved name is a decision the manager makes one at a
+  time. A file proposing fifteen new library entries gets abandoned rather than reconciled.
+- **An unresolved barrier is not created at all** if left blank at reconciliation — unlike
+  a risk source, whose risk still imports with an empty column. There is no third option.
+
+### Never say whether a control is in place
+
+`status`, `verifiedDate`, `verifiedBy` and `documentReference` are **refused, and they fail
+the whole file**. R28 splits a barrier in two: what the control *is* travels with the
+template; any claim that it is actually installed belongs to the project that adopts it.
+
+This matters when reading a source register, because the `Tiltak` column often carries
+exactly that evidence — "montert 2024", "utført av HMS-leder", "se prosedyre QSE-PRO-012".
+Strip it. Use the sentence to pick the library entry, and drop the rest.
+
+---
+
 ## 5. Scales, and the line you must not read
 
 ### Recognise the shape first
@@ -236,6 +293,11 @@ Signals that the scores are really residual:
 - Consequence text that already assumes protection ("ingen skade ved bruk av verneutstyr").
 - Scores implausibly low for the described event.
 
+Barriers being importable does **not** change this. Every imported barrier arrives
+*planned*, so a residual leaning on one would rest on nothing recorded and be flagged the
+moment anyone looked (R5). The template says what the hazard is and what would control it;
+the company earns the residual by doing the work.
+
 Raise it; do not resolve it silently. Three defensible answers:
 
 1. Re-score the hazard as pre-control, together, activity by activity.
@@ -267,7 +329,11 @@ Legacy registers fail in predictable ways. Challenge by activity, not row by row
 - Structure validates against `ra-template-import.schema-v1.json`. Any structural fault
   refuses the whole file, so this is not optional.
 - Every dropped column is named in the rationale document, with its reason.
-- Rescued barrier text is carried across as an appendix.
+- Barriers resolve against the library, sit in the two-to-four range, and carry no
+  status, verified date, verifier or document reference.
+- The user has been told that every risk carrying a barrier will read as **residual not
+  established** until somebody records the control is actually in place. This is the single
+  most likely thing to be reported back as a bug.
 - The two behaviours that surprise everyone once are stated: the template arrives
   **Draft and unlocked** and cannot be copied into a project until locked, and import
   always **creates** a new template rather than merging into an existing one.

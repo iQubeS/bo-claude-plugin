@@ -19,10 +19,10 @@ being honest about the parts of their spreadsheet that cannot cross.
   work*, not one job on one site. Never ask "what went wrong last time?"; ask "what can
   go wrong every time this work is done?". Strip site names, dates, people and job
   numbers as you go.
-- **Your job is hazard identification. It is not controls.** Barriers cannot be expressed
-  in this format at all, deliberately: a template's value is the hazard identification,
-  and barriers are what the importing company decides to do about it. Importing another
-  organisation's barriers imports their control philosophy.
+- **Your job is hazard identification, and now also the controls that would reduce it.**
+  Barriers became importable on 2026-08-18. But a barrier is a *reference into the
+  company's own library*, never a sentence you write, and it always arrives **planned** —
+  you can say what would control the risk, never that anything is in place.
 - **The vocabulary manifest is a hard requirement.** Almost everything in an assessment is
   keyed to the tenant. Without the manifest you are guessing, and the failure is silent —
   a name that nearly matches resolves to nothing and the risk imports with an empty
@@ -57,8 +57,14 @@ being honest about the parts of their spreadsheet that cannot cross.
 6. **Never interpolate a scale.** Mapping a 1–4 source onto a 5-level ladder is a
    professional judgement belonging to a person, not arithmetic. Build the table, have
    the user approve it, then apply it mechanically.
-7. **Never emit `residualScores`, `scores`, barriers, identifiers, owners or deadlines.**
-   The format refuses the first two by name and has no field for the rest.
+7. **Never emit `residualScores`, `scores`, identifiers, owners or deadlines.** The format
+   refuses the first two by name and has no field for the rest. Barriers *are* now
+   accepted — see rule 8.
+8. **Never claim a control is in place.** `status`, `verifiedDate`, `verifiedBy` and
+   `documentReference` on a barrier **fail the whole file**, deliberately. R28 splits a
+   barrier in two: what the control *is* travels with the template, but whether it is
+   actually installed belongs to the project that adopts it. Source registers often carry
+   that evidence in the same cell — strip it.
 
 ## Language
 
@@ -147,8 +153,14 @@ Then read the tenant's dictionary back, so they can confirm it is the right tena
 >
 > **Farekilder (6)** — Falling or shifting load, Crushing and trapping, …
 > **Eksponeringsmål (4)** — Personnel/Personell, Environment/Miljø, …
+> **Barrierebibliotek (11)** — fra Elimination (Remote operation) via Technical (Physical
+> guarding, Mechanical interlock) til Ppe (Hearing protection). Det er disse kontrollene
+> jeg kan navngi; alt annet må foreslås som nye oppføringer.
 >
 > Stemmer dette med tenanten dere skal importere til?"
+
+If the manifest has **no `barrierLibrary`**, that tenant predates barrier support. Say so
+and author without barriers — do not invent a library.
 
 Note internally: the matrix sizes, which categories share a standard (ambiguous aliases),
 and whether risk sources carry `nameNb` (usually not — so Norwegian hazard terms will not
@@ -203,10 +215,12 @@ people are surprised.
 > eksponeringsmål · Verneutstyr → påkrevd verneutstyr · S og K per dimensjon (M/Ø/Ma/O)
 > → scorer
 >
+> **Blir med, men oversatt:** *Tiltak* → barrierer. Barrierer importeres nå, men som
+> oppslag i barrierebiblioteket deres — ikke som setningen i regnearket. Jeg bruker
+> teksten til å velge riktig oppføring, og bibliotekets egen formulering er den som
+> havner på risikoen.
+>
 > **Blir ikke med:**
-> • *Tiltak* — barrierer kan ikke importeres. Teksten går ikke tapt: jeg tar den med som
->   vedlegg i rationale-dokumentet, så dere kan legge dem inn som barrierer i verktøyet
->   etterpå.
 > • *Restrisiko* — formatet kan ikke uttrykke en restrisiko i det hele tatt. En
 >   restrisiko krever en registrert barriere for å være gyldig, og barrierer importeres
 >   ikke.
@@ -361,6 +375,42 @@ decision:
 Exposure targets often carry `nameNb`, so Norwegian may resolve directly — check rather
 than translating unnecessarily.
 
+### Barriers are the fourth vocabulary, and the hardest
+
+Same translation problem, higher stakes, because a barrier that does not resolve is **not
+created at all** — unlike a risk source, whose risk still imports with an empty column.
+
+Work from the source's `Tiltak` text to the *library entry*, and show the user that the
+library's wording is what will actually appear:
+
+> "Tiltakskolonnen deres, oversatt mot barrierebiblioteket:
+>
+> | Deres tekst | Antall | → Bibliotek | Teksten som havner på risikoen |
+> |---|---|---|---|
+> | «Arbeidstillatelse skal foreligge» | 11 | Permit to work | «Work carried out under a permit to work with the stated precautions in force.» |
+> | «Fysisk skjerming av valsene» | 6 | Physical guarding | bibliotekets formulering |
+> | «Bruk av hørselvern» | 8 | Hearing protection | bibliotekets formulering |
+> | «Sikker jobb-analyse før oppstart» | 4 | *ingenting som passer* | ← ny oppføring, eller ingen barriere |
+>
+> Merk at deres egen setning ikke følger med. Det er med vilje: handlingsvisningen
+> grupperer like barrierer på tvers av risikoer, og da må én kontroll være én setning."
+
+Then apply the judgement rules:
+
+- **Two to four per risk.** A `Tiltak` cell with six comma-separated measures is usually
+  two real controls and four restatements. Ten barriers makes the actions view unusable.
+- **Prefer the top of the hierarchy.** `suggestedType` ranks them Elimination →
+  Substitution → Technical → Organisational → Ppe, and only the first three can ever
+  justify a later severity reduction (R3).
+- **Never reach for a merely adjacent barrier.** If nothing fits, propose a new entry with
+  **both** a `type` and a `description`, or leave the risk bare. A risk with no adequate
+  control is a finding and the product reports it as one; an invented barrier hides that.
+- **Propose sparingly.** Fifteen new entries is a file that gets abandoned rather than
+  reconciled.
+- **Emit `type` only to override** the library's `suggestedType`, and **`description` only
+  for an entry the library does not hold** — where the name resolves, the library's wording
+  wins and yours is ignored.
+
 **Phase 3 ends when:** every distinct term has a decision: mapped, deliberately blank, or
 to-be-added-first.
 
@@ -478,6 +528,10 @@ published example. For every term and every level:
 - Does each `consequence` and `probability` label exist on **that category's own** ladder?
   `"Severe"` is level 5 on Finance and does not exist on Health at all.
 - Is every score's category listed in its activity's `effectCategories`?
+- Does each `barriers[].name` resolve against `barrierLibrary`, by name or key?
+- Is every barrier free of `status`, `verifiedDate`, `verifiedBy`, `documentReference`?
+- Is `type` omitted unless it genuinely overrides `suggestedType`, and `description`
+  omitted unless the entry is new?
 
 If the environment has a shell, run the checker rather than eyeballing it:
 
@@ -528,12 +582,17 @@ End with the two behaviours that surprise everyone once:
 >    den først.
 > 4. **Import lager alltid en ny mal.** Den fletter aldri inn i en eksisterende, så en ny
 >    import av samme fil gir deg mal nummer to.
-> 5. Legg rationale-dokumentet i maldokumentasjonen. Det forklarer kalibreringen,
+> 5. **Hver risiko med en barriere leses som «restrisiko ikke etablert».** Det er R5 som
+>    virker, ikke en feil: barrierene er planlagte, og ingen har registrert at noen av dem
+>    faktisk er på plass. En nyimportert mal viser altså risikoene sine som usikre, og den
+>    forteller sant. Dette er det enkeltpunktet som oftest meldes tilbake som en bug.
+> 6. Legg rationale-dokumentet i maldokumentasjonen. Det forklarer kalibreringen,
 >    ordvalgene, og hva regnearket inneholdt som ikke kunne følge med — nyttig ved revisjon
 >    og når noen overtar malen.
 >
-> Barrieretekstene fra *Tiltak*-kolonnen ligger i vedlegget i rationale-dokumentet, klare
-> til å legges inn som barrierer i verktøyet."
+> Oversettelsen fra *Tiltak*-kolonnen til barrierebiblioteket er dokumentert i
+> rationale-dokumentet §9, sammen med kildeteksten — så det er sporbart hvorfor akkurat
+> den oppføringen ble valgt."
 
 **Phase 6 ends when:** both files are presented and the warnings delivered.
 

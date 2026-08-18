@@ -2,10 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://business-online.no/schemas/ra-template-import-v1.json",
   "title": "RA template import, version 1",
-  "description": "A risk assessment template authored outside the tool and imported into the QHSE template manager (RS-26). Carries the hazard identification and its inherent severity, and nothing that is keyed to a tenant. Download the vocabulary manifest from the template manager first: it lists the effect categories with their axis level labels, plus the risk sources and exposure targets this tenant knows, so the file can be written with words that resolve. Every property is refused if misspelled, so a typo is reported rather than silently dropping the value.",
+  "description": "A risk assessment template authored outside the tool by the BO Claude plugin and imported into the QHSE template manager (RS-26). Carries the hazard identification, its inherent severity, and the controls the company already knows how to name, but nothing that is keyed to a tenant and nothing asserting that any control is in place. Download the vocabulary manifest from the template manager first: it lists the effect categories with their axis level labels, plus the risk sources, exposure targets and barrier library this tenant knows, so the file can be written with words that resolve. Every property is refused if misspelled, so a typo is reported rather than silently dropping the value.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "template", "activities"],
+  "required": [
+    "version",
+    "template",
+    "activities"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -18,7 +22,9 @@
     "template": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -35,42 +41,64 @@
       "type": "array",
       "minItems": 1,
       "description": "The job in sequence. Array order is the only ordering the file carries; the importer derives sortOrder and displayNumber from it, so no identifiers appear anywhere in this format.",
-      "items": { "$ref": "#/definitions/activity" }
+      "items": {
+        "$ref": "#/definitions/activity"
+      }
     }
   },
   "definitions": {
     "activity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "description": { "type": "string" },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
         "effectCategories": {
           "type": "array",
           "description": "Which effect categories this activity is assessed against, by name (\"Health\") or standard (\"ISO 45001\") from the manifest. This decides how many scores each of its risks carries, so an activity with none is not merely unscored but unscorable.",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "risks": {
           "type": "array",
           "description": "Risks are nested inside their activity. There is no parent reference, so a risk cannot dangle.",
-          "items": { "$ref": "#/definitions/risk" }
+          "items": {
+            "$ref": "#/definitions/risk"
+          }
         }
       }
     },
     "risk": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["event"],
-      "description": "One unwanted event. Barriers are deliberately absent from this format: a template's value is the hazard identification, and barriers are what the importing company decides to do about it.",
+      "required": [
+        "event"
+      ],
+      "description": "One unwanted event, with the controls a template may name. Barriers are library references, never free text (R24), and carry no execution evidence: a template says what the control is, not that anyone has put it in place (R28).",
       "properties": {
         "event": {
           "type": "string",
           "minLength": 1,
           "description": "The unwanted event. This is what the risk is."
         },
-        "cause": { "type": "string", "description": "What gives rise to it." },
-        "consequence": { "type": "string", "description": "What happens if it occurs." },
+        "cause": {
+          "type": "string",
+          "description": "What gives rise to it."
+        },
+        "consequence": {
+          "type": "string",
+          "description": "What happens if it occurs."
+        },
         "riskSource": {
           "type": "string",
           "description": "From the manifest's riskSources, by key or name. An unrecognised value is not an error: the importer asks about it once, with its usage count, and offers to map it, add it to the vocabulary, or leave it blank."
@@ -85,15 +113,28 @@
         },
         "inherentScores": {
           "type": "array",
-          "description": "The hazard before any controls. Residual scores cannot be expressed in this format at all: R2 and R3 require a recorded barrier before an improvement is legitimate, barriers are not imported, and an imported residual would arrive unjustified.",
-          "items": { "$ref": "#/definitions/score" }
+          "description": "The hazard before any controls. Residual scores cannot be expressed in this format at all. Barriers are imported, but they arrive planned rather than established, so a residual leaning on them would be flagged NotEstablished on sight (R2, R3, R5).",
+          "items": {
+            "$ref": "#/definitions/score"
+          }
+        },
+        "barriers": {
+          "type": "array",
+          "description": "Controls, as references into the company's barrier library. An unrecognised name is not an error: the importer asks about it once, with its usage count, and offers to map it, add it to the library, or leave it blank. Left blank the barrier is not created, because R24 leaves no way to record one the library does not hold.",
+          "items": {
+            "$ref": "#/definitions/barrier"
+          }
         }
       }
     },
     "score": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["effectCategory", "consequence", "probability"],
+      "required": [
+        "effectCategory",
+        "consequence",
+        "probability"
+      ],
       "properties": {
         "effectCategory": {
           "type": "string",
@@ -112,9 +153,44 @@
     },
     "level": {
       "oneOf": [
-        { "type": "string", "minLength": 1 },
-        { "type": "integer", "minimum": 1 }
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
       ]
+    },
+    "barrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "description": "A control, named from the manifest's barrierLibrary. Status, verification and document reference cannot be set here: every imported barrier arrives planned, and the assessment that adopts it records when it is actually in place (R28).",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The library entry's name, e.g. \"Physical guarding\". The entry's own wording is what lands on the risk, so two risks citing one control carry one sentence and the actions view can group them."
+        },
+        "type": {
+          "enum": [
+            "Elimination",
+            "Substitution",
+            "Technical",
+            "Organisational",
+            "Ppe"
+          ],
+          "description": "Optional; the library entry carries a suggested type. Ordered by the hierarchy of controls, and only Elimination, Substitution and Technical can later justify a severity reduction (R3). It matters most for a barrier this tenant does not hold yet, where adding it to the library needs a type the library cannot supply."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional, and used only if this barrier is new to the company. Where the name resolves, the library entry's wording wins (R24); where it does not and the manager adds it, this becomes the new entry's description. Without it the entry would be created with none."
+        }
+      }
     }
   }
 }

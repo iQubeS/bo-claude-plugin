@@ -16,7 +16,7 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 # label | local path (repo-relative) | upstream repo | pinned ref | upstream path
 SCHEMAS=(
   "qcp|assets/qcp/qcp-schema-v1.json|iQubeS/bo-qcp-admin|v0.2.0|src/utils/qcp-schema/qcp-schema-v1.json"
-  "ra|assets/risk/ra-template-import.schema-v1.json|iQubeS/bo-ra|3f1140ab66c3dcc14320f420f6bb1119a6b95167|docs/ra-template-import.schema.json"
+  "ra|assets/risk/ra-template-import.schema-v1.json|iQubeS/bo-ra|0927a0c9966579142cad740bd8d112819ccff28f|docs/ra-template-import.schema.json"
 )
 
 # Not checked here, because there is nothing upstream to check against:
