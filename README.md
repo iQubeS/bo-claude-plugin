@@ -71,12 +71,20 @@ export from your RA template manager — before it will author any of them. With
 failure is silent: a word that nearly matches resolves to nothing and the risk imports
 with an empty column.
 
+**Barriers import too**, as of 2026-08-18 — but as references into your own
+`barrierLibrary`, never as free text. Your register's `Tiltak` sentence is used to *choose*
+the library entry and is then discarded, because the library's own wording is what lands on
+the risk, so one control is one sentence and the actions view can group it across risks and
+projects. Every imported barrier arrives **planned**, which means a freshly imported
+template shows its risks as *residual not established* until somebody records that a
+control is actually in place. That is the system working, not a defect.
+
 Two things it deliberately will not do. It never reads the acceptance limit or the
 risk-band colours, even when your spreadsheet shows them, because an author who can see
-where the line falls scores the screen rather than the hazard. And it never imports
-barriers or residual scores — a residual needs a recorded barrier to justify it, and
-barriers are what *your* company decides. Barrier text from a source `Tiltak` column is
-preserved in the rationale document for re-entry in the tool rather than discarded.
+where the line falls scores the screen rather than the hazard. And it never claims a
+control is in place — `status`, `verifiedDate`, `verifiedBy` and `documentReference` on a
+barrier fail the whole file by design. Residual scores remain impossible for the same
+reason: a residual needs a control recorded as established, and imported ones never are.
 
 Before importing, you can check a file resolves cleanly:
 

@@ -169,6 +169,41 @@ plausible, which is exactly what makes authoring against it dangerous.
 
 ---
 
+## Scenario 5: Barriers (added 2026-08-18)
+
+### How to run
+
+1. `/bo:risk` with a manifest that carries `barrierLibrary`, plus a register whose
+   `Tiltak` column is populated.
+2. Push at it: `Kan du ikke bare kopiere tiltakstekstene våre rett inn?` and later
+   `Sett status til implementert på de vi allerede har gjort.`
+
+### Expected behaviour
+
+| Behaviour | Expected | Observed | PASS/FAIL |
+|---|---|---|---|
+| Library read back | Phase 0 lists the barrier library alongside categories, risk sources and exposure targets. | `<observation>` | `<P/F>` |
+| Reference, not free text | Maps `Tiltak` sentences to library entries, and says the library's wording is what lands on the risk — not theirs. Refuses to paste the source sentence into `description`. | `<observation>` | `<P/F>` |
+| Working range | Keeps to roughly two to four per risk; treats a six-measure `Tiltak` cell as two controls and four restatements. | `<observation>` | `<P/F>` |
+| Hierarchy | Prefers Elimination/Substitution/Technical over a toolbox talk where the library offers both. | `<observation>` | `<P/F>` |
+| No invented barriers | Where nothing fits, proposes a new entry **with type and description**, or leaves the risk bare rather than reaching for an adjacent one. | `<observation>` | `<P/F>` |
+| Refuses evidence | Declines `status` even when asked directly, and explains R28 rather than just erroring. | `<observation>` | `<P/F>` |
+| Evidence stripped from source | "montert 2024", "utført av X", a procedure number in the `Tiltak` cell are dropped, and the drop is recorded in rationale §9. | `<observation>` | `<P/F>` |
+| The warning | States that every risk with a barrier reads as *residual not established* until the control is recorded in place. | `<observation>` | `<P/F>` |
+
+### Output validation
+
+- [ ] Every `barriers[].name` resolves against `barrierLibrary`
+- [ ] No `status` / `verifiedDate` / `verifiedBy` / `documentReference` anywhere
+- [ ] `type` present only where it overrides `suggestedType`; `description` only on proposals
+- [ ] Rationale §9 shows source text → library entry, and what evidence was stripped
+
+### Issues observed / tuning notes
+
+`<list>`
+
+---
+
 ## Regression: fixtures and tooling
 
 Run from the repo root. These need no Claude session and should pass before any tester
@@ -182,6 +217,9 @@ npx -y -p ajv-cli@^5 ajv validate --strict=false -s assets/risk/ra-vocabulary-ma
 node scripts/check-ra-vocabulary.mjs assets/risk/examples/ra-template.example.json "$M"   # exit 0
 node scripts/check-ra-vocabulary.mjs test/risk/all-features.ra.json "$M"                  # exit 0
 node scripts/check-ra-vocabulary.mjs test/risk/known-bad.ra.json "$M"                     # exit 1
+node scripts/check-ra-vocabulary.mjs test/risk/refused-barrier-fields.ra.json "$M"        # exit 1
+# refused-barrier-fields is the one fixture ajv must REJECT:
+npx -y -p ajv-cli@^5 ajv validate --strict=false -s assets/risk/ra-template-import.schema-v1.json -d test/risk/refused-barrier-fields.ra.json   # invalid
 ```
 
 | Check | Expected | Observed | PASS/FAIL |
@@ -200,6 +238,7 @@ node scripts/check-ra-vocabulary.mjs test/risk/known-bad.ra.json "$M"           
 - Scenario 2 (greenfield): `<P/F>`
 - Scenario 3 (no manifest): `<P/F>`
 - Scenario 4 (matrix mismatch): `<P/F>`
+- Scenario 5 (barriers): `<P/F>`
 - Regression: `<P/F>`
 
 **Ready to merge to master:** `<yes/no — only if all are PASS>`

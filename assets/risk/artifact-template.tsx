@@ -33,6 +33,8 @@ type Score = {
   probability: string | number;
 };
 
+type Barrier = { name: string; type?: string; description?: string };
+
 type Risk = {
   event: string;
   cause?: string;
@@ -41,6 +43,7 @@ type Risk = {
   exposureTarget?: string;
   minimumPpe?: string;
   inherentScores?: Score[];
+  barriers?: Barrier[];
 };
 
 type Activity = {
@@ -88,6 +91,7 @@ const INITIAL_TEMPLATE: Template = {
           riskSource: 'Falling or shifting load',
           exposureTarget: 'Personnel',
           minimumPpe: 'Hjelm, synlighetstøy, vernesko, slaghansker',
+          barriers: [{ name: 'Permit to work' }, { name: 'Verified competence' }],
           inherentScores: [
             { effectCategory: 'Health', consequence: 'Very critical', probability: 'Probable' },
             { effectCategory: 'Finance', consequence: 'Moderate', probability: 'Low probability' },
@@ -184,6 +188,8 @@ export default function RiskTemplatePreview() {
       </ol>
 
       <p className="mt-6 text-xs text-slate-400 leading-relaxed max-w-3xl">
+        Barrierer importeres som <em>planlagt</em>, så hver risiko med en barriere leses som
+        «restrisiko ikke etablert» til noen registrerer at kontrollen faktisk er på plass.
         Forhåndsvisningen viser ingen risikoverdi og ingen fargekoder. Verktøyet regner ut
         banding selv, og akseptkriteriet holdes bevisst utenfor forfatterens synsfelt — den
         som ser hvor grensen går fristes til å score skjermbildet i stedet for faren.
@@ -372,6 +378,26 @@ function RiskRow({
           </span>
         )}
       </div>
+
+      {(risk.barriers ?? []).length > 0 && (
+        <div className="mt-2 ml-6">
+          <span className="text-xs uppercase tracking-wide text-slate-400">Barrierer</span>
+          <div className="flex flex-wrap gap-1.5 mt-1">
+            {(risk.barriers ?? []).map((b, i) => (
+              <span
+                key={i}
+                className="text-xs border border-slate-300 bg-slate-50 text-slate-700 px-2 py-0.5 rounded"
+                title={b.description ?? undefined}
+              >
+                {b.name}
+                {b.type && <span className="text-slate-400"> · {b.type}</span>}
+                {b.description && <span className="text-slate-400"> · ny</span>}
+              </span>
+            ))}
+          </div>
+          <p className="text-xs text-slate-400 mt-1">Importeres som planlagt</p>
+        </div>
+      )}
 
       {scores.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2 ml-6">

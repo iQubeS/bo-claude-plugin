@@ -7,6 +7,52 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ## [Unreleased]
 
 ### Added
+- **Barrier support in `/bo:risk`.** `risks[].barriers` is now authored: an array of
+  `{ name, type?, description? }` where `name` is a reference into the manifest's new
+  `barrierLibrary`. Vendored schema and both examples re-pinned to `bo-ra@0927a0c9`.
+- `assets/risk/ra-vocabulary-manifest.schema-v1.json` gains `barrierLibrary`
+  (`{key, name, description?, suggestedType?}`). Optional, so a manifest exported before
+  barrier support still validates.
+- `test/risk/refused-barrier-fields.ra.json` — a third fixture, and the only one that is
+  **structurally invalid on purpose**. It plants `status`, `verifiedDate`, `verifiedBy`,
+  `documentReference` and a bad `type` enum, because "these fail the whole file,
+  deliberately" is a promise to whoever writes a file against this format, and a promise
+  is worth a test.
+- `scripts/check-ra-vocabulary.mjs` resolves barrier names against the library, refuses the
+  four evidence fields with an R28 explanation rather than a generic "unknown property",
+  validates the `type` enum, and advises on: barriers beyond the two-to-four working range,
+  a `description` that restates one the library already holds, a `type` identical to
+  `suggestedType`, a proposal with no type or description, five or more proposed entries,
+  risks with no barriers, and a manifest with no `barrierLibrary` at all.
+
+### Changed
+- **`Tiltak` now crosses.** Yesterday it was rescued into a rationale appendix because
+  barriers could not be imported; today it maps to `barriers[]`. But the source's sentence
+  is used only to *choose* a library entry and is then discarded — the library's own
+  wording lands on the risk (R24), so one control is one sentence and the actions view can
+  group it. `column-lexicon.md` §4b and rationale §9 are rewritten around that.
+- Rationale §9 changes from "barrier text carried over, not imported" to a source-text →
+  library-entry audit trail, plus what evidence was stripped from the source cell.
+
+### Notes
+- **Backward compatible, and verified as such.** `barriers` is optional and the format
+  version is still `1`. Checked in four directions: an old file validates against the new
+  schema; an old file still pre-flights clean against the new manifest; an old manifest
+  still validates against the updated manifest schema; and a barrier-bearing file against a
+  pre-barrier manifest fails loudly rather than silently.
+- **Every imported barrier arrives planned**, so every risk carrying one reads as *residual
+  not established* until somebody records the control is in place. That is R5 working, and
+  the handover flags it as the single most likely thing to be reported back as a bug — so
+  the command, the rationale template and the live preview all say it up front.
+- **An unresolved barrier is not created at all**, unlike a risk source, whose risk still
+  imports with an empty column. The pre-flight calls that out specifically, because the
+  two failure modes look alike and are not.
+- Residual scores are still impossible, and barriers do not change that: they arrive
+  planned, so a residual leaning on one would rest on nothing recorded (R5).
+
+## [0.4.0] — 2026-08-17
+
+### Added
 - `/bo:risk` slash command — guided risk-assessment consultation that produces a
   `.ra.json` template (ra-template-import v1) ready for import into the Business Online
   QHSE risk-assessment template manager, plus a `-rationale.md` companion recording the

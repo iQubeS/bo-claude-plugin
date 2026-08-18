@@ -9,8 +9,12 @@ There are two checks, and they catch different things:
 
 | Check | Catches | Should pass | Should fail |
 |---|---|---|---|
-| `ajv` against the schema | Structural faults — a misspelled key, a missing `event`, a `residualScores` block. Any one refuses the **whole file** at import. | both | neither |
-| `check-ra-vocabulary.mjs` | Semantic faults — words this tenant does not know, levels its axes do not have. These import "successfully" and leave blanks behind. | `all-features` | `known-bad` |
+| `ajv` against the schema | Structural faults — a misspelled key, a missing `event`, a `residualScores` block, **a barrier claiming it is in place**. Any one refuses the **whole file** at import. | `all-features`, `known-bad` | `refused-barrier-fields` |
+| `check-ra-vocabulary.mjs` | Semantic faults — words this tenant does not know, levels its axes do not have. These import "successfully" and leave blanks behind. | `all-features` | `known-bad`, `refused-barrier-fields` |
+
+The three fixtures divide along that split deliberately: `all-features` is clean on both,
+`known-bad` is **structurally valid** so only the pre-flight catches it, and
+`refused-barrier-fields` is structurally invalid so ajv catches it first.
 
 The second check is the one worth internalising. A file can be perfectly valid and still
 import into an empty column, because unresolved vocabulary is not an error in the
@@ -96,6 +100,42 @@ So for a Norwegian source register the manager is typically handed a list of unr
 words with **no suggestions attached**. Translating the vocabulary is the command's job
 in Phase 3, not something to defer to the import screen.
 
+## `refused-barrier-fields.ra.json` — the fields that fail the whole file
+
+Expected: `ajv` **invalid**, pre-flight **exit 1** with five structural problems.
+
+R28 splits a barrier in two. What the control *is* — its name, type and description —
+travels with the template. Any claim that it is actually installed does not: that belongs
+to the project that adopts the template, recorded by people the template has never met.
+
+So all four evidence fields are refused, and one bad enum value alongside them:
+
+| Planted field | Why it fails |
+|---|---|
+| `status: "Implemented"` | Every imported barrier arrives **planned**. |
+| `verifiedDate` | Verification is execution evidence, not authored content. |
+| `verifiedBy` | Same. |
+| `documentReference` | Same. |
+| `type: "Administrative"` | Not in the enum — it is `Organisational`. |
+
+This fixture exists because "these fail the whole file, deliberately" is a promise made to
+whoever writes a file against this format. A promise is worth a test.
+
+## Barriers, and the one thing to expect afterwards
+
+Barriers import as of 2026-08-18. `barriers` is optional and the format version is still
+`1`, so a file written before that date imports exactly as it did.
+
+A barrier is a **reference into `barrierLibrary`**, never free text — the library entry's
+own `description` is what lands on the risk (R24), so one control is one sentence and the
+actions view can group it across risks and projects. Two consequences worth internalising:
+
+- **An unresolved barrier is not created at all**, unlike a risk source, whose risk still
+  imports with an empty column. There is no third option.
+- **Every imported barrier arrives planned**, so every risk carrying one reads as
+  *residual not established* until somebody records the control is in place. That is R5
+  working, and it is the single most likely thing to be reported back as a bug.
+
 ## Keeping these in sync
 
 If `scripts/check-schema-sync.sh` reports drift in the vendored schema, re-read
@@ -107,7 +147,7 @@ upstream, add a case here that exercises it.
 
 Vendored into this repo, and checked by `check-schema-sync.sh`:
 
-| Here | Upstream (`iQubeS/bo-ra@3f1140ab`) |
+| Here | Upstream (`iQubeS/bo-ra@0927a0c9`) |
 |---|---|
 | `assets/risk/ra-template-import.schema-v1.json` | `docs/ra-template-import.schema.json` |
 | `assets/risk/examples/ra-template.example.json` | `docs/examples/ra-template.example.json` |

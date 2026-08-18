@@ -178,25 +178,44 @@ call.}}
 
 | Source column | Rows affected | Why it did not cross |
 |---|---|---|
-| {{Tiltak}} | {{71}} | Barriers are deliberately not importable — a template's value is the hazard identification, and barriers are what the importing company decides to do about it. **Text preserved in §9.** |
-| {{Restrisiko}} | {{71}} | The format cannot express a residual at all. A residual needs a recorded barrier to justify it, and barriers are not imported. |
+| {{Tiltak}} | {{71}} | **Crossed, but translated.** Barriers import as library references, so the source sentence chose the entry and was then discarded — the library's wording is what lands on the risk (R24). Audit trail in §9. |
+| {{Restrisiko}} | {{71}} | The format cannot express a residual at all. Barriers importing does not change this: every imported barrier arrives planned, so a residual resting on one is not established (R5). |
 | {{Nr}} | {{84}} | The format carries no identifiers; array order is the ordering and the tool derives its own numbering. |
 | {{Risikotall}} | {{84}} | Derived by the tool from the score pair. |
 | {{Ansvarlig, Frist}} | {{84}} | These belong to a project instance, not to a generic template. |
 
 ---
 
-## 9. Appendix: barrier text carried over, not imported
+## 9. Barriers: source text to library entry
 
-{{Migration mode only, and only when the source had a barrier or Tiltak column.
+{{Only where barriers were authored. Barriers import as of 2026-08-18, but as references
+into the company's barrier library — the source's own sentence is used to choose the entry
+and is then discarded, because the library's wording is what lands on the risk (R24) and
+one control must be one sentence for the actions view to group it.
 
-This text is NOT in the .ra.json. It is preserved here so it can be entered as barriers in
-the tool after import, where it can be typed and credited properly — and where a residual
-score becomes legitimate.}}
+This table is the audit trail for that translation: it shows why a given entry was chosen
+for a given source sentence.}}
 
-| Activity | Event | Barrier text from source |
-|---|---|---|
-| {{activity}} | {{event}} | {{verbatim source text}} |
+| Source `Tiltak` text | Uses | → Library entry | Note |
+|---|---|---|---|
+| {{"Arbeidstillatelse skal foreligge"}} | {{11}} | {{Permit to work}} | |
+| {{"Sikker jobb-analyse før oppstart"}} | {{4}} | *proposed new* | {{type + description supplied; manager decides at import}} |
+| {{"Montert 2024, se QSE-PRO-012"}} | {{2}} | {{Physical guarding}} | evidence stripped — see below |
+
+### Evidence removed from the source
+
+{{`status`, `verifiedDate`, `verifiedBy` and `documentReference` are refused by the format
+and fail the whole file. Source registers routinely carry them inside the Tiltak cell
+("montert 2024", "utført av HMS-leder", a procedure number). List what was stripped, so
+nobody thinks it was lost by accident:}}
+
+- {{source text}} → kept {{library entry}}, dropped {{"montert 2024"}}
+
+### Risks left without barriers
+
+{{Count, and whether it was a decision or a gap. A risk with no adequate control is a
+finding and the product reports it as one — that is the honest outcome when the library
+holds nothing that fits, and better than an invented barrier that hides it.}}
 
 ---
 
@@ -223,7 +242,11 @@ If everything proposed was incorporated, state "Alle forslag ble inkludert."}}
    find it. Lock it first.
 4. **Import always creates a new template.** It never merges into an existing one, so
    re-importing the same file gives you a second copy.
-5. {{If any vocabulary was left unresolved: "At import you will be asked about {{n}}
+5. **Every risk carrying a barrier reads as *residual not established*** until somebody
+   records that the control is actually in place. That is R5 working as designed, not a
+   defect: every imported barrier arrives planned. A freshly imported template shows its
+   risks as questionable, and it is telling the truth.
+6. {{If any vocabulary was left unresolved: "At import you will be asked about {{n}}
    terms. §5 records the decision already taken for each — reconcile to match, or the
    register will disagree with this document."}}
 

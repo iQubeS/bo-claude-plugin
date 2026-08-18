@@ -6,7 +6,12 @@
   "$comment": "AUTHORED HERE, NOT UPSTREAM. bo-ra publishes ra-template-import.schema.json for the authored template but no schema for the manifest, so this one is derived from the VocabularyManifest / ManifestCategory / ManifestAxisLevel / ManifestEntry interfaces in bo-ra@3f1140ab:src/services/templateJson.ts, plus the invariants asserted in bo-ra@3f1140ab:tests/templateJsonExamples.test.ts. It is deliberately strict (additionalProperties: false throughout) so a wrong file fails loudly rather than validating hollowly. If bo-ra ever adds a manifest field, this schema must be bumped by hand — scripts/check-schema-sync.sh does not cover it, because there is no upstream file to compare against.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "effectCategories", "riskSources", "exposureTargets"],
+  "required": [
+    "version",
+    "effectCategories",
+    "riskSources",
+    "exposureTargets"
+  ],
   "properties": {
     "version": {
       "const": 1,
@@ -16,24 +21,43 @@
       "type": "array",
       "minItems": 1,
       "description": "What a risk is scored against. Each carries the standard it answers to, the grid size, and both axes. The ladders differ per category — that difference is the entire reason this file exists.",
-      "items": { "$ref": "#/definitions/category" }
+      "items": {
+        "$ref": "#/definitions/category"
+      }
     },
     "riskSources": {
       "type": "array",
       "description": "What gives rise to the unwanted event. Only active entries are exported: offering an author a word the pickers will not show invites a value that resolves once and can never be chosen again.",
-      "items": { "$ref": "#/definitions/entry" }
+      "items": {
+        "$ref": "#/definitions/entry"
+      }
     },
     "exposureTargets": {
       "type": "array",
       "description": "What is harmed.",
-      "items": { "$ref": "#/definitions/entry" }
+      "items": {
+        "$ref": "#/definitions/entry"
+      }
+    },
+    "barrierLibrary": {
+      "type": "array",
+      "description": "The controls the company already knows how to name. A barrier on a risk is a reference into this list, never free text: the entry's own description is what lands on the risk, so identical controls group together across risks and projects in the actions view (R24). Absent on a tenant that predates barrier support — the field is optional for exactly that reason.",
+      "items": {
+        "$ref": "#/definitions/barrierEntry"
+      }
     }
   },
   "definitions": {
     "category": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "standard", "matrixType", "consequenceLevels", "probabilityLevels"],
+      "required": [
+        "name",
+        "standard",
+        "matrixType",
+        "consequenceLevels",
+        "probabilityLevels"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -54,20 +78,28 @@
           "type": "array",
           "minItems": 1,
           "description": "The severity ladder for THIS category. Copy labels from here verbatim: matching forgives case and runs of whitespace, and nothing else.",
-          "items": { "$ref": "#/definitions/axisLevel" }
+          "items": {
+            "$ref": "#/definitions/axisLevel"
+          }
         },
         "probabilityLevels": {
           "type": "array",
           "minItems": 1,
           "description": "The likelihood ladder for THIS category. Also per-category: on the reference tenant Opportunity runs 'Very low'..'Very high' while every other category runs 'Very low probability'..'Very high probability'.",
-          "items": { "$ref": "#/definitions/axisLevel" }
+          "items": {
+            "$ref": "#/definitions/axisLevel"
+          }
         }
       }
     },
     "axisLevel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["level", "label", "descriptor"],
+      "required": [
+        "level",
+        "label",
+        "descriptor"
+      ],
       "properties": {
         "level": {
           "type": "integer",
@@ -88,7 +120,10 @@
     "entry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["key", "name"],
+      "required": [
+        "key",
+        "name"
+      ],
       "properties": {
         "key": {
           "type": "string",
@@ -104,6 +139,40 @@
           "type": "string",
           "minLength": 1,
           "description": "The Norwegian name, where the company has supplied one. Optional and frequently absent — on the reference tenant every exposure target has one and no risk source does, so a Norwegian risk-source term will not resolve and must be written as the English name or the key."
+        }
+      }
+    },
+    "barrierEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "name"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The stable key, e.g. 'permit-to-work'. Resolves first, before the name."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The control's name, e.g. 'Permit to work'. This is what an authored file writes in barriers[].name."
+        },
+        "description": {
+          "type": "string",
+          "description": "The wording that lands on the risk when this entry is cited. An author choosing between two entries is choosing between these sentences rather than between two names, so an authored file must NOT restate it."
+        },
+        "suggestedType": {
+          "enum": [
+            "Elimination",
+            "Substitution",
+            "Technical",
+            "Organisational",
+            "Ppe"
+          ],
+          "description": "Where the control sits in the hierarchy of controls, ordered strongest first. An authored file omits barriers[].type unless it means to override this. Only Elimination, Substitution and Technical can ever justify a later severity reduction (R3)."
         }
       }
     }
