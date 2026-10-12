@@ -45,6 +45,7 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 /bo:qcp                 # Design a QCP (Quality Control Plan) template → .qcp.json
 /bo:checklist           # Design a checklist/form template → .checklist.json
 /bo:risk                # Design or migrate a risk assessment template → .ra.json
+/bo:process             # Design, migrate or continue a process diagram → .diagram.json
 /bo:bo-crm              # CRM operations guide
 /bo:bo-project          # Project management guide
 /bo:bo-hr               # HR module guide
@@ -54,13 +55,14 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 ### Design commands
 
-Three guided consultants turn a conversation into an import-ready template:
+Four guided consultants turn a conversation into an import-ready file:
 
 - **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `.qcp.json` (plus a process-rationale doc) ready to upload via **Import QCP** in QCPAdmin (Next).
 - **`/bo:checklist`** — a forms/data-collection consultant. It interviews you about a checklist or form, challenges weak questions and wrong field types, and produces a `.checklist.json` (plus an import-guide with the name/code/category/project-type metadata) ready to import into the **Template Manager**.
 - **`/bo:risk`** — a risk-assessment consultant. Most sessions start with a customer's Excel register: it reads the workbook, calibrates their scale against your tenant's, translates their vocabulary, challenges weak hazard entries, and produces a `.ra.json` (plus a rationale doc) ready to import into the **QHSE risk-assessment template manager**.
+- **`/bo:process`** — a process-diagram consultant. It draws out one process as a swimlane diagram (roles as lanes, stages as phases, steps, decisions, hand-offs), from a conversation, from an existing procedure document, BPMN export, drawing or meeting notes, or as a continuation of a diagram exported from **BO Atlas**. Produces a `.diagram.json` (plus a rationale doc) ready to import on the **Diagram tab in Atlas Studio**.
 
-All three support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists; Excel/CSV/Word/PDF registers for risk — and render a live preview of the template as you build it.
+All four support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists; Excel/CSV/Word/PDF registers for risk; procedures, BPMN, drawings and meeting notes for process diagrams — and render a live preview as you build. `/bo:process` additionally supports **continuation**: start from a file Atlas exported, change it, and import it back without losing what Atlas holds on the steps.
 
 #### `/bo:risk` needs one extra input
 
@@ -92,6 +94,28 @@ Before importing, you can check a file resolves cleanly:
 node scripts/check-ra-vocabulary.mjs my-template.ra.json my-manifest.json
 ```
 
+#### `/bo:process` and BO Atlas
+
+The diagram file is the exchange format of BO Atlas itself: it carries **the drawing and
+only the drawing** (lanes, phases, steps, connectors, notes). Triggers, links, work files,
+RACI, ISO mappings and the process definition are authored in Atlas afterwards, and an
+import never touches them. Import goes into whichever process is open on the Diagram tab,
+is reviewed before it applies (removals first), and is never saved by itself.
+
+Two rules carry continuation mode. Step ids from an export are how Atlas knows a step is
+the same one, so the command keeps every one of them; a lost id means a deleted and
+recreated step, and its triggers and links are gone. And coordinates are all-or-nothing:
+the command never writes them for a new diagram, and strips the exported set the moment a
+step is added or moved, because Atlas would otherwise honour a stale position.
+
+Before importing, you can check a file, and in continuation mode see what the Atlas
+review dialog will say:
+
+```bash
+node scripts/check-process-diagram.mjs my-process.diagram.json
+node scripts/check-process-diagram.mjs my-process.diagram.json the-export.diagram.json
+```
+
 Or just ask Claude naturally:
 - "Vis meg salgspipelinen"
 - "Opprett et avvik for kvalitetsproblemet på prosjekt X"
@@ -117,18 +141,23 @@ bo-claude-plugin/
 │   ├── status.md            # /bo:status dashboard command
 │   ├── qcp.md               # /bo:qcp — QCP template designer
 │   ├── checklist.md         # /bo:checklist — checklist template designer
-│   └── risk.md              # /bo:risk — risk assessment template designer
+│   ├── risk.md              # /bo:risk — risk assessment template designer
+│   └── process.md           # /bo:process — process diagram designer (BO Atlas)
 ├── assets/
 │   ├── qcp/                 # QCP schema, examples, artifact & rationale templates
 │   ├── checklist/           # Checklist schema, examples, artifact & import-guide templates
-│   └── risk/                # RA schemas (vendored + manifest), examples, artifact,
-│                            #   rationale template, Norwegian column lexicon
+│   ├── risk/                # RA schemas (vendored + manifest), examples, artifact,
+│   │                        #   rationale template, Norwegian column lexicon
+│   └── process/             # Atlas diagram schema (vendored), example, modelling lexicon,
+│                            #   artifact & rationale templates
 ├── scripts/
 │   ├── check-schema-sync.sh      # Vendored schemas still match upstream?
-│   └── check-ra-vocabulary.mjs   # Will this .ra.json import without reconciliation?
+│   ├── check-ra-vocabulary.mjs   # Will this .ra.json import without reconciliation?
+│   └── check-process-diagram.mjs # Will this .diagram.json import as the diagram it describes?
 ├── test/
 │   ├── checklist/           # Schema-coverage fixture for /bo:checklist
-│   └── risk/                # Coverage + known-bad fixtures for /bo:risk
+│   ├── risk/                # Coverage + known-bad fixtures for /bo:risk
+│   └── process/             # Coverage, known-bad and continuation fixtures for /bo:process
 ├── docs/
 │   ├── brukermanual/        # Norwegian user manual (63 files)
 │   └── qa/                  # Manual QA logs for the design commands

@@ -18,6 +18,7 @@ There is nothing to build, install, or configure locally. The connection to BO r
 - Design new QCP (Quality Control Plan) templates with `/bo:qcp` — guided business-process consultation that produces a `.qcp.json` ready for upload into QCPAdmin (Next). Supports both greenfield design and migration from existing process docs (BPMN, Word, PDF, screenshots).
 - Design new checklist/form templates with `/bo:checklist` — guided forms consultation that produces a `.checklist.json` ready for import into the Template Manager, plus an import-guide with the name/code/category/project-type metadata. Supports greenfield design and migration from existing forms (Word, PDF, Excel, photos of paper forms).
 - Design or migrate risk assessment templates with `/bo:risk` — guided hazard identification that produces a `.ra.json` ready for import into the QHSE risk-assessment template manager, plus a rationale doc. The usual starting point is a customer's Excel risk register. Requires the tenant's `Copy vocabulary` manifest as a second input.
+- Design, migrate or continue business-process diagrams with `/bo:process` — guided consultation (roles as lanes, stages as phases, steps, decisions, hand-offs) that produces a `.diagram.json` ready for import on the Diagram tab in BO Atlas Studio, plus a rationale doc. Three ways in: a conversation, an existing procedure document / BPMN / drawing / meeting notes, or a `.diagram.json` exported from Atlas (continuation).
 - Ask questions about how Business Online works (HR, onboarding, processes)
 
 ## How the Plugin Is Organized
@@ -33,7 +34,8 @@ There is nothing to build, install, or configure locally. The connection to BO r
 - `commands/qcp.md` — The `/bo:qcp` QCP-template design command (assets in `assets/qcp/`)
 - `commands/checklist.md` — The `/bo:checklist` checklist-template design command (assets in `assets/checklist/`)
 - `commands/risk.md` — The `/bo:risk` risk-assessment-template design command (assets in `assets/risk/`)
-- `scripts/` — Release checks, not runtime: `check-schema-sync.sh` (vendored schemas still match upstream) and `check-ra-vocabulary.mjs` (will a `.ra.json` import without hand reconciliation)
+- `commands/process.md` — The `/bo:process` process-diagram design command (assets in `assets/process/`)
+- `scripts/` — Release checks, not runtime: `check-schema-sync.sh` (vendored schemas still match upstream), `check-ra-vocabulary.mjs` (will a `.ra.json` import without hand reconciliation) and `check-process-diagram.mjs` (will a `.diagram.json` import as the diagram it describes, and what will the Atlas review dialog say)
 - `docs/brukermanual/` — 63 Norwegian user manual files organized by module. Skills reference these for detailed guidance.
 
 ## Data Connections
@@ -65,6 +67,7 @@ These are available as `${BO_COMPANY_NAME}` and `${BO_LANGUAGE}` in skills and c
 - **HR has no live data**: The bo-hr skill only provides guidance and documentation. Do not attempt to call HR APIs — they don't exist yet.
 - **IDs are GUIDs**: All record identifiers (companies, contacts, leads, projects, NCRs) are GUIDs.
 - **Risk assessments need the tenant's vocabulary manifest**: `/bo:risk` cannot author risk sources, exposure targets or scores without the `Copy vocabulary` export from the destination tenant. Never substitute the bundled reference example in `assets/risk/examples/` — it is a *different* tenant, and authoring against it produces words that look right and import into empty columns. Never read the acceptance limit or risk-band colours out of a customer's spreadsheet, and never compute S×K.
+- **Process diagrams carry the drawing only, and continuation keeps ids**: `/bo:process` never writes triggers, links, RACI or ISO mappings into a `.diagram.json`; they are authored in Atlas afterwards. When continuing an Atlas export, every step id (including `unlinked:` ones) and lane id is kept exactly, and all coordinates are stripped the moment a step, lane, phase or annotation is added or moved. Atlas keys phases by title, so a phase rename is a delete plus a create.
 - **Doc references use `${CLAUDE_SKILL_DIR}`**: Skills point to user manual files via relative paths from the skill directory. Keep this pattern when editing skills.
 
 ## When Something Goes Wrong
