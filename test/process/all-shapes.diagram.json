@@ -1,0 +1,224 @@
+{
+  "schema_version": "1.0",
+  "kind": "bo-atlas-diagram",
+  "process": {
+    "title": "Reklamasjon fra kunde"
+  },
+  "lanes": [
+    {
+      "id": "lane-kundeservice",
+      "label": "Kundeservice"
+    },
+    {
+      "id": "lane-kvalitet",
+      "label": "Kvalitet"
+    },
+    {
+      "id": "lane-produksjon",
+      "label": "Produksjon"
+    },
+    {
+      "id": "lane-leder",
+      "label": "Leder"
+    }
+  ],
+  "phases": [
+    {
+      "title": "Mottak"
+    },
+    {
+      "title": "Vurdering"
+    },
+    {
+      "title": "Tiltak"
+    },
+    {
+      "title": "Avslutning"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Reklamasjon mottatt",
+      "phase": "Mottak",
+      "lane": "lane-kundeservice",
+      "shape": "oval"
+    },
+    {
+      "id": "s2",
+      "title": "Registrer reklamasjonen",
+      "description": "Kunde, ordre, vare og hva kunden mener er feil.",
+      "phase": "Mottak",
+      "lane": "lane-kundeservice",
+      "shape": "rect"
+    },
+    {
+      "id": "s3",
+      "title": "Hent ordre- og leveransedata",
+      "phase": "Mottak",
+      "lane": "lane-kundeservice",
+      "shape": "data"
+    },
+    {
+      "id": "s4",
+      "title": "Undersøk returnert vare",
+      "description": "Fysisk kontroll mot spesifikasjon og følgeseddel.",
+      "phase": "Vurdering",
+      "lane": "lane-kvalitet",
+      "shape": "manual"
+    },
+    {
+      "id": "s5",
+      "title": "Berettiget reklamasjon?",
+      "phase": "Vurdering",
+      "lane": "lane-kvalitet",
+      "shape": "diamond"
+    },
+    {
+      "id": "s6",
+      "title": "Opprett avvik",
+      "description": "Eget avvik i KHMS; denne prosessen venter ikke på årsaksanalysen.",
+      "phase": "Tiltak",
+      "lane": "lane-kvalitet",
+      "shape": "subprocess"
+    },
+    {
+      "id": "s7",
+      "title": "Godkjenn kostnad over 20 000 kr",
+      "phase": "Tiltak",
+      "lane": "lane-leder",
+      "shape": "rect"
+    },
+    {
+      "id": "s8",
+      "title": "Klargjør erstatningsproduksjon",
+      "phase": "Tiltak",
+      "lane": "lane-produksjon",
+      "shape": "prep"
+    },
+    {
+      "id": "s9",
+      "title": "Vent på ny leveranse",
+      "phase": "Tiltak",
+      "lane": "lane-kundeservice",
+      "shape": "delay"
+    },
+    {
+      "id": "s10",
+      "title": "Skriv svar til kunde",
+      "description": "",
+      "phase": "Avslutning",
+      "lane": "lane-kundeservice",
+      "shape": "document"
+    },
+    {
+      "id": "s11",
+      "title": "Arkiver saken",
+      "phase": "Avslutning",
+      "lane": "lane-kvalitet",
+      "shape": "store"
+    },
+    {
+      "id": "s12",
+      "title": "Sak lukket",
+      "phase": "Avslutning",
+      "lane": "lane-kundeservice",
+      "shape": "oval"
+    }
+  ],
+  "connectors": [
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3",
+      "label": "oppslag",
+      "style": "dashed",
+      "arrow": "both"
+    },
+    {
+      "from": "s2",
+      "to": "s4",
+      "style": "solid",
+      "arrow": "end"
+    },
+    {
+      "from": "s4",
+      "to": "s2",
+      "label": "mangler opplysninger",
+      "style": "dashed",
+      "arrow": "end"
+    },
+    {
+      "from": "s4",
+      "to": "s5"
+    },
+    {
+      "from": "s5",
+      "to": "s6",
+      "label": "ja"
+    },
+    {
+      "from": "s5",
+      "to": "s10",
+      "label": "nei"
+    },
+    {
+      "from": "s6",
+      "to": "s7",
+      "label": "kostnadsanslag",
+      "style": "dashed",
+      "arrow": "end"
+    },
+    {
+      "from": "s6",
+      "to": "s8"
+    },
+    {
+      "from": "s7",
+      "to": "s8",
+      "label": "mandat",
+      "style": "dotted",
+      "arrow": "none"
+    },
+    {
+      "from": "s8",
+      "to": "s9"
+    },
+    {
+      "from": "s9",
+      "to": "s10"
+    },
+    {
+      "from": "s10",
+      "to": "s11"
+    },
+    {
+      "from": "s11",
+      "to": "s12"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "n1",
+      "kind": "note",
+      "text": "Vurder mot leveringsbetingelsene i rammeavtalen, ikke mot kundens forventning.",
+      "lane": "lane-kvalitet",
+      "attached_to": "s5"
+    },
+    {
+      "id": "n2",
+      "kind": "connector",
+      "text": "A",
+      "lane": "lane-produksjon"
+    },
+    {
+      "id": "n3",
+      "kind": "offpage",
+      "text": "Produksjonsplanlegging",
+      "attached_to": "s8"
+    }
+  ]
+}

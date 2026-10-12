@@ -7,6 +7,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ## [Unreleased]
 
 ### Added
+- **`/bo:process` contract, step one of the command.** The BO Atlas diagram exchange
+  format (`.diagram.json`, kind `bo-atlas-diagram`, schema 1.0) is now vendored as
+  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@34b8ac24` in
+  `scripts/check-schema-sync.sh`. bo-atlas carries no tags, so the pin is a commit, as for
+  bo-ra. The worked example `innkjop.diagram.json` is copied beside it.
+- `scripts/check-process-diagram.mjs`: the pre-flight for a diagram file. Mirrors the four
+  reference checks Atlas refuses on (unknown connector endpoint, unknown annotation target,
+  unknown phase or lane on a step, duplicate id) and adds the advisories Atlas does not
+  give: a partial coordinate set that will be ignored wholesale, a decision with one exit
+  or unlabelled exits, a step nothing connects to, an empty lane or phase, a self-loop.
+  With the Atlas export as a second argument it prints what the Atlas review dialog will
+  say, removals first, and refuses a file that kept a complete coordinate set while adding
+  or moving something, because Atlas honours the whole set and writes a moved step at its
+  old position outside its new lane.
+- `test/process/`: six fixtures and a README. `all-shapes` covers every shape, connector
+  style, arrow and annotation kind; `known-bad` is structurally valid and reference-invalid
+  on purpose; `export`, `continuation` and `continuation-stale-layout` exercise continuation
+  mode including the round-trip-is-identity case and the stale-position trap.
+
 - **Barrier support in `/bo:risk`.** `risks[].barriers` is now authored: an array of
   `{ name, type?, description? }` where `name` is a reference into the manifest's new
   `barrierLibrary`. Vendored schema and both examples re-pinned to `bo-ra@0927a0c9`.

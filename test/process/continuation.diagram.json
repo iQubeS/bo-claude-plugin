@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "kind": "bo-atlas-diagram",
+  "process": { "title": "Onboarding av ny ansatt", "category_id": "cat-hr-onboarding" },
+  "lanes": [
+    { "id": "lane-hr", "label": "HR" },
+    { "id": "lane-leder", "label": "Nærmeste leder" },
+    { "id": "lane-it", "label": "IT" },
+    { "id": "lane-fadder", "label": "Fadder" }
+  ],
+  "phases": [{ "title": "Før oppstart" }, { "title": "Første dag" }, { "title": "Første måned" }],
+  "steps": [
+    { "id": "4f1c6a2e-8d3b-4e6f-9a1c-2b7d5e8f0a11", "title": "Kontrakt signert", "phase": "Før oppstart", "lane": "lane-hr", "shape": "oval" },
+    { "id": "7a2d9b4c-1e5f-4a8b-b3c6-9d0e1f2a3b22", "title": "Bestill utstyr og tilganger", "description": "PC, telefon, M365-lisens og tilganger etter rolle.", "phase": "Før oppstart", "lane": "lane-leder", "shape": "rect" },
+    { "id": "unlinked:Før oppstart|Opprett bruker", "title": "Opprett bruker og tilganger", "phase": "Før oppstart", "lane": "lane-it", "shape": "rect" },
+    { "id": "s-fadder", "title": "Utpek fadder", "description": "En kollega i samme team, avtalt før første dag.", "phase": "Før oppstart", "lane": "lane-leder", "shape": "rect" },
+    { "id": "b5e8c1d2-3f4a-4b6c-8d9e-0a1b2c3d4e33", "title": "Velkomstmøte", "description": "Leder tar imot, presenterer teamet og dagens plan.", "phase": "Første dag", "lane": "lane-leder", "shape": "manual" },
+    { "id": "c6f9d2e3-4a5b-4c7d-9e0f-1b2c3d4e5f44", "title": "Sikkerhetsopplæring gjennomført", "phase": "Første dag", "lane": "lane-fadder", "shape": "rect" },
+    { "id": "e8b1f4a5-6c7d-4e9f-b021-3d4e5f6a7b66", "title": "Prøvetidssamtale", "phase": "Første måned", "lane": "lane-leder", "shape": "rect" },
+    { "id": "f9c2a5b6-7d8e-4fa0-8132-4e5f6a7b8c77", "title": "Onboarding fullført", "phase": "Første måned", "lane": "lane-hr", "shape": "oval" }
+  ],
+  "connectors": [
+    { "from": "4f1c6a2e-8d3b-4e6f-9a1c-2b7d5e8f0a11", "to": "7a2d9b4c-1e5f-4a8b-b3c6-9d0e1f2a3b22", "style": "solid", "arrow": "end" },
+    { "from": "4f1c6a2e-8d3b-4e6f-9a1c-2b7d5e8f0a11", "to": "s-fadder", "style": "solid", "arrow": "end" },
+    { "from": "7a2d9b4c-1e5f-4a8b-b3c6-9d0e1f2a3b22", "to": "unlinked:Før oppstart|Opprett bruker", "label": "bestilling", "style": "dashed", "arrow": "end" },
+    { "from": "7a2d9b4c-1e5f-4a8b-b3c6-9d0e1f2a3b22", "to": "b5e8c1d2-3f4a-4b6c-8d9e-0a1b2c3d4e33", "style": "solid", "arrow": "end" },
+    { "from": "s-fadder", "to": "b5e8c1d2-3f4a-4b6c-8d9e-0a1b2c3d4e33", "style": "solid", "arrow": "end" },
+    { "from": "b5e8c1d2-3f4a-4b6c-8d9e-0a1b2c3d4e33", "to": "c6f9d2e3-4a5b-4c7d-9e0f-1b2c3d4e5f44", "style": "solid", "arrow": "end" },
+    { "from": "c6f9d2e3-4a5b-4c7d-9e0f-1b2c3d4e5f44", "to": "e8b1f4a5-6c7d-4e9f-b021-3d4e5f6a7b66", "style": "solid", "arrow": "end" },
+    { "from": "e8b1f4a5-6c7d-4e9f-b021-3d4e5f6a7b66", "to": "f9c2a5b6-7d8e-4fa0-8132-4e5f6a7b8c77", "style": "solid", "arrow": "end" }
+  ],
+  "annotations": [
+    { "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c88", "kind": "note", "text": "Tilganger bestilles senest fem virkedager før oppstart.", "lane": "lane-leder", "attached_to": "7a2d9b4c-1e5f-4a8b-b3c6-9d0e1f2a3b22" }
+  ]
+}

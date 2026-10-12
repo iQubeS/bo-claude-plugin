@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "kind": "bo-atlas-diagram",
+  "exported_at": "2026-10-12T09:00:00.000Z",
+  "process": { "title": "Innkjop" },
+  "lanes": [
+    { "id": "lane-innkjoper", "label": "Innkjoper" },
+    { "id": "lane-leder", "label": "Leder" },
+    { "id": "lane-lager", "label": "Lager" }
+  ],
+  "phases": [{ "title": "Behov" }, { "title": "Bestilling" }, { "title": "Mottak" }],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Registrer behov",
+      "description": "Noter hva som trengs, hvor mye og nar det ma vaere pa plass.",
+      "phase": "Behov",
+      "lane": "lane-innkjoper",
+      "shape": "oval"
+    },
+    {
+      "id": "s2",
+      "title": "Over 50 000 kroner",
+      "description": "Belop over grensen gar til leder for godkjenning.",
+      "phase": "Behov",
+      "lane": "lane-leder",
+      "shape": "diamond"
+    },
+    {
+      "id": "s3",
+      "title": "Godkjenn innkjopet",
+      "description": "Leder godkjenner eller avviser, med begrunnelse.",
+      "phase": "Behov",
+      "lane": "lane-leder",
+      "shape": "manual"
+    },
+    {
+      "id": "s4",
+      "title": "Send bestilling",
+      "description": "Bestill hos leverandor pa rammeavtale der den finnes.",
+      "phase": "Bestilling",
+      "lane": "lane-innkjoper",
+      "shape": "document"
+    },
+    {
+      "id": "s5",
+      "title": "Motta og kontroller varen",
+      "description": "Sjekk antall og tilstand mot bestillingen for signering.",
+      "phase": "Mottak",
+      "lane": "lane-lager",
+      "shape": "rect"
+    },
+    {
+      "id": "s6",
+      "title": "Arkiver dokumentasjonen",
+      "description": "Bestilling, folgeseddel og faktura legges i saksmappen.",
+      "phase": "Mottak",
+      "lane": "lane-innkjoper",
+      "shape": "store"
+    }
+  ],
+  "connectors": [
+    { "from": "s1", "to": "s2", "style": "solid", "arrow": "end" },
+    { "from": "s2", "to": "s3", "label": "ja", "style": "solid", "arrow": "end" },
+    { "from": "s2", "to": "s4", "label": "nei", "style": "solid", "arrow": "end" },
+    { "from": "s3", "to": "s4", "style": "solid", "arrow": "end" },
+    { "from": "s4", "to": "s5", "style": "solid", "arrow": "end" },
+    { "from": "s5", "to": "s6", "style": "solid", "arrow": "end" },
+    { "from": "s5", "to": "s1", "label": "avvik meldes", "style": "dashed", "arrow": "end" }
+  ],
+  "annotations": [
+    {
+      "id": "n1",
+      "kind": "note",
+      "text": "Rammeavtalen gar foran. Kjop utenfor den skal begrunnes skriftlig.",
+      "lane": "lane-innkjoper",
+      "attached_to": "s4"
+    }
+  ]
+}
