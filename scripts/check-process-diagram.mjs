@@ -42,13 +42,14 @@
  * referenceErrors and the diff below are reimplementations of validateDiagram and
  * diffDiagramExchange (with phaseFor, the id-then-title resolution) in
  *
- *     bo-atlas@4c55803:packages/process-core/src/validate/validate-diagram.ts
- *     bo-atlas@4c55803:packages/process-core/src/convert/diagram-import.ts
+ *     bo-atlas@3b91f6f:packages/process-core/src/validate/validate-diagram.ts
+ *     bo-atlas@3b91f6f:packages/process-core/src/convert/diagram-import.ts
  *
- * read on 2026-10-13 (4c55803 is the merge of PR #106, schema 1.1; the fifth check and
- * laneBands in auto-layout.ts came with PR #103 at b163f59 the same day; the four older
- * checks were read at 34b8ac24 on 2026-10-12). Two statements of one behaviour can drift;
- * it is accepted because
+ * read on 2026-10-13 (3b91f6f is PR #108, a renamed phase does not move the steps in it;
+ * schema 1.1 came with PR #106 at 4c55803; the fifth check and laneBands in
+ * auto-layout.ts with PR #103 at b163f59, all the same day; the four older checks were
+ * read at 34b8ac24 on 2026-10-12). Two statements of one behaviour can drift; it is
+ * accepted because
  * both are small and pure, and because this is a CHECK and never the contract. When the
  * two disagree, Atlas is right and this file is the bug. scripts/check-schema-sync.sh
  * guards the schema; if it reports drift, re-read both files before trusting these results.
@@ -344,12 +345,10 @@ function continuation(file, exp) {
   const stepsAdded = file.steps.filter((s) => !expSteps.has(s.id));
   const stepsRemoved = exp.steps.filter((s) => !fileSteps.has(s.id));
   const stepsRenamed = [];
-  const stepsMoved = [];
   for (const s of file.steps) {
     const was = expSteps.get(s.id);
     if (was === undefined) continue;
     if (was.title !== s.title) stepsRenamed.push({ from: was.title, to: s.title, id: s.id });
-    if (was.phase !== s.phase || was.lane !== s.lane) stepsMoved.push(s);
   }
 
   // Phases resolve as phaseFor does in Atlas, three cases in this order: an id matching an
@@ -371,6 +370,19 @@ function continuation(file, exp) {
   const phasesRenamed = [...continued].filter(([was, now]) => was.title !== now.title).map(([was, now]) => ({ from: was.title, to: now.title }));
   const renamedTo = new Set(phasesRenamed.map((r) => r.to));
   const renamedFrom = new Set(phasesRenamed.map((r) => r.from));
+  const newTitleOf = new Map(phasesRenamed.map((r) => [r.from, r.to]));
+
+  // A step whose phase was renamed under it has not moved. Without this the dialog would
+  // report a phase rename twice and in two voices, once truthfully as a rename and once as
+  // every step in it moving to another phase, which an author reads as damage.
+  const stepsMoved = [];
+  for (const s of file.steps) {
+    const was = expSteps.get(s.id);
+    if (was === undefined) continue;
+    const movedPhase = was.phase !== s.phase && newTitleOf.get(was.phase) !== s.phase;
+    if (movedPhase || was.lane !== s.lane) stepsMoved.push(s);
+  }
+
   const expPhases = new Set(exp.phases.map((p) => p.title));
   const filePhases = new Set(file.phases.map((p) => p.title));
   const phasesAdded = file.phases.filter((p) => !expPhases.has(p.title) && !renamedTo.has(p.title)).map((p) => p.title);

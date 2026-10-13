@@ -9,7 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ### Added
 - **`/bo:process` contract, step one of the command.** The BO Atlas diagram exchange
   format (`.diagram.json`, kind `bo-atlas-diagram`, schema 1.0) is now vendored as
-  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@4c55803` in
+  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@3b91f6f` in
   `scripts/check-schema-sync.sh`. bo-atlas carries no tags, so the pin is a commit, as for
   bo-ra. The worked example `innkjop.diagram.json` is copied beside it.
 - `scripts/check-process-diagram.mjs`: the pre-flight for a diagram file. Mirrors the six
@@ -24,7 +24,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   then drops what is attached to the phase itself, an ISO clause mapped to it; the steps
   keep their ids), and refuses a file that kept a complete coordinate set while adding or
   moving something, because a new step would land wherever a number was invented for it.
-- **Schema 1.1.** The vendored schema is the one at `bo-atlas@4c55803`: `schema_version`
+- **Schema 1.1.** The vendored schema is the one at `bo-atlas@3b91f6f`: `schema_version`
   is `1.0` or `1.1`, and `1.1` adds an optional `phases[].id`, written by an Atlas export
   for every phase that has a stable id. The command carries it exactly in continuation
   mode and never invents one; a greenfield or migration file stays on `1.0`.
