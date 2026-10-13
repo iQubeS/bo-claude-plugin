@@ -17,6 +17,7 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SCHEMAS=(
   "qcp|assets/qcp/qcp-schema-v1.json|iQubeS/bo-qcp-admin|v0.2.0|src/utils/qcp-schema/qcp-schema-v1.json"
   "ra|assets/risk/ra-template-import.schema-v1.json|iQubeS/bo-ra|0927a0c9966579142cad740bd8d112819ccff28f|docs/ra-template-import.schema.json"
+  "process|assets/process/diagram-exchange-v1.schema.json|iQubeS/bo-atlas|b163f59be31a6776d7865c33769910e781937a43|packages/process-core/src/schema/diagram-exchange-v1.schema.json"
 )
 
 # Not checked here, because there is nothing upstream to check against:
@@ -31,6 +32,11 @@ SCHEMAS=(
 # bo-ra carries no tags or releases yet, which is why its pin is a commit. Swap it for a
 # tag as soon as one exists — a tag says "this is a version", a commit only says
 # "this is what was there that day".
+#
+# bo-atlas has no tags either, so the process-diagram schema is pinned the same way. Its
+# reference checks (validate/validate-diagram.ts) and import rules (convert/diagram-import.ts)
+# are mirrored in scripts/check-process-diagram.mjs; on drift, re-read both before trusting
+# the fixtures in test/process/.
 
 failures=0
 
@@ -38,7 +44,7 @@ for entry in "${SCHEMAS[@]}"; do
   IFS='|' read -r label local_path repo ref upstream_path <<< "$entry"
   local_file="$ROOT/$local_path"
 
-  printf '%-4s %s\n' "$label" "$repo@${ref:0:8} :: $upstream_path"
+  printf '%-8s %s\n' "$label" "$repo@${ref:0:8} :: $upstream_path"
 
   if [[ ! -f "$local_file" ]]; then
     printf '     MISSING  %s is not in this repo\n\n' "$local_path"

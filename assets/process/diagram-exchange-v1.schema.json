@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.business-online.no/atlas-diagram/v1.json",
+  "title": "BO Atlas Diagram Exchange v1",
+  "description": "The drawing half of a process: lanes, phases, steps, connectors and annotations. Nothing else in the process document is in this format, and importing one leaves everything else untouched.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "process", "lanes", "phases", "steps", "connectors"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "kind": { "const": "bo-atlas-diagram" },
+    "exported_at": { "type": "string", "format": "date-time" },
+    "process": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category_id": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": { "$ref": "#/definitions/lane" }
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/definitions/phase" }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 400,
+      "items": { "$ref": "#/definitions/step" }
+    },
+    "connectors": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 800,
+      "items": { "$ref": "#/definitions/connector" }
+    },
+    "annotations": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 200,
+      "items": { "$ref": "#/definitions/annotation" }
+    }
+  },
+  "definitions": {
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "height": { "type": "number", "minimum": 40, "maximum": 4000 }
+      }
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "x": { "type": "number" },
+        "width": { "type": "number", "minimum": 40, "maximum": 4000 }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "phase", "lane", "shape"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 50000 },
+        "phase": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "lane": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "shape": {
+          "type": "string",
+          "enum": [
+            "oval",
+            "rect",
+            "diamond",
+            "document",
+            "data",
+            "subprocess",
+            "manual",
+            "prep",
+            "delay",
+            "store"
+          ]
+        },
+        "position": { "$ref": "#/definitions/position" }
+      }
+    },
+    "connector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "to": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "label": { "type": "string", "maxLength": 200 },
+        "style": { "type": "string", "enum": ["solid", "dashed", "dotted"] },
+        "arrow": { "type": "string", "enum": ["end", "both", "none"] }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "text"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "kind": { "type": "string", "enum": ["note", "connector", "offpage"] },
+        "text": { "type": "string", "maxLength": 4000 },
+        "lane": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "attached_to": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "position": { "$ref": "#/definitions/position" }
+      }
+    }
+  }
+}

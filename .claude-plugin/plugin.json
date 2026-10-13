@@ -19,7 +19,9 @@
     "qcp",
     "checklist",
     "qhse",
-    "risk-assessment"
+    "risk-assessment",
+    "process-diagram",
+    "bo-atlas"
   ],
   "userConfig": {
     "BO_COMPANY_NAME": {

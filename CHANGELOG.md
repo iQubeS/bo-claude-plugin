@@ -7,6 +7,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ## [Unreleased]
 
 ### Added
+- **`/bo:process` contract, step one of the command.** The BO Atlas diagram exchange
+  format (`.diagram.json`, kind `bo-atlas-diagram`, schema 1.0) is now vendored as
+  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@b163f59` in
+  `scripts/check-schema-sync.sh`. bo-atlas carries no tags, so the pin is a commit, as for
+  bo-ra. The worked example `innkjop.diagram.json` is copied beside it.
+- `scripts/check-process-diagram.mjs`: the pre-flight for a diagram file. Mirrors the five
+  reference checks Atlas refuses on (unknown connector endpoint, unknown annotation target,
+  unknown phase or lane on a step, duplicate id, and a kept position outside the lane it
+  names, the last added upstream in bo-atlas PR #103) and adds the advisories Atlas does
+  not give: a partial coordinate set that will be ignored wholesale, a decision with one
+  exit or unlabelled exits, a step nothing connects to, an empty lane or phase, a
+  self-loop. With the Atlas export as a second argument it prints what the Atlas review
+  dialog will say, removals first, warns that a renamed phase drops what is attached to
+  the phase itself (an ISO clause mapped to it; the steps keep their ids), and refuses a
+  file that kept a complete coordinate set while adding or moving something, because a
+  new step would land wherever a number was invented for it.
+- `test/process/`: six fixtures and a README. `all-shapes` covers every shape, connector
+  style, arrow and annotation kind; `known-bad` is structurally valid and reference-invalid
+  on purpose; `export`, `continuation` and `continuation-stale-layout` exercise continuation
+  mode including the round-trip-is-identity case and the stale-position trap.
+- **`/bo:process` slash command**: guided process-diagram consultation producing a
+  `.diagram.json` for the Diagram tab in BO Atlas Studio, plus a `-rationale.md`. Three
+  ways in: greenfield interview; migration from a procedure document, BPMN export, drawing
+  or meeting notes; and continuation of a file Atlas exported. Six-phase arc with a
+  by-phase challenge pass (steps that are decisions, decisions with one exit, ping-pong
+  hand-offs, missing rework paths, phases that are verbs). Nine standing rules, the two
+  that matter most being: never write coordinates, and keep every id from an export.
+- `assets/process/modelling-lexicon.md`: shape and connector semantics with Norwegian cue
+  words, how to read quality-system procedures (section patterns, step-table header
+  variants), a deterministic BPMN element mapping, how to read meeting notes and
+  transcripts (hedges, disagreements, exceptions told as rules), defect patterns to
+  challenge, and how to read an Atlas export. A written reference, never an example file.
+- `assets/process/artifact-template.tsx`: live SVG swimlane preview that arranges the
+  diagram with the same column width, header height, paddings and shape sizes as the
+  Atlas auto-layout, draws all ten shapes and all three line styles, and lists what must
+  be authored in Atlas afterwards instead of pretending to draw it.
+- `assets/process/rationale-template.md`: lanes and phases with reasons, decisions and
+  rework paths, challenges, what the file cannot carry, the source trail, and in
+  continuation mode the diff Atlas will report.
+- `CLAUDE.md`, `README.md` and `plugin.json` describe the command.
+
 - **Barrier support in `/bo:risk`.** `risks[].barriers` is now authored: an array of
   `{ name, type?, description? }` where `name` is a reference into the manifest's new
   `barrierLibrary`. Vendored schema and both examples re-pinned to `bo-ra@0927a0c9`.
