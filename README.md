@@ -106,7 +106,8 @@ Two rules carry continuation mode. Step ids from an export are how Atlas knows a
 the same one, so the command keeps every one of them; a lost id means a deleted and
 recreated step, and its triggers and links are gone. And coordinates are all-or-nothing:
 the command never writes them for a new diagram, and strips the exported set the moment a
-step is added or moved, because Atlas would otherwise honour a stale position.
+step is added or moved, because Atlas refuses a kept position that falls outside the lane
+the step now names, and would honour whatever number was invented for a new step.
 
 Before importing, you can check a file, and in continuation mode see what the Atlas
 review dialog will say:

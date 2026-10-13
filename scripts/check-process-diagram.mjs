@@ -7,11 +7,12 @@
  *
  * WHY THIS EXISTS
  * ---------------
- * Atlas refuses a file outright for four things its schema cannot express: a connector
+ * Atlas refuses a file outright for five things its schema cannot express: a connector
  * naming a step the file does not define, an annotation attached to one, a step naming a
- * phase or lane the file does not list, and a duplicate id. It refuses rather than
+ * phase or lane the file does not list, a duplicate id, and (in a file carrying a complete
+ * set of coordinates) a position outside the lane it names. It refuses rather than
  * repairs, because an author who approved six connectors and silently got five has been
- * handed a different process. This script asks the same four questions before the file
+ * handed a different process. This script asks the same five questions before the file
  * ever leaves the session, and adds the advisories Atlas does not give: a decision with
  * one exit, a step nothing connects to, a half-set of coordinates that will be ignored.
  *
@@ -19,14 +20,16 @@
  * Atlas review dialog will say: steps removed (first, and alone, because a removed step
  * takes its triggers, links and work files with it and the file has nothing to put them
  * back), added, renamed and moved; phases and lanes added and removed; connectors added
- * and removed. Two traps specific to continuation are checked here because Atlas does
- * not check them:
+ * and removed. Two things specific to continuation are checked here as well:
  *
  *   - a complete set of coordinates on a file that also added or moved something. Atlas
- *     honours the whole set and writes a moved step at its old position, outside its new
- *     lane. The rule is: strip every coordinate when anything structural changed.
- *   - a renamed phase. Atlas keys phases by title, so a rename is a delete plus a create,
- *     and any phase-scoped ISO mapping on the old phase is orphaned.
+ *     refuses the moved-step case itself (the fifth check above), but a NEW step with a
+ *     complete set carries a position somebody invented, which Atlas honours. The rule is
+ *     simpler than the arithmetic: strip every coordinate when anything structural changed.
+ *   - a renamed phase. A phase has no id in this format, only its title, so Atlas cannot
+ *     tell a rename from a delete plus an add. The steps keep their ids and everything on
+ *     them; what goes is anything attached to the phase itself, today an ISO clause mapped
+ *     to it, which Atlas drops deliberately and announces in the review dialog.
  *
  * A NOTE ON DUPLICATION
  * ---------------------
@@ -36,7 +39,9 @@
  *     bo-atlas@34b8ac24:packages/process-core/src/validate/validate-diagram.ts
  *     bo-atlas@34b8ac24:packages/process-core/src/convert/diagram-import.ts
  *
- * read on 2026-10-12. Two statements of one behaviour can drift; it is accepted because
+ * read on 2026-10-12, plus the fifth check (outOfLaneErrors, laneBands in auto-layout.ts)
+ * and the phase-scope cascade from bo-atlas PR #103, read at 51cb822 on 2026-10-13 while
+ * that PR was still open. Two statements of one behaviour can drift; it is accepted because
  * both are small and pure, and because this is a CHECK and never the contract. When the
  * two disagree, Atlas is right and this file is the bug. scripts/check-schema-sync.sh
  * guards the schema; if it reports drift, re-read both files before trusting these results.
@@ -103,7 +108,7 @@ function structuralErrors(file) {
 }
 
 /* ------------------------------------------------------------------ *
- * The four reference checks, mirroring validate-diagram.ts
+ * The five reference checks, mirroring validate-diagram.ts
  * ------------------------------------------------------------------ */
 
 function referenceErrors(file) {
@@ -167,12 +172,64 @@ function referenceErrors(file) {
     }
   });
 
+  errors.push(...outOfLaneErrors(file, laneIds));
+
   return errors;
 }
 
 /* ------------------------------------------------------------------ *
- * Coordinates, mirroring hasCompleteLayout in diagram-import.ts
+ * Coordinates, mirroring hasCompleteLayout in diagram-import.ts and
+ * laneBands / outOfLaneErrors from bo-atlas PR #103
  * ------------------------------------------------------------------ */
+
+/** The vertical band each lane occupies: the first lane starts under the phase header. */
+const PHASE_HEADER_H = 32;
+
+/**
+ * Lane id -> { top, bottom }, half-open: top inclusive, bottom exclusive. A lane's top is
+ * the phase header plus the sum of the heights above it, which is why every stored y is
+ * absolute and why the coordinate set is all-or-nothing.
+ */
+function laneBands(lanes) {
+  const bands = new Map();
+  let top = PHASE_HEADER_H;
+  for (const lane of lanes) {
+    const height = lane.height ?? 0;
+    bands.set(lane.id, { top, bottom: top + height });
+    top += height;
+  }
+  return bands;
+}
+
+/**
+ * The fifth refusal: a position that contradicts the lane it names. Only in a file with a
+ * complete set, because that is the only case where Atlas honours positions at all. Only
+ * the origin is checked, never the whole box, since a node may legitimately overhang its
+ * lane floor in a layout Atlas itself exported. x is deliberately not checked against the
+ * phase column: the lane is the parent on the canvas, a phase is a membership, and an
+ * author may drag a step clear of its column on purpose.
+ */
+function outOfLaneErrors(file, laneIds) {
+  if (layoutState(file) !== 'complete') return [];
+  const errors = [];
+  const bands = laneBands(file.lanes);
+  const check = (path, label, laneId, position) => {
+    if (!laneIds.has(laneId)) return; // already reported as an unknown lane
+    const band = bands.get(laneId);
+    if (position.y >= band.top && position.y < band.bottom) return;
+    errors.push({
+      path,
+      message: `${label} sits at y ${position.y}, outside lane "${laneId}", which runs from ${band.top} to ${band.bottom}. A step that changed lane needs its position changed too, or no positions at all`,
+    });
+  };
+  file.steps.forEach((s, i) => {
+    if (s.position !== undefined) check(`/steps/${i}/position`, `step "${s.id}"`, s.lane, s.position);
+  });
+  (file.annotations ?? []).forEach((a, i) => {
+    if (a.position !== undefined && a.lane !== undefined) check(`/annotations/${i}/position`, `annotation "${a.id}"`, a.lane, a.position);
+  });
+  return errors;
+}
 
 /** 'none' | 'partial' | 'complete'. Only 'complete' is honoured by Atlas. */
 function layoutState(file) {
@@ -292,7 +349,7 @@ function continuation(file, exp) {
   const connectorsRemoved = [...expEdges].filter((e) => !fileEdges.has(e)).length;
 
   // A renamed phase: every kept step that sat in a removed phase now sits in one added
-  // phase. Atlas keys phases by title, so this is a delete plus a create.
+  // phase. A phase has no id in this format, so Atlas sees a delete plus an add.
   for (const gone of phasesRemoved) {
     const keptFromGone = exp.steps.filter((s) => s.phase === gone && fileSteps.has(s.id));
     if (keptFromGone.length === 0) continue;
@@ -300,7 +357,7 @@ function continuation(file, exp) {
     if (nowIn.size === 1) {
       const [target] = nowIn;
       if (phasesAdded.includes(target)) {
-        warnings.push(`phase "${gone}" looks renamed to "${target}". Atlas keys phases by title, so this imports as a removed phase and a new one: any ISO mapping scoped to "${gone}" is orphaned, and the steps count as moved`);
+        warnings.push(`phase "${gone}" looks renamed to "${target}". A phase has no id, so the review dialog will say "removes the phase" and "adds the phase", and Atlas drops anything attached to the phase itself (today an ISO clause mapped to it). The ${keptFromGone.length} step(s) in it keep their ids and everything on them, and count as moved`);
       }
     }
   }
@@ -319,7 +376,7 @@ function continuation(file, exp) {
   if (layout === 'complete' && structural > 0) {
     errors.push({
       path: '',
-      message: `the file keeps a complete set of coordinates but also added or moved ${structural} element(s). Atlas honours the whole set, so a moved step keeps its old position outside its new lane and a new step lands at whatever was written for it. Strip every position, lane height and phase x/width; Atlas will lay the diagram out`,
+      message: `the file keeps a complete set of coordinates but also added or moved ${structural} element(s). Atlas honours the whole set: a moved step left at its old position is refused, and a new step lands at whatever was invented for it. Strip every position, lane height and phase x/width; Atlas will lay the diagram out`,
     });
   }
 

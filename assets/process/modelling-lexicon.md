@@ -88,8 +88,10 @@ process; a note never does.
   *Bestill* or *Motta varen*.
 - A phase boundary is where a reader would say "and now the next part begins", usually a
   hand-off or a decision.
-- Phases are keyed by title in Atlas. A rename is a delete plus a create, and a phase-scoped
-  ISO mapping does not follow. Choose titles that will last.
+- A phase has no id in the file, only its title, so Atlas cannot tell a rename from a delete
+  plus a create and says so in the review dialog ("removes the phase X", "adds the phase
+  Y"). The steps in it keep their ids and everything on them; anything attached to the
+  phase itself, today an ISO clause mapped to it, is dropped. Choose titles that will last.
 - Every phase needs at least one step. An empty phase is a column with nothing in it.
 
 ---

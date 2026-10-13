@@ -105,7 +105,7 @@ Six phases. Phase 0 decides the mode; the rest is a conversation.
    change requests (continuation).
 3. **Challenge**: by phase, not step by step.
 4. **Structure and preview**: shapes, connectors, annotations, live artifact.
-5. **Validate and deliver**: the schema, the four reference checks, the pre-flight, two
+5. **Validate and deliver**: the schema, the five reference checks, the pre-flight, two
    files, and the closing message.
 
 ---
@@ -378,13 +378,18 @@ any structural fault:
 
 ### Step 2: references
 
-The four things the schema cannot say and Atlas refuses on:
+The five things the schema cannot say and Atlas refuses on:
 
 - every `connectors[].from` and `.to` names a step id in the file,
 - every `annotations[].attached_to` names a step id, and every `lane` on a step or
   annotation names a lane id,
 - every `steps[].phase` names a phase title in the file,
-- no duplicate step id, lane id, annotation id or phase title.
+- no duplicate step id, lane id, annotation id or phase title,
+- in a file carrying a complete set of coordinates, every step or annotation `position.y`
+  falls inside the band of the lane it names. The first lane starts at y 32, each lane
+  below starts at 32 plus the heights above it, top inclusive and bottom exclusive. You
+  never write coordinates, so this only bites a continuation that kept the export set while
+  moving something, which rule 1 already forbids.
 
 ### Step 3: the drawing
 

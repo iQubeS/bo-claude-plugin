@@ -18,7 +18,7 @@ There are two checks, and they catch different things:
 | Check | Catches | Should pass | Should fail |
 |---|---|---|---|
 | `ajv` against the schema | Structural faults: a misspelled key, a missing `shape`, an unknown enum value, a `size` on a step, anything a `.qcp.json` has. Atlas refuses the **whole file**. | all six fixtures | (none; every fixture is structurally valid on purpose) |
-| `check-process-diagram.mjs` | Reference faults Atlas also refuses (a connector to a step that is not there, a step in a lane the file does not list, a duplicate id), and advisories Atlas does not give (a decision with one exit, an orphan step, a half-set of coordinates). With the export as a second argument: the diff Atlas will show, and the stale-position trap. | `all-shapes`, `export`, `continuation` (with `export`) | `known-bad`, `continuation-stale-layout` (with `export`) |
+| `check-process-diagram.mjs` | Reference faults Atlas also refuses (a connector to a step that is not there, a step in a lane the file does not list, a duplicate id, a kept position outside the lane the step names), and advisories Atlas does not give (a decision with one exit, an orphan step, a half-set of coordinates). With the export as a second argument: the diff Atlas will show, and the kept-coordinates-plus-structural-change rule. | `all-shapes`, `export`, `continuation` (with `export`) | `known-bad`, `continuation-stale-layout` (alone and with `export`) |
 
 The fixtures divide along that split deliberately. `known-bad` is **structurally valid** so
 only the pre-flight catches it. There is no structurally invalid fixture because Atlas and
@@ -108,7 +108,10 @@ Expected against the export: **exit 0**, with the dialog preview naming the remo
 then `added 1, renamed 1, moved 1, lanes +1, lines +3 -2, layout none`.
 
 `continuation-stale-layout.diagram.json` is the same edit with the coordinates left in.
-Expected against the export: **exit 1**. The error is the stale-position trap: Atlas
-honours a complete set, so the moved step is written at its old position outside its new
-lane and the new step wherever a number was invented for it. Atlas does not check this
-itself; this fixture is the reason the command strips coordinates on any structural change.
+Expected **exit 1** both on its own and against the export. On its own it trips the fifth
+reference check: *Sikkerhetsopplæring gjennomført* names lane `lane-fadder` (band 466 to
+586) but keeps `y: 48` from its old lane, which Atlas refuses since bo-atlas PR #103.
+Against the export it also trips the continuation rule: a complete set plus a structural
+change, because the new step *Utpek fadder* sits at a position somebody invented, which
+Atlas would honour. This fixture is the reason the command strips coordinates on any
+structural change rather than recomputing bands.
