@@ -36,12 +36,13 @@
  * referenceErrors and the diff below are reimplementations of validateDiagram and
  * diffDiagramExchange in
  *
- *     bo-atlas@34b8ac24:packages/process-core/src/validate/validate-diagram.ts
- *     bo-atlas@34b8ac24:packages/process-core/src/convert/diagram-import.ts
+ *     bo-atlas@b163f59:packages/process-core/src/validate/validate-diagram.ts
+ *     bo-atlas@b163f59:packages/process-core/src/convert/diagram-import.ts
  *
- * read on 2026-10-12, plus the fifth check (outOfLaneErrors, laneBands in auto-layout.ts)
- * and the phase-scope cascade from bo-atlas PR #103, read at 51cb822 on 2026-10-13 while
- * that PR was still open. Two statements of one behaviour can drift; it is accepted because
+ * read on 2026-10-13 (b163f59 is the merge of PR #103, which added the fifth check as
+ * outOfLaneErrors with laneBands in auto-layout.ts, and the phase-scope cascade; the
+ * four older checks were read at 34b8ac24 on 2026-10-12 and did not change). Two
+ * statements of one behaviour can drift; it is accepted because
  * both are small and pure, and because this is a CHECK and never the contract. When the
  * two disagree, Atlas is right and this file is the bug. scripts/check-schema-sync.sh
  * guards the schema; if it reports drift, re-read both files before trusting these results.

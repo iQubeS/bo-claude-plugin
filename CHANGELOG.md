@@ -9,7 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ### Added
 - **`/bo:process` contract, step one of the command.** The BO Atlas diagram exchange
   format (`.diagram.json`, kind `bo-atlas-diagram`, schema 1.0) is now vendored as
-  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@34b8ac24` in
+  `assets/process/diagram-exchange-v1.schema.json`, pinned to `bo-atlas@b163f59` in
   `scripts/check-schema-sync.sh`. bo-atlas carries no tags, so the pin is a commit, as for
   bo-ra. The worked example `innkjop.diagram.json` is copied beside it.
 - `scripts/check-process-diagram.mjs`: the pre-flight for a diagram file. Mirrors the five
