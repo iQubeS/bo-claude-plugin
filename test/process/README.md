@@ -71,12 +71,14 @@ A customer-complaint process (*Reklamasjon fra kunde*). Expected: `ajv` valid, p
 ## `known-bad.diagram.json`: everything the pre-flight should catch
 
 **Structurally valid on purpose.** `ajv` passes it; the pre-flight must not. Expected:
-`ajv` valid, pre-flight **exit 1** with 8 errors and 6 warnings.
+`ajv` valid, pre-flight **exit 1** with 11 errors and 7 warnings.
 
 | Planted defect | Atlas behaviour |
 |---|---|
 | Duplicate step id `s3` | refused |
-| Duplicate phase title *Vurdering* | refused; phases are keyed by title |
+| Duplicate phase title *Vurdering* | refused; a phase is referenced by title |
+| A phase id in a file that says `1.0`, on both *Vurdering* phases | refused, twice; the id arrived with schema 1.1. Also a warning that only an export writes phase ids |
+| The same phase id `p-vurdering` on both | refused once more as a duplicate |
 | Step `s4` names phase *Bokføring* and lane `lane-x`, neither listed | refused, twice |
 | Connector to `s99` | refused |
 | Annotation attached to `s98`, in lane `lane-q` | refused, twice; plus a duplicate annotation id |
@@ -89,11 +91,12 @@ A customer-complaint process (*Reklamasjon fra kunde*). Expected: `ajv` valid, p
 A trio for **continuation mode**, the case where the user started from a file Atlas
 exported.
 
-`export.diagram.json` is written the way Atlas writes one: UUID step ids (the stable ids),
-one `unlinked:` synthetic id for a step that had none, `exported_at`, and a complete set
-of coordinates. On its own the pre-flight passes it with one warning saying the ids look
-exported and asking for the export as a second argument. Against itself it reports nothing
-changed and `layout kept`, which is the round-trip-is-identity promise.
+`export.diagram.json` is written the way an Atlas on schema 1.1 writes one: `schema_version`
+`"1.1"`, UUID step ids (the stable ids), one `unlinked:` synthetic id for a step that had
+none, a UUID `id` on every phase, `exported_at`, and a complete set of coordinates. On its
+own the pre-flight passes it with one warning saying the ids look exported and asking for
+the export as a second argument. Against itself it reports nothing changed and `layout
+kept`, which is the round-trip-is-identity promise.
 
 `continuation.diagram.json` is what `/bo:process` should produce from that export after a
 session that:
@@ -102,10 +105,18 @@ session that:
 - added *Utpek fadder* with a plain id `s-fadder`,
 - removed *Opplæringsplan*,
 - moved *Sikkerhetsopplæring gjennomført* to a new lane *Fadder*,
+- renamed the phase *Første måned* to *Første tre måneder*, keeping its id, so Atlas sees a
+  rename and not a removed plus an added phase,
+- kept `"1.1"` and every phase id,
 - and **stripped every coordinate**, because something structural changed.
 
 Expected against the export: **exit 0**, with the dialog preview naming the removal first,
-then `added 1, renamed 1, moved 1, lanes +1, lines +3 -2, layout none`.
+then `added 1, renamed 1, moved 1, phases +0 -0, 1 renamed, lanes +1, lines +3 -2, layout
+none`. One moved, not three: the two steps in the renamed phase stayed put, and since
+bo-atlas PR #108 Atlas agrees (an Atlas build before that fix over-reports them as moved,
+in the safe direction). Drop the id from the renamed phase and the same file warns that
+the phase looks renamed without an id to say so, the phases line becomes `+1 -1`, and
+those two steps do count as moved, because without the id Atlas sees a new phase.
 
 `continuation-stale-layout.diagram.json` is the same edit with the coordinates left in.
 Expected **exit 1** both on its own and against the export. On its own it trips the fifth

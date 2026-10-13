@@ -88,10 +88,12 @@ process; a note never does.
   *Bestill* or *Motta varen*.
 - A phase boundary is where a reader would say "and now the next part begins", usually a
   hand-off or a decision.
-- A phase has no id in the file, only its title, so Atlas cannot tell a rename from a delete
-  plus a create and says so in the review dialog ("removes the phase X", "adds the phase
-  Y"). The steps in it keep their ids and everything on them; anything attached to the
-  phase itself, today an ISO clause mapped to it, is dropped. Choose titles that will last.
+- Steps name a phase by title. An export (schema 1.1) also gives each phase an `id`, which
+  is identity rather than reference: carry it and a rename is a rename, with everything
+  attached to the phase (today an ISO clause mapped to it) surviving. Without it Atlas
+  cannot tell a rename from a delete plus a create and says so in the review dialog
+  ("removes the phase X", "adds the phase Y"); the steps keep their ids either way. A file
+  written from scratch has no phase ids and says `1.0`. Choose titles that will last.
 - Every phase needs at least one step. An empty phase is a column with nothing in it.
 
 ---
@@ -266,6 +268,7 @@ What the export tells you, and what to do with it.
 |---|---|---|
 | Step `id` shaped like a UUID | A real stable id. The step has, or may have, triggers, links and work files in Atlas that the file does not show. | Keep it exactly. |
 | Step `id` starting `unlinked:` | A step that had no stable id in Atlas; the export gave it a synthetic one so it can be referenced. Atlas adopts it back onto the same step. | Keep it exactly, including the `|`. |
+| `schema_version` `1.1` and an `id` on a phase | Written by an Atlas on 1.1 for every phase with a stable id. The id is what makes a phase rename a rename instead of a remove plus an add. A phase with no id has no stable id and nothing attached to it. | Keep every phase id exactly and keep `1.1`. Never invent one for a phase that has none, or for a new phase. |
 | `position` on every step and annotation, `height` on every lane, `x` and `width` on every phase | A hand-arranged (`manual`) diagram, or an `auto` one that Atlas laid out for the export. | Keep the whole set only if nothing structural changes. Otherwise strip all of it. |
 | `description` present | The step has one; absent means it has none. | Keep as is unless the user changes it. Clearing is `""`, not absence. |
 | `exported_at` | When it was exported. | Drop it from the file you produce. |
