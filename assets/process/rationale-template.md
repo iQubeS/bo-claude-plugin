@@ -32,8 +32,8 @@ information (drawn as a dashed line), a system (drawn as a `data` step), a perso
 ## 3. Phases: the stages, and why these
 
 Phases become QCP phases in the Atlas process, and each step becomes a checkpoint in its
-phase. Renaming a phase in Atlas later is a delete plus a create, so these titles are
-meant to last.
+phase. A phase written from scratch has no id, so renaming it through a file later is a
+delete plus a create until it has been exported once; these titles are meant to last.
 
 | Phase | What it covers | Boundary (why the previous phase ends here) |
 |---|---|---|
@@ -151,14 +151,15 @@ and explain it.}}
 | Steps removed | {{1}} | {{*Opplæringsplan*. Takes its description, links, work files and triggers with it. Confirmed with the owner that it carried nothing needed.}} |
 | Steps added | {{1}} | {{*Utpek fadder*, id `s-fadder`}} |
 | Steps renamed | {{1}} | {{*Opprett bruker* → *Opprett bruker og tilganger*, same id}} |
-| Steps moved | {{1}} | {{*Sikkerhetsopplæring gjennomført* to lane *Fadder*}} |
-| Phases | {{+0 −0}} | |
+| Steps moved | {{3}} | {{*Sikkerhetsopplæring gjennomført* to lane *Fadder*; the two steps in the renamed phase are counted as moved by Atlas because their phase title changed, although they stayed where they were}} |
+| Phases | {{+0 −0, 1 renamed}} | {{*Første måned* → *Første tre måneder*, same id, so the dialog says renamed and the phase keeps what is attached to it}} |
 | Lanes | {{+1 −0}} | {{*Fadder* added}} |
 | Connectors | {{+3 −2}} | |
 | Layout | {{stripped / kept}} | {{"Stripped: steps were added and moved, so Atlas lays the diagram out again and the hand arrangement is lost" / "Kept: nothing structural changed, so the arrangement survives"}} |
 
-{{If a phase was renamed: say that Atlas treats it as a removed and an added phase, and
-that any ISO mapping scoped to the old phase must be re-entered.}}
+{{If a phase was renamed and the export wrote no id for it: say that Atlas treats it as a
+removed and an added phase, and that anything attached to the old phase (an ISO clause
+mapped to it) is dropped and must be re-entered.}}
 
 ---
 

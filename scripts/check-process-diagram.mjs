@@ -7,42 +7,48 @@
  *
  * WHY THIS EXISTS
  * ---------------
- * Atlas refuses a file outright for five things its schema cannot express: a connector
+ * Atlas refuses a file outright for six things its schema cannot express: a connector
  * naming a step the file does not define, an annotation attached to one, a step naming a
- * phase or lane the file does not list, a duplicate id, and (in a file carrying a complete
- * set of coordinates) a position outside the lane it names. It refuses rather than
- * repairs, because an author who approved six connectors and silently got five has been
- * handed a different process. This script asks the same five questions before the file
- * ever leaves the session, and adds the advisories Atlas does not give: a decision with
- * one exit, a step nothing connects to, a half-set of coordinates that will be ignored.
+ * phase or lane the file does not list, a duplicate id, (in a file carrying a complete
+ * set of coordinates) a position outside the lane it names, and a phase id in a file that
+ * calls itself 1.0. It refuses rather than repairs, because an author who approved six
+ * connectors and silently got five has been handed a different process. This script asks
+ * the same six questions before the file ever leaves the session, and adds the advisories
+ * Atlas does not give: a decision with one exit, a step nothing connects to, a half-set
+ * of coordinates that will be ignored.
  *
  * With an export as the second argument it runs in CONTINUATION mode and prints what the
  * Atlas review dialog will say: steps removed (first, and alone, because a removed step
  * takes its triggers, links and work files with it and the file has nothing to put them
- * back), added, renamed and moved; phases and lanes added and removed; connectors added
- * and removed. Two things specific to continuation are checked here as well:
+ * back), added, renamed and moved; phases added, removed and renamed; lanes added and
+ * removed; connectors added and removed. Three things specific to continuation are
+ * checked here as well:
  *
  *   - a complete set of coordinates on a file that also added or moved something. Atlas
  *     refuses the moved-step case itself (the fifth check above), but a NEW step with a
  *     complete set carries a position somebody invented, which Atlas honours. The rule is
  *     simpler than the arithmetic: strip every coordinate when anything structural changed.
- *   - a renamed phase. A phase has no id in this format, only its title, so Atlas cannot
- *     tell a rename from a delete plus an add. The steps keep their ids and everything on
- *     them; what goes is anything attached to the phase itself, today an ISO clause mapped
- *     to it, which Atlas drops deliberately and announces in the review dialog.
+ *   - a phase id the export wrote and the file dropped. Since schema 1.1 a phase carries
+ *     its id (identity, not reference: steps still name a phase by title) and that id is
+ *     the only thing that lets a rename be a rename. Export writes it for every phase that
+ *     has a stable id and omits it otherwise; the file keeps exactly what the export wrote.
+ *   - a phase renamed WITHOUT an id to carry it. Atlas then cannot tell a rename from a
+ *     delete plus an add. The steps keep their ids and everything on them; what goes is
+ *     anything attached to the phase itself, today an ISO clause mapped to it, which Atlas
+ *     drops deliberately and announces in the review dialog.
  *
  * A NOTE ON DUPLICATION
  * ---------------------
  * referenceErrors and the diff below are reimplementations of validateDiagram and
- * diffDiagramExchange in
+ * diffDiagramExchange (with phaseFor, the id-then-title resolution) in
  *
- *     bo-atlas@b163f59:packages/process-core/src/validate/validate-diagram.ts
- *     bo-atlas@b163f59:packages/process-core/src/convert/diagram-import.ts
+ *     bo-atlas@4c55803:packages/process-core/src/validate/validate-diagram.ts
+ *     bo-atlas@4c55803:packages/process-core/src/convert/diagram-import.ts
  *
- * read on 2026-10-13 (b163f59 is the merge of PR #103, which added the fifth check as
- * outOfLaneErrors with laneBands in auto-layout.ts, and the phase-scope cascade; the
- * four older checks were read at 34b8ac24 on 2026-10-12 and did not change). Two
- * statements of one behaviour can drift; it is accepted because
+ * read on 2026-10-13 (4c55803 is the merge of PR #106, schema 1.1; the fifth check and
+ * laneBands in auto-layout.ts came with PR #103 at b163f59 the same day; the four older
+ * checks were read at 34b8ac24 on 2026-10-12). Two statements of one behaviour can drift;
+ * it is accepted because
  * both are small and pure, and because this is a CHECK and never the contract. When the
  * two disagree, Atlas is right and this file is the bug. scripts/check-schema-sync.sh
  * guards the schema; if it reports drift, re-read both files before trusting these results.
@@ -65,6 +71,8 @@ const SHAPES = ['oval', 'rect', 'diamond', 'document', 'data', 'subprocess', 'ma
 const STYLES = ['solid', 'dashed', 'dotted'];
 const ARROWS = ['end', 'both', 'none'];
 const KINDS = ['note', 'connector', 'offpage'];
+/** 1.1 adds the optional phase id and nothing else. A file that uses it must say 1.1. */
+const VERSIONS = ['1.0', '1.1'];
 
 /** Atlas writes stable ids as UUID v4; a file written from scratch never contains one. */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -96,8 +104,8 @@ function structuralErrors(file) {
   if (file.kind !== 'bo-atlas-diagram') {
     errors.push({ path: '/kind', message: `expected "bo-atlas-diagram", got ${JSON.stringify(file.kind)}` });
   }
-  if (file.schema_version !== '1.0') {
-    errors.push({ path: '/schema_version', message: `expected "1.0", got ${JSON.stringify(file.schema_version)}` });
+  if (!VERSIONS.includes(file.schema_version)) {
+    errors.push({ path: '/schema_version', message: `expected one of ${VERSIONS.map((v) => JSON.stringify(v)).join(', ')}, got ${JSON.stringify(file.schema_version)}` });
   }
   for (const key of ['lanes', 'phases', 'steps', 'connectors']) {
     if (!Array.isArray(file[key])) errors.push({ path: `/${key}`, message: 'missing or not an array' });
@@ -127,12 +135,22 @@ function referenceErrors(file) {
     laneIds.add(lane.id);
   });
 
-  // Phases are keyed by title, not id: that is how a phase is referenced everywhere in
-  // the Atlas model, and two phases sharing a title would make every reference ambiguous.
+  // A phase is REFERENCED by title: that is how a phase is referenced everywhere in the
+  // Atlas model, and two phases sharing a title would make every reference ambiguous, so
+  // the title refusal stays whether or not the file carries ids. A phase id is IDENTITY,
+  // a different job: it lets a rename be a rename. It arrived with 1.1, so a 1.0 file
+  // carrying one is refused rather than quietly read.
   const phaseTitles = new Set();
+  const phaseIds = new Set();
   file.phases.forEach((phase, i) => {
     if (phaseTitles.has(phase.title)) errors.push({ path: `/phases/${i}/title`, message: `duplicate phase title "${phase.title}"` });
     phaseTitles.add(phase.title);
+    if (phase.id === undefined) return;
+    if (file.schema_version === '1.0') {
+      errors.push({ path: `/phases/${i}/id`, message: `phase "${phase.title}" carries an id, which arrived in schema_version 1.1. Say "1.1", or drop the id` });
+    }
+    if (phaseIds.has(phase.id)) errors.push({ path: `/phases/${i}/id`, message: `duplicate phase id "${phase.id}"` });
+    phaseIds.add(phase.id);
   });
 
   file.steps.forEach((step, i) => {
@@ -302,8 +320,10 @@ function advisories(file, hasExport) {
 
   if (!hasExport) {
     const exported = file.steps.filter((s) => UUID.test(s.id) || s.id.startsWith(UNLINKED));
-    if (exported.length > 0) {
-      warnings.push(`${exported.length} step id(s) look like Atlas stable ids. If this file continues an export, pass the export as the second argument to see what the import will change`);
+    const phaseIds = file.phases.filter((p) => p.id !== undefined).length;
+    if (exported.length > 0 || phaseIds > 0) {
+      const what = [exported.length > 0 && `${exported.length} step id(s) look like Atlas stable ids`, phaseIds > 0 && `${phaseIds} phase(s) carry an id, which only an export writes`].filter(Boolean).join('; ');
+      warnings.push(`${what}. If this file continues an export, pass the export as the second argument to see what the import will change`);
     }
   }
 
@@ -332,10 +352,38 @@ function continuation(file, exp) {
     if (was.phase !== s.phase || was.lane !== s.lane) stepsMoved.push(s);
   }
 
+  // Phases resolve as phaseFor does in Atlas, three cases in this order: an id matching an
+  // export phase id means THAT phase; otherwise a title match; otherwise a new phase. The
+  // title fallback is what makes an unmatched id harmless, so adding ids to a file can
+  // only preserve more, never less. Keyed by the export phase, whose identity is in question.
+  const phaseFor = (phase) => {
+    if (phase.id !== undefined) {
+      const byId = exp.phases.find((p) => p.id !== undefined && p.id === phase.id);
+      if (byId !== undefined) return byId;
+    }
+    return exp.phases.find((p) => p.title === phase.title);
+  };
+  const continued = new Map();
+  for (const phase of file.phases) {
+    const previous = phaseFor(phase);
+    if (previous !== undefined && !continued.has(previous)) continued.set(previous, phase);
+  }
+  const phasesRenamed = [...continued].filter(([was, now]) => was.title !== now.title).map(([was, now]) => ({ from: was.title, to: now.title }));
+  const renamedTo = new Set(phasesRenamed.map((r) => r.to));
+  const renamedFrom = new Set(phasesRenamed.map((r) => r.from));
   const expPhases = new Set(exp.phases.map((p) => p.title));
   const filePhases = new Set(file.phases.map((p) => p.title));
-  const phasesAdded = file.phases.filter((p) => !expPhases.has(p.title)).map((p) => p.title);
-  const phasesRemoved = exp.phases.filter((p) => !filePhases.has(p.title)).map((p) => p.title);
+  const phasesAdded = file.phases.filter((p) => !expPhases.has(p.title) && !renamedTo.has(p.title)).map((p) => p.title);
+  const phasesRemoved = exp.phases.filter((p) => !filePhases.has(p.title) && !renamedFrom.has(p.title)).map((p) => p.title);
+
+  // An id the export wrote and the file lost. Only an export writes a phase id, and only
+  // the id lets a rename be a rename; a continued phase that dropped it is still matched
+  // by title today, but the next rename will cost whatever is attached to the phase.
+  for (const [was, now] of continued) {
+    if (was.id !== undefined && now.id !== was.id) {
+      warnings.push(`phase "${now.title}" dropped the id "${was.id}" the export wrote${now.id !== undefined ? ` (now "${now.id}")` : ''}. Keep every phase id exactly, and say schema_version "1.1" with it`);
+    }
+  }
 
   const expLanes = new Map(exp.lanes.map((l) => [l.id, l.label]));
   const fileLanes = new Map(file.lanes.map((l) => [l.id, l.label]));
@@ -349,8 +397,8 @@ function continuation(file, exp) {
   const connectorsAdded = [...fileEdges].filter((e) => !expEdges.has(e)).length;
   const connectorsRemoved = [...expEdges].filter((e) => !fileEdges.has(e)).length;
 
-  // A renamed phase: every kept step that sat in a removed phase now sits in one added
-  // phase. A phase has no id in this format, so Atlas sees a delete plus an add.
+  // A phase renamed without an id to carry it: every kept step that sat in a removed phase
+  // now sits in one added phase. Atlas then sees a delete plus an add.
   for (const gone of phasesRemoved) {
     const keptFromGone = exp.steps.filter((s) => s.phase === gone && fileSteps.has(s.id));
     if (keptFromGone.length === 0) continue;
@@ -358,7 +406,11 @@ function continuation(file, exp) {
     if (nowIn.size === 1) {
       const [target] = nowIn;
       if (phasesAdded.includes(target)) {
-        warnings.push(`phase "${gone}" looks renamed to "${target}". A phase has no id, so the review dialog will say "removes the phase" and "adds the phase", and Atlas drops anything attached to the phase itself (today an ISO clause mapped to it). The ${keptFromGone.length} step(s) in it keep their ids and everything on them, and count as moved`);
+        const expPhase = exp.phases.find((p) => p.title === gone);
+        const fix = expPhase?.id !== undefined
+          ? `Give the renamed phase the id "${expPhase.id}" the export wrote and say schema_version "1.1", and it imports as a rename`
+          : `The export wrote no id for it (the phase has no stable id in Atlas), so nothing is attached to it to lose`;
+        warnings.push(`phase "${gone}" looks renamed to "${target}" but carries no id to say so. The review dialog will say "removes the phase" and "adds the phase", and Atlas drops anything attached to the phase itself (today an ISO clause mapped to it); the ${keptFromGone.length} step(s) in it keep their ids and count as moved. ${fix}`);
       }
     }
   }
@@ -386,7 +438,7 @@ function continuation(file, exp) {
     warnings,
     diff: {
       stepsRemoved, stepsAdded, stepsRenamed, stepsMoved,
-      phasesAdded, phasesRemoved, lanesAdded, lanesRemoved, lanesRelabelled,
+      phasesAdded, phasesRemoved, phasesRenamed, lanesAdded, lanesRemoved, lanesRelabelled,
       connectorsAdded, connectorsRemoved,
       keepsLayout: layout === 'complete',
     },
@@ -415,7 +467,7 @@ function printDiff(d) {
   console.log(`  added    ${d.stepsAdded.length} step(s)${d.stepsAdded.length ? ': ' + list(d.stepsAdded, stepLabel) : ''}`);
   console.log(`  renamed  ${d.stepsRenamed.length} step(s)${d.stepsRenamed.length ? ': ' + list(d.stepsRenamed, (r) => `"${r.from}" -> "${r.to}"`) : ''}`);
   console.log(`  moved    ${d.stepsMoved.length} step(s)${d.stepsMoved.length ? ': ' + list(d.stepsMoved, stepLabel) : ''}`);
-  console.log(`  phases   +${d.phasesAdded.length} -${d.phasesRemoved.length}${d.phasesRemoved.length ? ' (removed: ' + list(d.phasesRemoved, (p) => `"${p}"`) + ')' : ''}`);
+  console.log(`  phases   +${d.phasesAdded.length} -${d.phasesRemoved.length}${d.phasesRemoved.length ? ' (removed: ' + list(d.phasesRemoved, (p) => `"${p}"`) + ')' : ''}${d.phasesRenamed.length ? `, ${d.phasesRenamed.length} renamed: ` + list(d.phasesRenamed, (r) => `"${r.from}" -> "${r.to}"`) : ''}`);
   console.log(`  lanes    +${d.lanesAdded.length} -${d.lanesRemoved.length}${d.lanesRelabelled.length ? `, ${d.lanesRelabelled.length} relabelled` : ''}`);
   console.log(`  lines    +${d.connectorsAdded} -${d.connectorsRemoved}`);
   console.log(`  layout   ${d.keepsLayout ? 'kept: imports as manual arrangement' : 'none: Atlas lays the diagram out, imports as auto'}`);
@@ -470,7 +522,7 @@ function main(argv) {
   }
 
   const counts = `${file.lanes.length} lane(s), ${file.phases.length} phase(s), ${file.steps.length} step(s), ${file.connectors.length} connector(s), ${(file.annotations ?? []).length} annotation(s)`;
-  console.log(`  ${counts}; coordinates: ${layoutState(file)}`);
+  console.log(`  schema ${file.schema_version}; ${counts}; coordinates: ${layoutState(file)}`);
 
   if (errors.length > 0) {
     console.log('\nErrors (Atlas refuses the file, or imports a diagram you did not mean)');

@@ -102,9 +102,11 @@ RACI, ISO mappings and the process definition are authored in Atlas afterwards, 
 import never touches them. Import goes into whichever process is open on the Diagram tab,
 is reviewed before it applies (removals first), and is never saved by itself.
 
-Two rules carry continuation mode. Step ids from an export are how Atlas knows a step is
-the same one, so the command keeps every one of them; a lost id means a deleted and
-recreated step, and its triggers and links are gone. And coordinates are all-or-nothing:
+Two rules carry continuation mode. Ids from an export are how Atlas knows a step, lane or
+phase is the same one, so the command keeps every one of them; a lost step id means a
+deleted and recreated step with its triggers and links gone, and a lost phase id (schema
+1.1) means a renamed phase imports as a removed and an added one. The command never invents
+a phase id: a file written from scratch says `1.0`. And coordinates are all-or-nothing:
 the command never writes them for a new diagram, and strips the exported set the moment a
 step is added or moved, because Atlas refuses a kept position that falls outside the lane
 the step now names, and would honour whatever number was invented for a new step.

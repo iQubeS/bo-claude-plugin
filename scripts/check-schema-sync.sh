@@ -17,7 +17,7 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SCHEMAS=(
   "qcp|assets/qcp/qcp-schema-v1.json|iQubeS/bo-qcp-admin|v0.2.0|src/utils/qcp-schema/qcp-schema-v1.json"
   "ra|assets/risk/ra-template-import.schema-v1.json|iQubeS/bo-ra|0927a0c9966579142cad740bd8d112819ccff28f|docs/ra-template-import.schema.json"
-  "process|assets/process/diagram-exchange-v1.schema.json|iQubeS/bo-atlas|b163f59be31a6776d7865c33769910e781937a43|packages/process-core/src/schema/diagram-exchange-v1.schema.json"
+  "process|assets/process/diagram-exchange-v1.schema.json|iQubeS/bo-atlas|4c55803|packages/process-core/src/schema/diagram-exchange-v1.schema.json"
 )
 
 # Not checked here, because there is nothing upstream to check against:

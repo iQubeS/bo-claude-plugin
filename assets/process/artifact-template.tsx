@@ -32,7 +32,7 @@ type Shape =
   | 'subprocess' | 'manual' | 'prep' | 'delay' | 'store';
 
 type Lane = { id: string; label: string };
-type Phase = { title: string };
+type Phase = { id?: string; title: string };
 type Step = {
   id: string;
   title: string;

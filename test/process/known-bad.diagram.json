@@ -1,29 +1,115 @@
 {
   "schema_version": "1.0",
   "kind": "bo-atlas-diagram",
-  "process": { "title": "Kjent dårlig" },
+  "process": {
+    "title": "Kjent dårlig"
+  },
   "lanes": [
-    { "id": "lane-a", "label": "Selger" },
-    { "id": "lane-b", "label": "Leder" },
-    { "id": "lane-tom", "label": "Økonomi" }
+    {
+      "id": "lane-a",
+      "label": "Selger"
+    },
+    {
+      "id": "lane-b",
+      "label": "Leder"
+    },
+    {
+      "id": "lane-tom",
+      "label": "Økonomi"
+    }
   ],
-  "phases": [{ "title": "Start" }, { "title": "Vurdering" }, { "title": "Vurdering" }],
+  "phases": [
+    {
+      "title": "Start"
+    },
+    {
+      "id": "p-vurdering",
+      "title": "Vurdering"
+    },
+    {
+      "id": "p-vurdering",
+      "title": "Vurdering"
+    }
+  ],
   "steps": [
-    { "id": "s1", "title": "Ordre mottatt", "phase": "Start", "lane": "lane-a", "shape": "oval", "position": { "x": 70, "y": 48 } },
-    { "id": "s2", "title": "Kredittsjekk nødvendig?", "phase": "Vurdering", "lane": "lane-b", "shape": "diamond" },
-    { "id": "s3", "title": "Godkjenn ordre", "phase": "Vurdering", "lane": "lane-b", "shape": "rect" },
-    { "id": "s3", "title": "Send ordrebekreftelse", "phase": "Vurdering", "lane": "lane-a", "shape": "document" },
-    { "id": "s4", "title": "Registrer i regnskap", "phase": "Bokføring", "lane": "lane-x", "shape": "store" },
-    { "id": "s5", "title": "Frittstående notat som ble et steg", "phase": "Start", "lane": "lane-a", "shape": "rect" }
+    {
+      "id": "s1",
+      "title": "Ordre mottatt",
+      "phase": "Start",
+      "lane": "lane-a",
+      "shape": "oval",
+      "position": {
+        "x": 70,
+        "y": 48
+      }
+    },
+    {
+      "id": "s2",
+      "title": "Kredittsjekk nødvendig?",
+      "phase": "Vurdering",
+      "lane": "lane-b",
+      "shape": "diamond"
+    },
+    {
+      "id": "s3",
+      "title": "Godkjenn ordre",
+      "phase": "Vurdering",
+      "lane": "lane-b",
+      "shape": "rect"
+    },
+    {
+      "id": "s3",
+      "title": "Send ordrebekreftelse",
+      "phase": "Vurdering",
+      "lane": "lane-a",
+      "shape": "document"
+    },
+    {
+      "id": "s4",
+      "title": "Registrer i regnskap",
+      "phase": "Bokføring",
+      "lane": "lane-x",
+      "shape": "store"
+    },
+    {
+      "id": "s5",
+      "title": "Frittstående notat som ble et steg",
+      "phase": "Start",
+      "lane": "lane-a",
+      "shape": "rect"
+    }
   ],
   "connectors": [
-    { "from": "s1", "to": "s2" },
-    { "from": "s2", "to": "s3" },
-    { "from": "s3", "to": "s99" },
-    { "from": "s3", "to": "s3", "style": "dotted" }
+    {
+      "from": "s1",
+      "to": "s2"
+    },
+    {
+      "from": "s2",
+      "to": "s3"
+    },
+    {
+      "from": "s3",
+      "to": "s99"
+    },
+    {
+      "from": "s3",
+      "to": "s3",
+      "style": "dotted"
+    }
   ],
   "annotations": [
-    { "id": "n1", "kind": "note", "text": "Henger på et steg som ikke finnes.", "attached_to": "s98" },
-    { "id": "n1", "kind": "offpage", "text": "Dobbel id.", "lane": "lane-q" }
+    {
+      "id": "n1",
+      "kind": "note",
+      "text": "Henger på et steg som ikke finnes.",
+      "attached_to": "s98"
+    },
+    {
+      "id": "n1",
+      "kind": "offpage",
+      "text": "Dobbel id.",
+      "lane": "lane-q"
+    }
   ]
 }

@@ -55,11 +55,18 @@ the gaps.
    and say so: Atlas honours a complete set as it stands, so a moved step would be written
    at its old position, outside its new lane.
 2. **Keep every id from an export.** Step ids, including the `unlinked:` synthetic ones,
-   and lane ids. New steps get plain ids (`s1`, `s2`, ...), never one shaped like a UUID.
-   New lanes get readable ids (`lane-okonomi`).
-3. **Phases are keyed by title.** The same title means the same phase; a new title means
-   a new phase. Treat a phase rename as what it is in Atlas (remove plus add) and warn
-   that ISO mappings scoped to the old phase do not follow.
+   lane ids, and phase ids. New steps get plain ids (`s1`, `s2`, ...), never one shaped
+   like a UUID. New lanes get readable ids (`lane-okonomi`). New phases get **no id**:
+   only an export writes a phase id, and you never synthesise one.
+3. **A phase is referenced by title and identified by id.** `steps[].phase` always names
+   the title. The optional `phases[].id` (schema 1.1) is what lets a rename be a rename:
+   carry it exactly as the export wrote it, and the phase keeps everything attached to it
+   (today an ISO clause mapped to it) through a title change. A phase with no id, or a
+   file written from scratch, is matched by title, so a rename there is a remove plus an
+   add in the review dialog and drops what was attached to the phase; say so. A greenfield
+   or migration file says `schema_version` `"1.0"` and carries no phase ids. A continuation
+   says `"1.1"` when the export did, and never the other way round: a phase id in a `"1.0"`
+   file is refused.
 4. **A connector is a dependency.** Every connector, whatever its style, is written into
    the process as "this step connects to that step", which is the half that reaches
    QCPAdmin. So draw a line only where two steps are genuinely connected: solid where the
@@ -137,7 +144,8 @@ anyway; say so.
 
 ### If an export is attached
 
-Validate it: `kind` is `bo-atlas-diagram`, `schema_version` is `1.0`, every connector and
+Validate it: `kind` is `bo-atlas-diagram`, `schema_version` is `1.0` or `1.1` (an Atlas
+on 1.1 writes `1.1` and an `id` on every phase that has a stable id), every connector and
 annotation points at a step the file has. Strip a UTF-8 BOM if present. Then read it back
 so the user confirms it is the right process and the current version:
 
@@ -365,8 +373,9 @@ exits, the preview reflects the whole, and the user recognises their process in 
 Walk `@assets/process/diagram-exchange-v1.schema.json`. Atlas refuses the whole file on
 any structural fault:
 
-- Root has `schema_version` `"1.0"`, `kind` `"bo-atlas-diagram"`, `process.title`,
-  `lanes` (1 to 40), `phases` (1 to 100), `steps`, `connectors`; `annotations` optional.
+- Root has `schema_version` `"1.0"` (or `"1.1"` when, and only when, a phase carries an
+  id), `kind` `"bo-atlas-diagram"`, `process.title`, `lanes` (1 to 40), `phases` (1 to
+  100), `steps`, `connectors`; `annotations` optional.
 - Every step has `id`, `title`, `phase`, `lane`, `shape`; shape is one of the ten.
 - Every connector has `from` and `to`; `style` in solid / dashed / dotted; `arrow` in end /
   both / none.
@@ -378,13 +387,14 @@ any structural fault:
 
 ### Step 2: references
 
-The five things the schema cannot say and Atlas refuses on:
+The six things the schema cannot say and Atlas refuses on:
 
 - every `connectors[].from` and `.to` names a step id in the file,
 - every `annotations[].attached_to` names a step id, and every `lane` on a step or
   annotation names a lane id,
 - every `steps[].phase` names a phase title in the file,
-- no duplicate step id, lane id, annotation id or phase title,
+- no duplicate step id, lane id, annotation id, phase id or phase title,
+- no phase id in a file that says `"1.0"`,
 - in a file carrying a complete set of coordinates, every step or annotation `position.y`
   falls inside the band of the lane it names. The first lane starts at y 32, each lane
   below starts at 32 plus the heights above it, top inclusive and bottom exclusive. You
