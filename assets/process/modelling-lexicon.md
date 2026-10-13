@@ -65,6 +65,11 @@ between the same two steps in the same direction are one line.
 `attached_to` the step the note belongs with, `lane` where it should sit. A note with
 neither floats; give it a lane at least.
 
+Leave `position` off a note. Atlas places an unpositioned note beside the step it is
+attached to, clear of whatever is already there (Atlas Studio builds before 1.0.117.0
+dropped it at the origin instead). The only note that keeps a position is one that came
+from an export in a file where nothing structural changed.
+
 **Never** store a note as a step. A step reaches QCPAdmin as a checkpoint in the customer's
 process; a note never does.
 

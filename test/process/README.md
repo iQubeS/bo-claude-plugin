@@ -112,11 +112,10 @@ session that:
 
 Expected against the export: **exit 0**, with the dialog preview naming the removal first,
 then `added 1, renamed 1, moved 1, phases +0 -0, 1 renamed, lanes +1, lines +3 -2, layout
-none`. One moved, not three: the two steps in the renamed phase stayed put, and since
-bo-atlas PR #108 Atlas agrees (an Atlas build before that fix over-reports them as moved,
-in the safe direction). Drop the id from the renamed phase and the same file warns that
-the phase looks renamed without an id to say so, the phases line becomes `+1 -1`, and
-those two steps do count as moved, because without the id Atlas sees a new phase.
+none`. One moved, not three: the two steps in the renamed phase stayed put, and Atlas
+agrees since bo-atlas PR #108. Drop the id from the renamed phase and the same file warns
+that the phase looks renamed without an id to say so, the phases line becomes `+1 -1`,
+and those two steps do count as moved, because without the id Atlas sees a new phase.
 
 `continuation-stale-layout.diagram.json` is the same edit with the coordinates left in.
 Expected **exit 1** both on its own and against the export. On its own it trips the fifth
