@@ -112,7 +112,7 @@ Six phases. Phase 0 decides the mode; the rest is a conversation.
    change requests (continuation).
 3. **Challenge**: by phase, not step by step.
 4. **Structure and preview**: shapes, connectors, annotations, live artifact.
-5. **Validate and deliver**: the schema, the five reference checks, the pre-flight, two
+5. **Validate and deliver**: the schema, the six reference checks, the pre-flight, two
    files, and the closing message.
 
 ---

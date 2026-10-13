@@ -117,7 +117,7 @@ function structuralErrors(file) {
 }
 
 /* ------------------------------------------------------------------ *
- * The five reference checks, mirroring validate-diagram.ts
+ * The six reference checks, mirroring validate-diagram.ts
  * ------------------------------------------------------------------ */
 
 function referenceErrors(file) {
