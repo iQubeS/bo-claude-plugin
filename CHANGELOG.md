@@ -6,6 +6,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-10-19
+
 ### Added
 - **`/bo:process` contract, step one of the command.** The BO Atlas diagram exchange
   format (`.diagram.json`, kind `bo-atlas-diagram`, schema 1.0) is now vendored as
@@ -53,24 +55,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   continuation mode the diff Atlas will report.
 - `CLAUDE.md`, `README.md` and `plugin.json` describe the command.
 
-- **Barrier support in `/bo:risk`.** `risks[].barriers` is now authored: an array of
-  `{ name, type?, description? }` where `name` is a reference into the manifest's new
-  `barrierLibrary`. Vendored schema and both examples re-pinned to `bo-ra@0927a0c9`.
-- `assets/risk/ra-vocabulary-manifest.schema-v1.json` gains `barrierLibrary`
-  (`{key, name, description?, suggestedType?}`). Optional, so a manifest exported before
-  barrier support still validates.
-- `test/risk/refused-barrier-fields.ra.json` — a third fixture, and the only one that is
-  **structurally invalid on purpose**. It plants `status`, `verifiedDate`, `verifiedBy`,
-  `documentReference` and a bad `type` enum, because "these fail the whole file,
-  deliberately" is a promise to whoever writes a file against this format, and a promise
-  is worth a test.
-- `scripts/check-ra-vocabulary.mjs` resolves barrier names against the library, refuses the
-  four evidence fields with an R28 explanation rather than a generic "unknown property",
-  validates the `type` enum, and advises on: barriers beyond the two-to-four working range,
-  a `description` that restates one the library already holds, a `type` identical to
-  `suggestedType`, a proposal with no type or description, five or more proposed entries,
-  risks with no barriers, and a manifest with no `barrierLibrary` at all.
-
 ### Changed
 - **`/bo:qcp` now writes the file QCPAdmin actually opens.** The output is `<Title>.txt`
   in the editor's own stored shape (`qcpTitle`, `processPhases[].processDetails[]`, ids,
@@ -92,6 +76,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   alle felter`, every shape; `Kjent feil`, fourteen known faults) and a README.
 - The live artifact template and `scripts/check-process-diagram.mjs` (which now recognises
   a `.txt` handed to it by mistake) follow the new shape.
+
+## [0.5.0] — 2026-08-18
+
+### Added
+- **Barrier support in `/bo:risk`.** `risks[].barriers` is now authored: an array of
+  `{ name, type?, description? }` where `name` is a reference into the manifest's new
+  `barrierLibrary`. Vendored schema and both examples re-pinned to `bo-ra@0927a0c9`.
+- `assets/risk/ra-vocabulary-manifest.schema-v1.json` gains `barrierLibrary`
+  (`{key, name, description?, suggestedType?}`). Optional, so a manifest exported before
+  barrier support still validates.
+- `test/risk/refused-barrier-fields.ra.json` — a third fixture, and the only one that is
+  **structurally invalid on purpose**. It plants `status`, `verifiedDate`, `verifiedBy`,
+  `documentReference` and a bad `type` enum, because "these fail the whole file,
+  deliberately" is a promise to whoever writes a file against this format, and a promise
+  is worth a test.
+- `scripts/check-ra-vocabulary.mjs` resolves barrier names against the library, refuses the
+  four evidence fields with an R28 explanation rather than a generic "unknown property",
+  validates the `type` enum, and advises on: barriers beyond the two-to-four working range,
+  a `description` that restates one the library already holds, a `type` identical to
+  `suggestedType`, a proposal with no type or description, five or more proposed entries,
+  risks with no barriers, and a manifest with no `barrierLibrary` at all.
+
+### Changed
 - **`Tiltak` now crosses.** Yesterday it was rescued into a rationale appendix because
   barriers could not be imported; today it maps to `barriers[]`. But the source's sentence
   is used only to *choose* a library entry and is then discarded — the library's own
@@ -115,7 +122,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   two failure modes look alike and are not.
 - Residual scores are still impossible, and barriers do not change that: they arrive
   planned, so a residual leaning on one would rest on nothing recorded (R5).
-
 ## [0.4.0] — 2026-08-17
 
 ### Added
