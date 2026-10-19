@@ -15,7 +15,9 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # label | local path (repo-relative) | upstream repo | pinned ref | upstream path
 SCHEMAS=(
-  "qcp|assets/qcp/qcp-schema-v1.json|iQubeS/bo-qcp-admin|v0.2.0|src/utils/qcp-schema/qcp-schema-v1.json"
+  "qcp|assets/qcp/upstream/ProcessDetail.ts|iQubeS/bo-qcp-admin|v0.2.0|src/webparts/qcpAdmin/components/Modal/ProcessDetail.ts"
+  "qcp|assets/qcp/upstream/ProcessPhase.ts|iQubeS/bo-qcp-admin|v0.2.0|src/webparts/qcpAdmin/components/Modal/ProcessPhase.ts"
+  "qcp|assets/qcp/upstream/QCPModal.ts|iQubeS/bo-qcp-admin|v0.2.0|src/webparts/qcpAdmin/components/Modal/QCPModal.ts"
   "ra|assets/risk/ra-template-import.schema-v1.json|iQubeS/bo-ra|0927a0c9966579142cad740bd8d112819ccff28f|docs/ra-template-import.schema.json"
   "process|assets/process/diagram-exchange-v1.schema.json|iQubeS/bo-atlas|3b91f6f|packages/process-core/src/schema/diagram-exchange-v1.schema.json"
 )

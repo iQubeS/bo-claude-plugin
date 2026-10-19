@@ -1,0 +1,377 @@
+{
+  "qcpTitle": "Utviklingsprosjekt",
+  "processPhases": [
+    {
+      "ID": 1,
+      "title": "Initiering",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 1,
+          "title": "Forretningscase godkjent",
+          "description": "<p>Kost-nytte-vurdering presentert og godkjent av styringsgruppe.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/maler/forretningscase.docx"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "ProjectGeneral",
+              "Field": "Status",
+              "Status": "Approved",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/maler/forretningscase.docx",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        },
+        {
+          "ID": 2,
+          "title": "Prosjektleder tildelt",
+          "description": "<p>Ressurs-allokering bekreftet av avdelingsleder.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 1,
+              "PhaseTitle": "Initiering",
+              "PhaseDetailTitle": "Forretningscase godkjent",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 1,
+                "PhaseTitle": "Initiering",
+                "PhaseDetailTitle": "Forretningscase godkjent",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 1
+    },
+    {
+      "ID": 2,
+      "title": "Planlegging",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 3,
+          "title": "Prosjektplan utarbeidet",
+          "description": "<p>Tidslinje, milepæler, avhengigheter dokumentert.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Prosjektplan-mal",
+              "Link": "/sites/Admin/Styrende dokumenter/Mal-prosjektplan.docx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Started",
+              "ListName": "ProjectGeneral",
+              "Field": "PlannedStartDate",
+              "Status": "",
+              "FieldType": "DateTime",
+              "ActionIcon": "Play",
+              "Extender": "0"
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 2,
+              "PhaseTitle": "Initiering",
+              "PhaseDetailTitle": "Prosjektleder tildelt",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 2,
+                "PhaseTitle": "Initiering",
+                "PhaseDetailTitle": "Prosjektleder tildelt",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        },
+        {
+          "ID": 4,
+          "title": "Risikovurdering gjennomført",
+          "description": "<p>Identifiser, vurder, og dokumenter mitigering for risiko-elementer.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Risikoregister",
+              "Link": "/sites/Admin/Styrende dokumenter/Risikoregister-mal.xlsx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 2
+    },
+    {
+      "ID": 3,
+      "title": "Gjennomføring",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 5,
+          "title": "Sprint-leveranser etter plan",
+          "description": "<p>Kontinuerlig: oppdateres ved hver sprint-leveranse.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 2,
+              "PhaseDetailID": 3,
+              "PhaseTitle": "Planlegging",
+              "PhaseDetailTitle": "Prosjektplan utarbeidet",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 2,
+                "PhaseDetailID": 3,
+                "PhaseTitle": "Planlegging",
+                "PhaseDetailTitle": "Prosjektplan utarbeidet",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 3
+    },
+    {
+      "ID": 4,
+      "title": "Avslutning",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 6,
+          "title": "Sluttrapport levert",
+          "description": "<p>Erfaringer, måloppnåelse, anbefalinger til fremtidige prosjekter.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "ProjectGeneral",
+              "Field": "Status",
+              "Status": "Closed",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 3,
+              "PhaseDetailID": 5,
+              "PhaseTitle": "Gjennomføring",
+              "PhaseDetailTitle": "Sprint-leveranser etter plan",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": true,
+              "notify": "kvalitet@example.no"
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 3,
+                "PhaseDetailID": 5,
+                "PhaseTitle": "Gjennomføring",
+                "PhaseDetailTitle": "Sprint-leveranser etter plan",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 4
+    }
+  ],
+  "processPhasesLength": 4,
+  "percentage": 0,
+  "processDetailsSelected": [],
+  "processPhaseSelectedIndex": 0,
+  "qcpDetailsPopupShow": false,
+  "multiline": {
+    "multiline": false
+  },
+  "qcpValidation": false,
+  "LPID": 4,
+  "LPDID": 6
+}

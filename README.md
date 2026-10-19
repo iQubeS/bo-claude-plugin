@@ -42,7 +42,7 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 ```
 /bo:status              # Quick platform overview
-/bo:qcp                 # Design a QCP (Quality Control Plan) template → .qcp.json
+/bo:qcp                 # Design a QCP (Quality Control Plan) template → <Title>.txt
 /bo:checklist           # Design a checklist/form template → .checklist.json
 /bo:risk                # Design or migrate a risk assessment template → .ra.json
 /bo:process             # Design, migrate or continue a process diagram → .diagram.json
@@ -57,7 +57,7 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 Four guided consultants turn a conversation into an import-ready file:
 
-- **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `.qcp.json` (plus a process-rationale doc) ready to upload via **Import QCP** in QCPAdmin (Next).
+- **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `<Title>.txt` in the exact shape **QCPAdmin** stores (plus a process-rationale doc carrying the binding), uploaded into the QCP document library over the empty file QCPAdmin creates for a new QCP.
 - **`/bo:checklist`** — a forms/data-collection consultant. It interviews you about a checklist or form, challenges weak questions and wrong field types, and produces a `.checklist.json` (plus an import-guide with the name/code/category/project-type metadata) ready to import into the **Template Manager**.
 - **`/bo:risk`** — a risk-assessment consultant. Most sessions start with a customer's Excel register: it reads the workbook, calibrates their scale against your tenant's, translates their vocabulary, challenges weak hazard entries, and produces a `.ra.json` (plus a rationale doc) ready to import into the **QHSE risk-assessment template manager**.
 - **`/bo:process`** — a process-diagram consultant. It draws out one process as a swimlane diagram (roles as lanes, stages as phases, steps, decisions, hand-offs), from a conversation, from an existing procedure document, BPMN export, drawing or meeting notes, or as a continuation of a diagram exported from **BO Atlas**. Produces a `.diagram.json` (plus a rationale doc) ready to import on the **Diagram tab in Atlas Studio**.

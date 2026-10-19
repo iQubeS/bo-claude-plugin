@@ -1,0 +1,359 @@
+{
+  "qcpTitle": "Kjent feil",
+  "processPhases": [
+    {
+      "ID": 1,
+      "title": "Kvalifisering",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 1,
+          "title": "Behov kartlagt",
+          "description": "<p>Første møte gjennomført og behov notert.</p><ul><li>Hvem eier problemet?</li><li>Hva koster det dem i dag?</li></ul>",
+          "status": "Completed",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/salg/sporsmalsguide"
+            },
+            {
+              "Source": "GDL",
+              "Label": "Salgshåndbok v4",
+              "Link": "/sites/Admin/Styrende dokumenter/Salgshandbok-v4.pdf"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Started",
+              "ListName": "Leads",
+              "Field": "Status",
+              "Status": "Active",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            },
+            {
+              "Action": "Completed",
+              "ListName": "Leads",
+              "Field": "ProbabilityForSale",
+              "Status": "",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            },
+            {
+              "Action": "Deviation",
+              "ListName": "Leads",
+              "Field": "LCMStatus",
+              "Status": "On hold",
+              "FieldType": "Choice",
+              "ActionIcon": "ReportHacked",
+              "Extender": ""
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/salg/sporsmalsguide",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            },
+            {
+              "Label": "Salgshåndbok v4",
+              "Link": "/sites/Admin/Styrende dokumenter/Salgshandbok-v4.pdf",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        },
+        {
+          "ID": 2,
+          "title": "Beslutningstaker identifisert",
+          "description": "Ren tekst uten HTML",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 2,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 1,
+              "PhaseTitle": "Kvalifisering",
+              "PhaseDetailTitle": "Behov kartlagt",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": false,
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 1,
+                "PhaseTitle": "Kvalifisering",
+                "PhaseDetailTitle": "Behov kartlagt",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": true,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 1
+    },
+    {
+      "ID": 2,
+      "title": "Tilbud",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 3,
+          "title": "Tilbud sendt",
+          "description": "<p>Prisforslag sendt fra malen. Oppfølging om tre dager.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Tilbudsmal",
+              "Link": "/sites/Admin/Styrende dokumenter/Tilbudsmal.docx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "Leads",
+              "Field": "LCMStatus",
+              "Status": "Proposal sent",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            },
+            {
+              "Action": "Completed",
+              "ListName": "Leads",
+              "Field": "NextFollowupDate",
+              "Status": "Proposal sent",
+              "FieldType": "DateTime",
+              "ActionIcon": "CheckMark",
+              "Extender": "tre"
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 1,
+              "PhaseTitle": "Kvalifisering",
+              "PhaseDetailTitle": "Behov kartlagt",
+              "Status": "Not Started"
+            },
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 2,
+              "PhaseTitle": "Kvalifisering",
+              "PhaseDetailTitle": "Beslutningstaker identifisert",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": true,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 1,
+                "PhaseTitle": "Kvalifisering",
+                "PhaseDetailTitle": "Behov kartlagt",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        },
+        {
+          "ID": 4,
+          "title": "Kontrakt opprettet",
+          "description": "<p>Opprett kontraktsområdet fra skjemaet. Lukk muligheten når kontrakten er signert.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/salg/kontraktsrutine"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "Leads",
+              "Field": "Status",
+              "Status": "Won",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            },
+            {
+              "Action": "Completed",
+              "ListName": "Leads",
+              "Field": "ExpectedCloseDate",
+              "Status": "",
+              "FieldType": "DateTime",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            }
+          ],
+          "triggerForm": [
+            {
+              "SiteUrl": "https://contoso.sharepoint.com/sites/CRM",
+              "Listname": "Contracts",
+              "FormUrl": "/sites/CRM/Lists/Contracts/NewForm.aspx"
+            }
+          ],
+          "dependantFields": [
+            {
+              "PhaseID": 2,
+              "PhaseDetailID": 99,
+              "PhaseTitle": "Tilbud",
+              "PhaseDetailTitle": "Tilbud sendt",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": false,
+              "sendNotification": true,
+              "notify": "okonomi@example.no"
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 2,
+                "PhaseDetailID": 3,
+                "PhaseTitle": "Tilbud",
+                "PhaseDetailTitle": "Tilbud sendt",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/salg/kontraktsrutine",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            },
+            {
+              "Label": "Contracts",
+              "Link": "https://contoso.sharepoint.com/sites/CRM/Lists/Contracts/NewForm.aspx",
+              "Type": "formlink",
+              "SiteUrl": "https://contoso.sharepoint.com/sites/CRM",
+              "Listname": "Contracts",
+              "FormUrl": "/sites/CRM/Lists/Contracts/NewForm.aspx"
+            }
+          ]
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 3
+    }
+  ],
+  "processPhasesLength": 3,
+  "percentage": 0,
+  "processDetailsSelected": [],
+  "processPhaseSelectedIndex": 0,
+  "qcpDetailsPopupShow": false,
+  "multiline": {
+    "multiline": false
+  },
+  "qcpValidation": false,
+  "LPID": 2,
+  "LPDID": 3
+}

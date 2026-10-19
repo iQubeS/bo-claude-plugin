@@ -72,6 +72,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   risks with no barriers, and a manifest with no `barrierLibrary` at all.
 
 ### Changed
+- **`/bo:qcp` now writes the file QCPAdmin actually opens.** The output is `<Title>.txt`
+  in the editor's own stored shape (`qcpTitle`, `processPhases[].processDetails[]`, ids,
+  `LPID`/`LPDID`, derived `relevantDocs_forms_links`, mirrored dependencies, HTML
+  descriptions, English trigger actions with their Fluent icons), uploaded into the QCP
+  document library over the empty file QCPAdmin creates for a new QCP. The `.qcp.json`
+  exchange format is gone: the Import dialog in QCPAdmin (Next) stores that shape as-is,
+  and the editor loads `JSON.parse(text).processPhases`, so a plugin file imported that way
+  was accepted and then could not be opened. The binding (list, column, type values) is not
+  part of the file and now lives in a new section 0 of the rationale doc, with the upload
+  steps. A `.txt` taken out of the library is accepted as input and continued with its ids
+  kept. The vendored `qcp-schema-v1.json` is replaced by `qcp-template.schema.json`
+  (written here from the editor source) plus the three editor interfaces vendored under
+  `assets/qcp/upstream/`, pinned by blob to `bo-qcp-admin@v0.2.0` in
+  `scripts/check-schema-sync.sh`. The bundled examples are the same three processes in the
+  new shape, named as the QCP is.
+- `scripts/check-qcp-template.mjs`: the pre-flight for a QCP `.txt`. Checks what the
+  schema cannot express and the editor relies on, with `test/qcp/` fixtures (`Salgsprosess
+  alle felter`, every shape; `Kjent feil`, fourteen known faults) and a README.
+- The live artifact template and `scripts/check-process-diagram.mjs` (which now recognises
+  a `.txt` handed to it by mistake) follow the new shape.
 - **`Tiltak` now crosses.** Yesterday it was rescued into a rationale appendix because
   barriers could not be imported; today it maps to `barriers[]`. But the source's sentence
   is used only to *choose* a library entry and is then discarded — the library's own

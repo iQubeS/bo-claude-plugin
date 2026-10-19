@@ -7,132 +7,172 @@
 // - Must be a single self-contained TSX file (Claude artifacts have no
 //   node_modules access).
 // - Tailwind utility classes only (no CSS imports).
-// - Types embedded inline (mirror of bo-qcp-admin/src/utils/qcp-schema/types.ts
-//   v1.0, but resolved/_unresolved fields stripped — this artifact previews
-//   what's being authored, not what's being imported).
+// - Types embedded inline. They mirror the stored QCP body (<Title>.txt) as
+//   QCPAdmin writes and reads it: bo-qcp-admin/src/webparts/qcpAdmin/components/
+//   Modal/{QCPModal,ProcessPhase,ProcessDetail}.ts at v0.2.0, vendored under
+//   assets/qcp/upstream/. Runtime-only fields (status, comments, modifiedBy,
+//   percentage, statusInformations timestamps) are omitted from the preview
+//   types; the output file carries them empty.
 // - When Claude renders this, it replaces `INITIAL_QCP` with the current
-//   in-progress state.
+//   in-progress state (the same object that becomes the .txt; extra keys are
+//   ignored by the preview).
 
 import React, { useState } from 'react';
 
-// ----- Types (mirror schema v1.0; authoring shape, no _unresolved) -----
+// ----- Types (stored .txt shape; preview subset) -----
 
-type QcpV1 = {
-  title: string;
-  description?: string;
-  version: { major: number; minor: number };
-  binding: { list_name: string; column_name: string; column_value: string };
-  phases: PhaseV1[];
+type Qcp = {
+  qcpTitle: string;
+  processPhases: Phase[];
+  /** Not in the file. Shown in the header so the binding is reviewed with the QCP. */
+  binding?: { list: string; column: string; values: string[] };
 };
 
-type PhaseV1 = {
+type Phase = {
+  ID: number;
   title: string;
-  sort_order: number;
-  process_details: ProcessDetailV1[];
+  sortOrder: number; // 1-based
+  processDetails: Detail[];
 };
 
-type ProcessDetailV1 = {
+type Detail = {
+  ID: number;
   title: string;
-  description: string;
-  sort_order: number;
+  description: string; // HTML (react-quill)
+  sortOrderDetails: number; // 0-based
   na: boolean;
-  comment_mandatory: boolean;
-  links: LinkV1[];
-  work_files: WorkFileV1[];
-  triggers: TriggerV1[];
-  trigger_forms: TriggerFormV1[];
-  dependencies: DependencyV1[];
-  highlight: HighlightV1;
+  commentMandatory: boolean;
+  relevantDocuments: RelevantDocument[];
+  checklistDocuments: ChecklistDocument[];
+  triggers: Trigger[];
+  triggerForm: TriggerForm[];
+  dependantFields: DependantField[];
+  addToTimeline: TimelineEntry[] | false;
 };
 
-type LinkV1 =
-  | { type: 'external'; label: string; url: string }
-  | { type: 'governing_document'; label: string; doc_name: string };
+type RelevantDocument =
+  | { Source: 'ExternalLink'; Label: 'External Link'; Link: string }
+  | { Source: 'GDL'; Label: string; Link: string };
 
-type WorkFileV1 = { doc_name: string; label: string };
+type ChecklistDocument = { Source: 'GDL'; Label: string; Link: string; Folder: '' };
 
-type TriggerV1 =
-  | { action_status: 'Started' | 'Completed' | 'Deviation';
-      field_type: 'Choice'; list_name: string; field_name: string; value: string }
-  | { action_status: 'Started' | 'Completed' | 'Deviation';
-      field_type: 'DateTime'; list_name: string; field_name: string; days_offset: number };
-
-type TriggerFormV1 = { hub: string; list_name: string; form_name: string };
-type DependencyV1 = { phase_title: string; detail_title: string };
-type HighlightV1 = {
-  add_to_timeline: boolean;
-  send_notification: { email: string; display_name?: string } | null;
+type Trigger = {
+  Action: 'Started' | 'Completed' | 'Deviation';
+  ListName: string;
+  Field: string;
+  Status: string; // Choice value, or '' for DateTime
+  FieldType: 'Choice' | 'DateTime';
+  ActionIcon: 'Play' | 'CheckMark' | 'ReportHacked';
+  Extender: string; // days for DateTime, '' otherwise
 };
+
+type TriggerForm = { SiteUrl: string; Listname: string; FormUrl: string };
+
+type DependantField = {
+  PhaseID: number;
+  PhaseDetailID: number;
+  PhaseTitle: string;
+  PhaseDetailTitle: string;
+  Status: 'Not Started';
+};
+
+type TimelineEntry = { addToTimeline: boolean; sendNotification: boolean; notify: string };
 
 // ----- INITIAL_QCP: replaced by Claude with the in-progress state -----
 
-const INITIAL_QCP: QcpV1 = {
-  title: 'Eksempel: Utviklingsprosjekt',
-  description: 'Erstatt med faktisk QCP når samtalen produserer struktur.',
-  version: { major: 0, minor: 0 },
-  binding: { list_name: 'ProjectGeneral', column_name: 'ProjectType', column_value: 'Utvikling' },
-  phases: [
+const INITIAL_QCP: Qcp = {
+  qcpTitle: 'Eksempel: Utviklingsprosjekt',
+  binding: { list: 'ProjectGeneral', column: 'ProjectType', values: ['Utvikling'] },
+  processPhases: [
     {
+      ID: 1,
       title: 'Initiering',
-      sort_order: 1,
-      process_details: [
+      sortOrder: 1,
+      processDetails: [
         {
+          ID: 1,
           title: 'Forretningscase godkjent',
-          description: 'Kost-nytte godkjent av styringsgruppe.',
-          sort_order: 1,
+          description: '<p>Kost-nytte godkjent av styringsgruppe.</p>',
+          sortOrderDetails: 0,
           na: false,
-          comment_mandatory: true,
-          links: [],
-          work_files: [],
-          triggers: [],
-          trigger_forms: [],
-          dependencies: [],
-          highlight: { add_to_timeline: true, send_notification: null }
+          commentMandatory: true,
+          relevantDocuments: [],
+          checklistDocuments: [],
+          triggers: [
+            { Action: 'Completed', ListName: 'ProjectGeneral', Field: 'Status', Status: 'Approved', FieldType: 'Choice', ActionIcon: 'CheckMark', Extender: '' }
+          ],
+          triggerForm: [],
+          dependantFields: [],
+          addToTimeline: [{ addToTimeline: true, sendNotification: false, notify: '' }]
         }
       ]
     }
   ]
 };
 
+// ----- Helpers -----
+
+const ACTION_LABEL: Record<Trigger['Action'], string> = {
+  Started: 'ved start',
+  Completed: 'ved fullført',
+  Deviation: 'ved avvik'
+};
+
+function stripHtml(html: string): string {
+  return html
+    .replace(/<li>/gi, '• ')
+    .replace(/<\/(p|li|ul|ol|div|h[1-6])>/gi, '\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function timeline(d: Detail): TimelineEntry | null {
+  if (!Array.isArray(d.addToTimeline) || d.addToTimeline.length === 0) return null;
+  return d.addToTimeline[0];
+}
+
 // ----- Component -----
 
 export default function QcpPreview() {
   const qcp = INITIAL_QCP;
-  const totalSteps = qcp.phases.reduce((n, p) => n + p.process_details.length, 0);
+  const totalSteps = qcp.processPhases.reduce((n, p) => n + p.processDetails.length, 0);
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white text-slate-900 font-sans">
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold mb-1">{qcp.title}</h1>
-        {qcp.description && (
-          <p className="text-slate-600 text-sm">{qcp.description}</p>
-        )}
+        <h1 className="text-2xl font-semibold mb-1">{qcp.qcpTitle}</h1>
         <div className="mt-3 flex flex-wrap gap-2 text-xs">
+          <span className="bg-slate-100 px-2 py-1 rounded font-mono">{qcp.qcpTitle}.txt</span>
+          {qcp.binding && (
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+              {qcp.binding.list} · {qcp.binding.column} = {qcp.binding.values.join(', ')}
+            </span>
+          )}
           <span className="bg-slate-100 px-2 py-1 rounded">
-            v{qcp.version.major}.{qcp.version.minor}
-          </span>
-          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-            {qcp.binding.list_name} · {qcp.binding.column_name} = {qcp.binding.column_value}
-          </span>
-          <span className="bg-slate-100 px-2 py-1 rounded">
-            {qcp.phases.length} faser · {totalSteps} sjekkpunkter
+            {qcp.processPhases.length} faser · {totalSteps} sjekkpunkter
           </span>
         </div>
       </header>
 
       <ol className="space-y-4">
-        {qcp.phases
+        {qcp.processPhases
           .slice()
-          .sort((a, b) => a.sort_order - b.sort_order)
+          .sort((a, b) => a.sortOrder - b.sortOrder)
           .map((phase, i) => (
-            <Phase key={i} phase={phase} index={i} />
+            <PhaseView key={phase.ID} phase={phase} index={i} />
           ))}
       </ol>
     </div>
   );
 }
 
-function Phase({ phase, index }: { phase: PhaseV1; index: number }) {
+function PhaseView({ phase, index }: { phase: Phase; index: number }) {
   const [expanded, setExpanded] = useState(true);
   return (
     <li className="border border-slate-200 rounded-lg overflow-hidden">
@@ -146,18 +186,18 @@ function Phase({ phase, index }: { phase: PhaseV1; index: number }) {
           </span>
           <span className="font-medium">{phase.title}</span>
           <span className="text-xs text-slate-500">
-            {phase.process_details.length} sjekkpunkter
+            {phase.processDetails.length} sjekkpunkter
           </span>
         </div>
         <span className="text-slate-400 text-lg">{expanded ? '−' : '+'}</span>
       </button>
       {expanded && (
         <ol className="divide-y divide-slate-100">
-          {phase.process_details
+          {phase.processDetails
             .slice()
-            .sort((a, b) => a.sort_order - b.sort_order)
-            .map((detail, j) => (
-              <Detail key={j} detail={detail} />
+            .sort((a, b) => a.sortOrderDetails - b.sortOrderDetails)
+            .map((detail) => (
+              <DetailView key={detail.ID} detail={detail} />
             ))}
         </ol>
       )}
@@ -165,7 +205,8 @@ function Phase({ phase, index }: { phase: PhaseV1; index: number }) {
   );
 }
 
-function Detail({ detail }: { detail: ProcessDetailV1 }) {
+function DetailView({ detail }: { detail: Detail }) {
+  const text = stripHtml(detail.description);
   return (
     <li className="px-5 py-3">
       <div className="flex items-start gap-2 mb-1">
@@ -175,43 +216,48 @@ function Detail({ detail }: { detail: ProcessDetailV1 }) {
             Kan settes N/A
           </span>
         )}
-        {detail.comment_mandatory && (
+        {detail.commentMandatory && (
           <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">
             Kommentar påkrevet
           </span>
         )}
       </div>
-      {detail.description && (
-        <p className="text-sm text-slate-600 mb-2">{detail.description}</p>
+      {text && (
+        <p className="text-sm text-slate-600 mb-2 whitespace-pre-line">{text}</p>
       )}
       <Badges detail={detail} />
     </li>
   );
 }
 
-function Badges({ detail }: { detail: ProcessDetailV1 }) {
+function Badges({ detail }: { detail: Detail }) {
   const items: { label: string; tone: string }[] = [];
 
-  if (detail.links.length > 0) {
-    items.push({ label: `${detail.links.length} link${detail.links.length > 1 ? 'er' : ''}`, tone: 'bg-blue-50 text-blue-700' });
+  for (const doc of detail.relevantDocuments) {
+    items.push({
+      label: doc.Source === 'GDL' ? `Styrende dokument: ${doc.Label}` : `Lenke: ${doc.Link.replace(/^https?:\/\//, '').slice(0, 40)}`,
+      tone: 'bg-blue-50 text-blue-700'
+    });
   }
-  if (detail.work_files.length > 0) {
-    items.push({ label: `${detail.work_files.length} arbeidsfil${detail.work_files.length > 1 ? 'er' : ''}`, tone: 'bg-indigo-50 text-indigo-700' });
+  for (const wf of detail.checklistDocuments) {
+    items.push({ label: `Arbeidsfil: ${wf.Label}`, tone: 'bg-indigo-50 text-indigo-700' });
   }
-  if (detail.triggers.length > 0) {
-    items.push({ label: `${detail.triggers.length} trigger${detail.triggers.length > 1 ? 'e' : ''}`, tone: 'bg-emerald-50 text-emerald-700' });
+  for (const t of detail.triggers) {
+    const value = t.FieldType === 'DateTime' ? `i dag + ${t.Extender || '0'} d` : t.Status;
+    items.push({ label: `${t.ListName}.${t.Field} = ${value} ${ACTION_LABEL[t.Action]}`, tone: 'bg-emerald-50 text-emerald-700' });
   }
-  if (detail.trigger_forms.length > 0) {
-    items.push({ label: `${detail.trigger_forms.length} trigger-skjema${detail.trigger_forms.length > 1 ? 'er' : ''}`, tone: 'bg-emerald-50 text-emerald-700' });
+  for (const f of detail.triggerForm) {
+    items.push({ label: `Skjema: ny ${f.Listname}`, tone: 'bg-emerald-50 text-emerald-700' });
   }
-  if (detail.dependencies.length > 0) {
-    items.push({ label: `Avhengig av ${detail.dependencies.length} steg`, tone: 'bg-purple-50 text-purple-700' });
+  for (const dep of detail.dependantFields) {
+    items.push({ label: `Etter: ${dep.PhaseTitle} › ${dep.PhaseDetailTitle}`, tone: 'bg-purple-50 text-purple-700' });
   }
-  if (detail.highlight.add_to_timeline) {
+  const tl = timeline(detail);
+  if (tl && tl.addToTimeline) {
     items.push({ label: 'Tidslinje', tone: 'bg-rose-50 text-rose-700' });
   }
-  if (detail.highlight.send_notification) {
-    items.push({ label: `Varsler ${detail.highlight.send_notification.email}`, tone: 'bg-rose-50 text-rose-700' });
+  if (tl && tl.sendNotification) {
+    items.push({ label: `Varsler ${tl.notify}`, tone: 'bg-rose-50 text-rose-700' });
   }
 
   if (items.length === 0) return null;

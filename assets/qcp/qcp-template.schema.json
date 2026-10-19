@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.business-online.no/qcp/template-txt.json",
+  "title": "QCP template file (<Title>.txt) as stored and loaded by BO QCPAdmin",
+  "description": "The JSON body QCPAdmin writes to <Title>.txt in the QCP document library and reads back with JSON.parse(text).processPhases. Derived from src/webparts/qcpAdmin/components/Modal/{QCPModal,ProcessPhase,ProcessDetail}.ts at iQubeS/bo-qcp-admin@v0.2.0 (vendored under assets/qcp/upstream/) and from the editor code that writes each part. This is NOT the v1 exchange file (schema_version/qcp/phases); that format is validated by the Import dialog but never opened by the editor. Runtime state (status, comments, modifiedBy, percentages, statusInformations timestamps) is present but empty in a template.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "qcpTitle",
+    "processPhases",
+    "processPhasesLength",
+    "percentage",
+    "processDetailsSelected",
+    "processPhaseSelectedIndex",
+    "qcpDetailsPopupShow",
+    "multiline",
+    "qcpValidation",
+    "LPID",
+    "LPDID"
+  ],
+  "properties": {
+    "qcpTitle": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[^\"*:<>?/\\\\|]+$",
+      "description": "The QCP name. The file is <qcpTitle>.txt and the editor reads it by that name, so the two must match. SharePoint file-name characters only."
+    },
+    "processPhases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/phase" }
+    },
+    "processPhasesLength": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Must equal processPhases.length (the editor recomputes it on every save)."
+    },
+    "percentage": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Runtime progress. 0 in a template."
+    },
+    "processDetailsSelected": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "Editor working copy of the open phase. Empty in a file; the editor fills it from processPhases[0] on load."
+    },
+    "processPhaseSelectedIndex": {
+      "type": "integer",
+      "minimum": -1,
+      "description": "Editor UI state. 0 in a generated file."
+    },
+    "qcpDetailsPopupShow": { "type": "boolean" },
+    "multiline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["multiline"],
+      "properties": { "multiline": { "type": "boolean" } }
+    },
+    "qcpValidation": { "type": "boolean" },
+    "LPID": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Last phase ID handed out. The editor allocates the next phase as LPID + 1, so it must equal the highest processPhases[].ID."
+    },
+    "LPDID": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Last process-detail ID handed out. Must equal the highest processDetails[].ID across every phase; detail IDs are unique across the whole QCP, not per phase."
+    },
+    "PrevNext": {
+      "type": "array",
+      "description": "Optional. Written as [] by the editor for a QCP created in the UI; absent from older files. Omit or leave empty.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["HubSites", "ListName", "SiteUrl", "PrevNext", "SiteUrlLabel"],
+        "properties": {
+          "HubSites": { "type": "string" },
+          "ListName": { "type": "string" },
+          "SiteUrl": { "type": "string" },
+          "PrevNext": { "type": "string" },
+          "SiteUrlLabel": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ID", "title", "type", "processDetails", "percentage", "phasePercentageCompleted", "sortOrder"],
+      "properties": {
+        "ID": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "type": { "const": "newtype" },
+        "processDetails": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/processDetail" }
+        },
+        "percentage": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "phasePercentageCompleted": { "type": "boolean" },
+        "sortOrder": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1-based and contiguous across phases. (Detail sortOrderDetails is 0-based; the editor is inconsistent and both are kept as it writes them.)"
+        }
+      }
+    },
+    "processDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ID",
+        "title",
+        "description",
+        "status",
+        "comments",
+        "checklistDocuments",
+        "relevantDocuments",
+        "modifiedBy",
+        "percentage",
+        "sortOrderDetails",
+        "triggers",
+        "triggerForm",
+        "dependantFields",
+        "addToTimeline",
+        "statusInformations",
+        "na",
+        "commentMandatory",
+        "relevantDocs_forms_links"
+      ],
+      "properties": {
+        "ID": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": {
+          "type": "string",
+          "maxLength": 50000,
+          "description": "Rich text as react-quill HTML: <p>, <ul><li>, <strong>, <em>, <a>. Plain text renders as one unformatted paragraph."
+        },
+        "status": { "const": "" },
+        "comments": { "const": "" },
+        "checklistDocuments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/checklistDocument" },
+          "description": "Work files: governing documents copied into the workspace library when the QCP runs."
+        },
+        "relevantDocuments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/relevantDocument" },
+          "description": "Links shown on the checkpoint: an external URL or a read-only link to a governing document."
+        },
+        "modifiedBy": { "const": "" },
+        "percentage": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "sortOrderDetails": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based and contiguous within the phase (the editor assigns processDetails.length to a new detail)."
+        },
+        "triggers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/trigger" }
+        },
+        "triggerForm": {
+          "type": "array",
+          "maxItems": 1,
+          "items": { "$ref": "#/definitions/triggerForm" },
+          "description": "At most one: the editor pushes only when the array is empty and otherwise edits [0]."
+        },
+        "dependantFields": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/dependantField" }
+        },
+        "addToTimeline": {
+          "type": "array",
+          "maxItems": 1,
+          "items": { "$ref": "#/definitions/timelineEntry" },
+          "description": "[] when neither timeline nor notification is wanted, else exactly one entry. (Files saved by old versions carry the boolean false here; the editor tolerates it, this schema does not write it.)"
+        },
+        "statusInformations": { "$ref": "#/definitions/statusInformation" },
+        "na": {
+          "type": "boolean",
+          "description": "true: the workspace owner may mark the checkpoint N/A."
+        },
+        "commentMandatory": {
+          "type": "boolean",
+          "description": "true: a comment is required when completing the checkpoint."
+        },
+        "relevantDocs_forms_links": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/relevantDocFormLink" },
+          "description": "Derived, not authored: every triggerForm entry as a formlink (first), then every relevantDocuments entry as a relevantlink, in that order. The editor rebuilds it on save; a file must carry the same derivation so the checkpoint renders before the first save."
+        }
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Action", "ListName", "Field", "Status", "FieldType", "ActionIcon", "Extender"],
+      "properties": {
+        "Action": {
+          "enum": ["Started", "Completed", "Deviation"],
+          "description": "The checkpoint state that fires the trigger. Stored in English regardless of UI language (as in every tenant file seen)."
+        },
+        "ListName": { "type": "string", "minLength": 1, "description": "List title on the workspace, e.g. Leads, ProjectGeneral, Companies." },
+        "Field": { "type": "string", "minLength": 1, "description": "Internal name of the column to set." },
+        "Status": { "type": "string", "description": "Choice: the exact choice string as it appears in the column (\"10 %\" is not \"10%\"). DateTime: empty." },
+        "FieldType": { "enum": ["Choice", "DateTime"] },
+        "ActionIcon": {
+          "enum": ["Play", "CheckMark", "ReportHacked"],
+          "description": "Fluent icon paired with Action: Started=Play, Completed=CheckMark, Deviation=ReportHacked."
+        },
+        "Extender": {
+          "type": "string",
+          "description": "DateTime: days added to today when the trigger fires, as a string (\"3\"; \"\" means 0). Choice: empty."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "FieldType": { "const": "Choice" } } },
+          "then": { "properties": { "Status": { "minLength": 1 }, "Extender": { "const": "" } } }
+        },
+        {
+          "if": { "properties": { "FieldType": { "const": "DateTime" } } },
+          "then": { "properties": { "Status": { "const": "" }, "Extender": { "pattern": "^-?[0-9]*$" } } }
+        },
+        {
+          "if": { "properties": { "Action": { "const": "Started" } } },
+          "then": { "properties": { "ActionIcon": { "const": "Play" } } }
+        },
+        {
+          "if": { "properties": { "Action": { "const": "Completed" } } },
+          "then": { "properties": { "ActionIcon": { "const": "CheckMark" } } }
+        },
+        {
+          "if": { "properties": { "Action": { "const": "Deviation" } } },
+          "then": { "properties": { "ActionIcon": { "const": "ReportHacked" } } }
+        }
+      ]
+    },
+    "triggerForm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["SiteUrl", "Listname", "FormUrl"],
+      "properties": {
+        "SiteUrl": {
+          "type": "string",
+          "pattern": "^https://[^/]+/sites/[^/]+$",
+          "description": "Absolute URL of the hub site that holds the list, e.g. https://contoso.sharepoint.com/sites/CRM."
+        },
+        "Listname": { "type": "string", "minLength": 1 },
+        "FormUrl": {
+          "type": "string",
+          "pattern": "^/sites/.+\\.aspx$",
+          "description": "Server-relative URL of the list form, normally /sites/<hub>/Lists/<Listname>/NewForm.aspx."
+        }
+      }
+    },
+    "relevantDocument": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["Source", "Label", "Link"],
+          "properties": {
+            "Source": { "const": "ExternalLink" },
+            "Label": { "const": "External Link", "description": "The editor always writes this literal for an external link; the URL is what the user sees." },
+            "Link": { "type": "string", "pattern": "^https?://", "maxLength": 2000 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["Source", "Label", "Link"],
+          "properties": {
+            "Source": { "const": "GDL" },
+            "Label": { "type": "string", "minLength": 1, "description": "Document title as shown in the governing-document library." },
+            "Link": { "type": "string", "minLength": 1, "description": "Server-relative URL of the document in the governing-document library (what the picker stores)." }
+          }
+        }
+      ]
+    },
+    "checklistDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Source", "Label", "Link", "Folder"],
+      "properties": {
+        "Source": { "const": "GDL" },
+        "Label": { "type": "string", "minLength": 1 },
+        "Link": { "type": "string", "minLength": 1, "description": "Server-relative URL of the document in the governing-document library." },
+        "Folder": { "const": "" }
+      }
+    },
+    "dependantField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["PhaseID", "PhaseDetailID", "PhaseTitle", "PhaseDetailTitle", "Status"],
+      "properties": {
+        "PhaseID": { "type": "integer", "minimum": 1, "description": "processPhases[].ID of the phase the prerequisite is in (the editor stores the dropdown key, which is the numeric ID)." },
+        "PhaseDetailID": { "type": "integer", "minimum": 1, "description": "processDetails[].ID of the prerequisite checkpoint." },
+        "PhaseTitle": { "type": "string", "minLength": 1 },
+        "PhaseDetailTitle": { "type": "string", "minLength": 1 },
+        "Status": { "const": "Not Started" }
+      }
+    },
+    "timelineEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["addToTimeline", "sendNotification", "notify"],
+      "properties": {
+        "addToTimeline": { "type": "boolean", "description": "Post the checkpoint completion on the workspace timeline." },
+        "sendNotification": { "type": "boolean" },
+        "notify": { "type": "string", "description": "E-mail address to notify when sendNotification is true; \"\" otherwise." }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "sendNotification": { "const": true } } },
+          "then": { "properties": { "notify": { "format": "email", "minLength": 3 } } }
+        },
+        {
+          "if": { "properties": { "sendNotification": { "const": false } } },
+          "then": { "properties": { "notify": { "const": "" } } }
+        }
+      ]
+    },
+    "statusInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started", "startedBy", "completed", "completedBy", "deviation", "deviationBy", "naUpdated", "naUpdatedBy", "dependencies"],
+      "properties": {
+        "started": { "const": "" },
+        "startedBy": { "const": "" },
+        "completed": { "const": "" },
+        "completedBy": { "const": "" },
+        "deviation": { "const": "" },
+        "deviationBy": { "const": "" },
+        "naUpdated": { "const": "" },
+        "naUpdatedBy": { "const": "" },
+        "dependencies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/dependantField" },
+          "description": "Mirror of dependantFields; the editor pushes to both. Must be identical."
+        }
+      }
+    },
+    "relevantDocFormLink": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["Label", "Link", "Type", "SiteUrl", "Listname", "FormUrl"],
+          "properties": {
+            "Label": { "type": "string", "description": "= triggerForm.Listname" },
+            "Link": { "type": "string", "description": "= origin of triggerForm.SiteUrl + triggerForm.FormUrl" },
+            "Type": { "const": "formlink" },
+            "SiteUrl": { "type": "string", "minLength": 1 },
+            "Listname": { "type": "string", "minLength": 1 },
+            "FormUrl": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["Label", "Link", "Type", "SiteUrl", "Listname", "FormUrl"],
+          "properties": {
+            "Label": { "type": "string", "description": "= relevantDocuments[].Label" },
+            "Link": { "type": "string", "description": "= relevantDocuments[].Link" },
+            "Type": { "const": "relevantlink" },
+            "SiteUrl": { "const": "" },
+            "Listname": { "const": "" },
+            "FormUrl": { "const": "" }
+          }
+        }
+      ]
+    }
+  }
+}
