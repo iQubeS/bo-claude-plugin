@@ -99,8 +99,8 @@ function structuralErrors(file) {
   if (file === null || typeof file !== 'object' || Array.isArray(file)) {
     return [{ path: '', message: 'not a JSON object' }];
   }
-  if ('qcp' in file && !('kind' in file)) {
-    return [{ path: '', message: 'this is a .qcp.json, not a diagram file. Atlas refuses it; /bo:qcp is the command for that format' }];
+  if (('qcp' in file || 'processPhases' in file) && !('kind' in file)) {
+    return [{ path: '', message: 'this is a QCP file, not a diagram file. Atlas refuses it; /bo:qcp is the command for that format' }];
   }
   if (file.kind !== 'bo-atlas-diagram') {
     errors.push({ path: '/kind', message: `expected "bo-atlas-diagram", got ${JSON.stringify(file.kind)}` });

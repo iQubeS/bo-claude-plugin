@@ -23,12 +23,12 @@
 3. Type `/bo:qcp`. Claude should respond with a domain-first question.
 4. Reply with: `HR-onboarding for nye fast-ansatte i en mellomstor IT-bedrift.`
 5. Walk through phases 1–5. Answer Claude's questions naturally.
-6. At end of session, copy the generated `.qcp.json` and validate against schema:
+6. At end of session, save the generated `<Title>.txt` under its own name and run both checks:
    ```bash
-   echo '<paste JSON here>' > /tmp/hr-test.qcp.json
-   npx -y -p ajv-cli@^5 ajv validate --strict=false \
-     -s assets/qcp/qcp-schema-v1.json \
-     -d /tmp/hr-test.qcp.json
+   npx -y -p ajv-cli@^5 -p ajv-formats ajv validate --strict=false -c ajv-formats \
+     -s assets/qcp/qcp-template.schema.json \
+     -d "/tmp/HR Onboarding.txt"
+   node scripts/check-qcp-template.mjs "/tmp/HR Onboarding.txt"
    ```
 
 ### Expected behavior
@@ -43,7 +43,8 @@
 
 ### Output validation
 
-- [ ] `.qcp.json` schema-valid (after `--strict=false`)
+- [ ] `<Title>.txt` passes ajv (after `--strict=false`) and `check-qcp-template.mjs` with no errors
+- [ ] Rationale section 0 names list, column and type value(s) for the binding
 - [ ] Rationale doc has all 7 sections
 - [ ] Title slug matches expectation
 - [ ] No ISO 9001 references in output (HR domain — should be GDPR-focused)
@@ -102,7 +103,7 @@
 
 ### Output validation
 
-- [ ] `.qcp.json` schema-valid
+- [ ] `<Title>.txt` passes ajv and `check-qcp-template.mjs` with no errors
 - [ ] Rationale section 7 (Source trail) populated
 - [ ] At least 1 step added beyond source (with ISO citation)
 

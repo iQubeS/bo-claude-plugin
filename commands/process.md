@@ -381,7 +381,7 @@ any structural fault:
   both / none.
 - Every annotation has `id`, `kind` (note / connector / offpage), `text`.
 - **No unknown keys anywhere.** No `size`, no `color`, no `order`, no `sort_order`, no
-  `stable_id`, nothing from a `.qcp.json`.
+  `stable_id`, nothing from a QCP file.
 - Lengths: titles 200, lane labels and ids 120, descriptions 50 000, labels 200, note text
   4 000.
 
@@ -480,7 +480,7 @@ In continuation mode add the removal warning, named:
 | Excel step tables | Rows are steps; columns usually hold role, phase and document. Lexicon §5 header variants apply. |
 | Meeting notes, workshop output, transcripts | Lexicon §7. Pasted text is fine. Extract, then confirm; never resolve a disagreement yourself. |
 | An existing `.diagram.json` | Continuation mode. Validate first. |
-| A `.qcp.json` | Not a diagram, but a useful source: its phases and checkpoints are the steps. Read it as a procedure and say that the QCP itself is not changed by anything this session produces. |
+| A QCP file (`<Title>.txt` from the QCP library, or an old `.qcp.json`) | Not a diagram, but a useful source: its phases and checkpoints are the steps. Read it as a procedure and say that the QCP itself is not changed by anything this session produces. |
 
 Maximum about 5 MB per file. For larger, ask for the relevant chapter.
 

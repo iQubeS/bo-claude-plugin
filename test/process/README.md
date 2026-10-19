@@ -17,7 +17,7 @@ There are two checks, and they catch different things:
 
 | Check | Catches | Should pass | Should fail |
 |---|---|---|---|
-| `ajv` against the schema | Structural faults: a misspelled key, a missing `shape`, an unknown enum value, a `size` on a step, anything a `.qcp.json` has. Atlas refuses the **whole file**. | all six fixtures | (none; every fixture is structurally valid on purpose) |
+| `ajv` against the schema | Structural faults: a misspelled key, a missing `shape`, an unknown enum value, a `size` on a step, anything a QCP `.txt` has. Atlas refuses the **whole file**. | all six fixtures | (none; every fixture is structurally valid on purpose) |
 | `check-process-diagram.mjs` | Reference faults Atlas also refuses (a connector to a step that is not there, a step in a lane the file does not list, a duplicate id, a kept position outside the lane the step names), and advisories Atlas does not give (a decision with one exit, an orphan step, a half-set of coordinates). With the export as a second argument: the diff Atlas will show, and the kept-coordinates-plus-structural-change rule. | `all-shapes`, `export`, `continuation` (with `export`) | `known-bad`, `continuation-stale-layout` (alone and with `export`) |
 
 The fixtures divide along that split deliberately. `known-bad` is **structurally valid** so

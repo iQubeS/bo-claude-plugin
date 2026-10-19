@@ -1,0 +1,446 @@
+{
+  "qcpTitle": "Leverandørkvalifisering",
+  "processPhases": [
+    {
+      "ID": 1,
+      "title": "Innledende vurdering",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 1,
+          "title": "Forretningsbehov dokumentert",
+          "description": "<p>Hvorfor trenger vi denne leverandøren? Hva skal de levere? Volum og kritikalitet.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://www.iso.org/standard/62085.html"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://www.iso.org/standard/62085.html",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 1
+    },
+    {
+      "ID": 2,
+      "title": "Due diligence",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 2,
+          "title": "Bedriftsopplysninger verifisert",
+          "description": "<p>Org.nummer, Brønnøysund-status, antall ansatte, finansiell stabilitet.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://www.brreg.no/"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 1,
+              "PhaseTitle": "Innledende vurdering",
+              "PhaseDetailTitle": "Forretningsbehov dokumentert",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 1,
+                "PhaseTitle": "Innledende vurdering",
+                "PhaseDetailTitle": "Forretningsbehov dokumentert",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://www.brreg.no/",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        },
+        {
+          "ID": 3,
+          "title": "Anti-korrupsjon screening",
+          "description": "<p>Sjekk mot sanksjonslister og PEP-databaser. ISO 37001-relatert. Dokumenter resultat.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Anti-korrupsjon-policy v2",
+              "Link": "/sites/Admin/Styrende dokumenter/Anti-korrupsjon-policy-v2.pdf"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": true,
+              "notify": "compliance@example.no"
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "Anti-korrupsjon-policy v2",
+              "Link": "/sites/Admin/Styrende dokumenter/Anti-korrupsjon-policy-v2.pdf",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        },
+        {
+          "ID": 4,
+          "title": "ISO/sertifiseringer dokumentert",
+          "description": "<p>Krev kopi av ISO 9001-sertifikat (eller likeverdig) for kvalitetskritiske leveranser. Verifiseres mot utstedende organ.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 2,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": true,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 2
+    },
+    {
+      "ID": 3,
+      "title": "Kontraktsfase",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 5,
+          "title": "Rammeavtale signert",
+          "description": "<p>Inkluderer SLA, prisstruktur, leveringsvilkår, oppsigelsesvilkår.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Rammeavtale-mal",
+              "Link": "/sites/Admin/Styrende dokumenter/Mal-rammeavtale-leverandor.docx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "Companies",
+              "Field": "Status",
+              "Status": "Active",
+              "FieldType": "Choice",
+              "ActionIcon": "CheckMark",
+              "Extender": ""
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 2,
+              "PhaseDetailID": 2,
+              "PhaseTitle": "Due diligence",
+              "PhaseDetailTitle": "Bedriftsopplysninger verifisert",
+              "Status": "Not Started"
+            },
+            {
+              "PhaseID": 2,
+              "PhaseDetailID": 3,
+              "PhaseTitle": "Due diligence",
+              "PhaseDetailTitle": "Anti-korrupsjon screening",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 2,
+                "PhaseDetailID": 2,
+                "PhaseTitle": "Due diligence",
+                "PhaseDetailTitle": "Bedriftsopplysninger verifisert",
+                "Status": "Not Started"
+              },
+              {
+                "PhaseID": 2,
+                "PhaseDetailID": 3,
+                "PhaseTitle": "Due diligence",
+                "PhaseDetailTitle": "Anti-korrupsjon screening",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        },
+        {
+          "ID": 6,
+          "title": "Databehandleravtale (DPA) hvis relevant",
+          "description": "<p>Påkrevet hvis leverandøren behandler personopplysninger på våre vegne. GDPR art. 28.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "DPA-mal",
+              "Link": "/sites/Admin/Styrende dokumenter/Mal-DPA-databehandler.docx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/databehandleravtaler/"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": true,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://www.datatilsynet.no/rettigheter-og-plikter/virksomhetenes-plikter/databehandleravtaler/",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 3
+    },
+    {
+      "ID": 4,
+      "title": "Aktiv leverandør",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 7,
+          "title": "Periodisk re-evaluering planlagt",
+          "description": "<p>Sett dato for neste full revurdering (typisk årlig). ISO 9001 8.4.2 krever dokumentert oppfølging.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "Companies",
+              "Field": "NextReviewDate",
+              "Status": "",
+              "FieldType": "DateTime",
+              "ActionIcon": "CheckMark",
+              "Extender": "365"
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 3,
+              "PhaseDetailID": 5,
+              "PhaseTitle": "Kontraktsfase",
+              "PhaseDetailTitle": "Rammeavtale signert",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 3,
+                "PhaseDetailID": 5,
+                "PhaseTitle": "Kontraktsfase",
+                "PhaseDetailTitle": "Rammeavtale signert",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 4
+    }
+  ],
+  "processPhasesLength": 4,
+  "percentage": 0,
+  "processDetailsSelected": [],
+  "processPhaseSelectedIndex": 0,
+  "qcpDetailsPopupShow": false,
+  "multiline": {
+    "multiline": false
+  },
+  "qcpValidation": false,
+  "LPID": 4,
+  "LPDID": 7
+}

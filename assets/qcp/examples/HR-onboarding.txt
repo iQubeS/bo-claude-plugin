@@ -1,0 +1,306 @@
+{
+  "qcpTitle": "HR-onboarding",
+  "processPhases": [
+    {
+      "ID": 1,
+      "title": "Før første dag",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 1,
+          "title": "Arbeidsavtale signert",
+          "description": "<p>Signer avtalen elektronisk eller fysisk på første dag.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Standard arbeidsavtale",
+              "Link": "/sites/Admin/Styrende dokumenter/Mal-arbeidsavtale-fast.docx",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        },
+        {
+          "ID": 2,
+          "title": "IT-utstyr bestilt",
+          "description": "<p>Laptop, telefon, tilganger til kjernesystemer (Microsoft 365, BO).</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 1,
+              "PhaseDetailID": 1,
+              "PhaseTitle": "Før første dag",
+              "PhaseDetailTitle": "Arbeidsavtale signert",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": false,
+              "sendNotification": true,
+              "notify": "it-support@example.no"
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 1,
+                "PhaseDetailID": 1,
+                "PhaseTitle": "Før første dag",
+                "PhaseDetailTitle": "Arbeidsavtale signert",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 1
+    },
+    {
+      "ID": 2,
+      "title": "Første uke",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 3,
+          "title": "Velkomstsamtale med leder",
+          "description": "<p>30-60-90-dager-plan gjennomgått. Forventninger avklart.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [
+            {
+              "Source": "ExternalLink",
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/hr/30-60-90.pdf"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "External Link",
+              "Link": "https://intranet.example.no/hr/30-60-90.pdf",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        },
+        {
+          "ID": 4,
+          "title": "Personvern-erklæring",
+          "description": "<p>GDPR-relatert: ansatt informert om hvilke personopplysninger arbeidsgiver behandler.</p><p>Signert kvittering arkivert.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Personvernerklæring",
+              "Link": "/sites/Admin/Styrende dokumenter/Personvernerklaering-ansatte-v3.pdf",
+              "Folder": ""
+            }
+          ],
+          "relevantDocuments": [
+            {
+              "Source": "GDL",
+              "Label": "Personvernerklæring v3",
+              "Link": "/sites/Admin/Styrende dokumenter/Personvernerklaering-ansatte-v3.pdf"
+            }
+          ],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 1,
+          "triggers": [],
+          "triggerForm": [],
+          "dependantFields": [],
+          "addToTimeline": [],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": []
+          },
+          "na": false,
+          "commentMandatory": false,
+          "relevantDocs_forms_links": [
+            {
+              "Label": "Personvernerklæring v3",
+              "Link": "/sites/Admin/Styrende dokumenter/Personvernerklaering-ansatte-v3.pdf",
+              "Type": "relevantlink",
+              "SiteUrl": "",
+              "Listname": "",
+              "FormUrl": ""
+            }
+          ]
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 2
+    },
+    {
+      "ID": 3,
+      "title": "Første 90 dager",
+      "type": "newtype",
+      "processDetails": [
+        {
+          "ID": 5,
+          "title": "Prøvetidssamtale",
+          "description": "<p>Strukturert samtale ved ca. 2,5 mnd. Status, tilbakemelding, justeringer.</p>",
+          "status": "",
+          "comments": "",
+          "checklistDocuments": [],
+          "relevantDocuments": [],
+          "modifiedBy": "",
+          "percentage": 0,
+          "sortOrderDetails": 0,
+          "triggers": [
+            {
+              "Action": "Completed",
+              "ListName": "Personnel",
+              "Field": "ProbationReviewDate",
+              "Status": "",
+              "FieldType": "DateTime",
+              "ActionIcon": "CheckMark",
+              "Extender": "0"
+            }
+          ],
+          "triggerForm": [],
+          "dependantFields": [
+            {
+              "PhaseID": 2,
+              "PhaseDetailID": 3,
+              "PhaseTitle": "Første uke",
+              "PhaseDetailTitle": "Velkomstsamtale med leder",
+              "Status": "Not Started"
+            }
+          ],
+          "addToTimeline": [
+            {
+              "addToTimeline": true,
+              "sendNotification": false,
+              "notify": ""
+            }
+          ],
+          "statusInformations": {
+            "started": "",
+            "startedBy": "",
+            "completed": "",
+            "completedBy": "",
+            "deviation": "",
+            "deviationBy": "",
+            "naUpdated": "",
+            "naUpdatedBy": "",
+            "dependencies": [
+              {
+                "PhaseID": 2,
+                "PhaseDetailID": 3,
+                "PhaseTitle": "Første uke",
+                "PhaseDetailTitle": "Velkomstsamtale med leder",
+                "Status": "Not Started"
+              }
+            ]
+          },
+          "na": false,
+          "commentMandatory": true,
+          "relevantDocs_forms_links": []
+        }
+      ],
+      "percentage": 0,
+      "phasePercentageCompleted": false,
+      "sortOrder": 3
+    }
+  ],
+  "processPhasesLength": 3,
+  "percentage": 0,
+  "processDetailsSelected": [],
+  "processPhaseSelectedIndex": 0,
+  "qcpDetailsPopupShow": false,
+  "multiline": {
+    "multiline": false
+  },
+  "qcpValidation": false,
+  "LPID": 3,
+  "LPDID": 5
+}
