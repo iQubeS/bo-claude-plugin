@@ -6,6 +6,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+### Added
+- **`/bo:process` offers a process description.** After the diagram file and the
+  rationale are generated, the command offers a third, optional file,
+  `<slug>-description.md`: a short description for people (purpose, scope and boundary,
+  roles, the flow phase by phase, decisions and rework, results), written from the same
+  facts as the diagram and in the customer's language. Plain Markdown only, so the
+  headings and lists survive a paste into Atlas or a document; it is not imported anywhere.
+  Template in `assets/process/description-template.md`. The diagram file and the rationale
+  are unchanged by it.
+
 ## [0.6.0] — 2026-10-19
 
 ### Added

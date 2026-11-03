@@ -1,5 +1,5 @@
 ---
-description: Design a business-process diagram through guided consultation, migrate one from an existing procedure document or meeting notes, or continue one exported from BO Atlas. Produces a .diagram.json ready for import into the Diagram tab in BO Atlas Studio, plus a rationale document recording the lanes, the phases, the challenges raised, and everything that must be authored in Atlas afterwards.
+description: Design a business-process diagram through guided consultation, migrate one from an existing procedure document or meeting notes, or continue one exported from BO Atlas. Produces a .diagram.json ready for import into the Diagram tab in BO Atlas Studio, plus a rationale document recording the lanes, the phases, the challenges raised, and everything that must be authored in Atlas afterwards. On request, also a short process description in plain Markdown for pasting into the UI.
 allowed-tools: []
 ---
 
@@ -94,12 +94,13 @@ The file is in the customer's language: lane labels, phase titles, step titles,
 descriptions, connector labels and notes are theirs. Ids, shapes, styles and kinds are the
 schema's English vocabulary and never translated.
 
-## The two output files
+## The output files
 
 | File | What it is |
 |---|---|
 | `<slug>.diagram.json` | The diagram. Imported through **Import** on the Diagram tab in Atlas Studio. |
 | `<slug>-rationale.md` | Why it looks the way it does: the lanes and phases chosen, the challenges raised, the source trail, what Atlas will report on import, and everything that must be authored in Atlas afterwards. |
+| `<slug>-description.md` (optional, offered after the two above) | A short process description for people: purpose, scope, roles, the flow phase by phase, decisions, results. Plain Markdown so the headings and lists survive a paste into the UI. Not imported anywhere, and it changes nothing in the two files above. |
 
 ## Conversation arc
 
@@ -113,7 +114,7 @@ Six phases. Phase 0 decides the mode; the rest is a conversation.
 3. **Challenge**: by phase, not step by step.
 4. **Structure and preview**: shapes, connectors, annotations, live artifact.
 5. **Validate and deliver**: the schema, the six reference checks, the pre-flight, two
-   files, and the closing message.
+   files, the offer of a process description, and the closing message.
 
 ---
 
@@ -438,7 +439,37 @@ slug = process.title.toLowerCase()
 slug = slug || 'prosess'
 file1 = slug + '.diagram.json'
 file2 = slug + '-rationale.md'
+file3 = slug + '-description.md'   # only when the user says yes in step 5b
 ```
+
+### Step 5b: offer the process description
+
+After the two files, and never instead of them, offer a third:
+
+> "Vil du også ha en kort prosessbeskrivelse i tekst, til å lime inn i Atlas eller i
+> prosessdokumentasjonen? Den er for folk som skal forstå prosessen uten å åpne
+> diagrammet, og importeres ikke noe sted."
+
+If the user declines, move on. If they accept, generate **File 3: `<slug>-description.md`**
+from `@assets/process/description-template.md`, in a fenced markdown block, and tell them
+the headings and lists paste cleanly into a rich-text field.
+
+Rules for the description:
+
+- **Same facts as the diagram.** Lanes become the roles, phases become the sub-headings,
+  steps become the numbered lines in flow order, decisions become "hvis ..., så ...;
+  ellers ..." sentences, and rework loops become a sentence. Say nothing the diagram and
+  the session did not establish; this is not where new steps appear.
+- **Written for a reader, in the customer's language.** No ids, no shape names, no
+  "connector", "lane" or "schema". A role is named as the lane is labelled.
+- **Simple Markdown only.** `#` for the title, `##` and `###` for sections, paragraphs,
+  numbered and bulleted lists, bold for role names. No tables, no HTML, no front matter,
+  no metadata lines, no links to files that do not exist. Every `{{placeholder}}` in the
+  template is replaced or its section removed.
+- **Short.** Roughly 200 to 500 words for a process of three to five phases. If it runs
+  longer, the steps are too detailed for a description; keep the detail in the diagram.
+- **It changes nothing else.** The diagram file and the rationale are already generated
+  and are not regenerated, renamed or amended because the description exists.
 
 ### Step 6: the closing message
 
@@ -459,13 +490,20 @@ file2 = slug + '-rationale.md'
 > 7. Legg rationale-dokumentet i prosessdokumentasjonen. Det forklarer rollene, fasene og
 >    valgene, og er det neste eier leser."
 
+When the process description was generated in step 5b, add:
+
+> "8. Prosessbeskrivelsen (`<slug>-description.md`) limer du inn der prosessen beskrives
+>    for leserne, for eksempel i Atlas eller i prosessdokumentasjonen. Overskriftene og
+>    listene følger med."
+
 In continuation mode add the removal warning, named:
 
 > "Importen fjerner *Opplæringsplan*. Det steget tar med seg beskrivelse, lenker,
 > arbeidsfiler og triggere. Sjekk i Atlas at det ikke hadde noe dere trenger, før du
 > trykker Lagre."
 
-**Phase 5 ends when:** both files are presented and the closing message delivered.
+**Phase 5 ends when:** both files are presented, the process description has been offered
+(and delivered if wanted), and the closing message delivered.
 
 ---
 
@@ -507,6 +545,7 @@ A procedure with 60 numbered steps is normal. When the source is large:
   @assets/process/modelling-lexicon.md
 - Live artifact template: @assets/process/artifact-template.tsx
 - Rationale document template: @assets/process/rationale-template.md
+- Process description template (optional third file): @assets/process/description-template.md
 - Worked example from Atlas, a small complete valid file: @assets/process/examples/innkjop.diagram.json
 - Pre-flight checker: `scripts/check-process-diagram.mjs` (see `test/process/README.md`)
 - Related commands: `/bo:qcp` for the control plan behind a process; `/bo:checklist` for a
