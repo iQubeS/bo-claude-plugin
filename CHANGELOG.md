@@ -6,6 +6,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-11-03
+
 ### Added
 - **`/bo:process` offers a process description.** After the diagram file and the
   rationale are generated, the command offers a third, optional file,
