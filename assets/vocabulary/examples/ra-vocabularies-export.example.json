@@ -1,0 +1,156 @@
+{
+  "format": "bo-ra-vocabularies",
+  "version": 1,
+  "vocabularies": {
+    "riskSources": {
+      "source": "stored",
+      "entries": [
+        { "key": "falling-or-shifting-load", "active": true, "name": "Falling or shifting load", "sortOrder": 100 },
+        { "key": "crushing-and-trapping", "active": true, "name": "Crushing and trapping", "sortOrder": 200 },
+        { "key": "electrical", "active": true, "name": "Electrical", "nameNb": "Elektrisk energi", "sortOrder": 300 },
+        { "key": "hot-work", "active": true, "name": "Hot work", "sortOrder": 400 },
+        { "key": "working-at-height", "active": true, "name": "Working at height", "sortOrder": 500 },
+        { "key": "vehicle-movement", "active": true, "name": "Vehicle and plant movement", "sortOrder": 600 },
+        { "key": "noise", "active": false, "name": "Noise", "sortOrder": 700 },
+        { "key": "chemical-exposure", "active": true, "name": "Chemical exposure" }
+      ]
+    },
+    "exposureTargets": {
+      "source": "stored",
+      "entries": [
+        { "key": "personnel", "active": true, "name": "Personnel", "nameNb": "Personell", "harmsPeople": true, "sortOrder": 100 },
+        { "key": "environment", "active": true, "name": "Environment", "nameNb": "Miljø", "harmsPeople": false, "sortOrder": 200 },
+        { "key": "equipment", "active": true, "name": "Equipment", "nameNb": "Utstyr", "harmsPeople": false, "sortOrder": 300 },
+        { "key": "third-parties", "active": true, "name": "Third parties", "nameNb": "Tredjepart", "harmsPeople": true, "sortOrder": 400 }
+      ]
+    },
+    "frequencyLevels": {
+      "source": "stored",
+      "entries": [
+        { "key": "continuous", "active": true, "name": "Continuous", "sortOrder": 100 },
+        { "key": "daily", "active": true, "name": "Daily", "sortOrder": 200 },
+        { "key": "per-job", "active": true, "name": "Per job or operation", "sortOrder": 300 }
+      ]
+    },
+    "barrierLibrary": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "remote-operation",
+          "active": true,
+          "name": "Remote operation",
+          "description": "Operate the equipment remotely so no one is stationed at it.",
+          "suggestedType": "Elimination",
+          "sortOrder": 100
+        },
+        {
+          "key": "physical-guarding",
+          "active": true,
+          "name": "Physical guarding",
+          "description": "Fixed guarding or barriers preventing access to the hazard during operation.",
+          "suggestedType": "Technical",
+          "sortOrder": 200
+        },
+        {
+          "key": "permit-to-work",
+          "active": true,
+          "name": "Permit to work",
+          "description": "Work carried out under a permit to work with the stated precautions in force.",
+          "suggestedType": "Organisational",
+          "suggestedFunction": "Preventing",
+          "performanceRequirement": "A permit is issued and signed before the work starts, and closed when the area is handed back.",
+          "verificationIntervalDays": 90,
+          "documentReference": "HMS-PRO-012",
+          "sortOrder": 300
+        },
+        {
+          "key": "toolbox-talk",
+          "active": true,
+          "name": "Toolbox talk",
+          "description": "Toolbox talk covering this operation and its controls before work starts.",
+          "suggestedType": "Organisational",
+          "suggestedFunction": "Preventing",
+          "sortOrder": 400
+        },
+        {
+          "key": "hearing-protection",
+          "active": true,
+          "name": "Hearing protection",
+          "description": "Hearing protection selected for the measured noise dose over the shift.",
+          "suggestedType": "Ppe",
+          "suggestedFunction": "Mitigating",
+          "sortOrder": 500
+        },
+        {
+          "key": "fire-watch",
+          "active": false,
+          "name": "Fire watch",
+          "description": "A named person watches the hot-work area during and after the work.",
+          "suggestedType": "Organisational",
+          "suggestedFunction": "Mitigating",
+          "sortOrder": 600
+        }
+      ]
+    },
+    "exclusionReasons": {
+      "source": "stored",
+      "entries": [
+        { "key": "not-applicable-operation", "active": true, "name": "Does not apply to this operation", "sortOrder": 100 },
+        { "key": "covered-elsewhere", "active": true, "name": "Covered by another assessment", "requiresReference": true, "sortOrder": 200 },
+        { "key": "other", "active": true, "name": "Other", "requiresFreeText": true, "sortOrder": 300 }
+      ]
+    },
+    "significanceCriteria": {
+      "source": "seed",
+      "entries": [
+        { "key": "scale-or-severity", "active": true, "name": "Scale or severity of the impact", "nameNb": "Omfang eller alvorlighet", "environmental": true, "sortOrder": 100 },
+        { "key": "legally-regulated", "active": true, "name": "Legally regulated", "nameNb": "Lovregulert", "sortOrder": 200 }
+      ]
+    },
+    "complianceObligations": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "working-environment-act",
+          "active": true,
+          "name": "Working Environment Act",
+          "nameNb": "Arbeidsmiljøloven",
+          "obligationType": "Legal",
+          "reference": "LOV-2005-06-17-62",
+          "jurisdiction": "Norway",
+          "sortOrder": 100
+        },
+        {
+          "key": "internal-control-regulations",
+          "active": true,
+          "name": "Internal Control Regulations",
+          "nameNb": "Internkontrollforskriften",
+          "obligationType": "Legal",
+          "reference": "FOR-1996-12-06-1127",
+          "jurisdiction": "Norway",
+          "sortOrder": 200
+        },
+        {
+          "key": "customer-hse-requirements",
+          "active": true,
+          "name": "Customer HSE requirements on site",
+          "nameNb": "Kundens HMS-krav på anlegget",
+          "obligationType": "Contractual",
+          "reference": "Frame agreement, appendix C",
+          "jurisdiction": "Customer contracts",
+          "sortOrder": 300
+        },
+        {
+          "key": "iso-45001-certification",
+          "active": true,
+          "name": "ISO 45001 certification commitments",
+          "nameNb": "Forpliktelser knyttet til ISO 45001-sertifisering",
+          "obligationType": "Voluntary",
+          "reference": "ISO 45001:2018",
+          "jurisdiction": "Company-wide",
+          "sortOrder": 400
+        }
+      ]
+    }
+  }
+}

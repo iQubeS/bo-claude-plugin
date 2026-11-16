@@ -411,8 +411,30 @@ Then apply the judgement rules:
   for an entry the library does not hold** — where the name resolves, the library's wording
   wins and yours is ignored.
 
+### Terms to add first go to `/bo:vocabulary`
+
+Every "to-be-added-first" decision — a risk source the tenant lacks, a barrier the library
+does not hold — is a vocabulary change, and vocabulary is maintained through its own
+import. Collect them into one table and hand it over rather than leaving the manager to
+type rows in Configuration:
+
+> "Disse må inn i ordlistene før malen importeres. Kjør `/bo:vocabulary` med
+> **Eksporter alle ordlister**-filen og lim inn tabellen; den lager importfilen:
+>
+> | Liste | Navn (EN) | Norsk | Antall | Type / beskrivelse |
+> |---|---|---|---|---|
+> | Farekilde | Chemical exposure | Kjemikalier | 7 | — |
+> | Farekilde | Noise | Støy | 3 | — |
+> | Barriere | Safe job analysis before start-up | Sikker jobb-analyse før oppstart | 4 | Organisational · «A safe job analysis is held with the crew before …» |
+>
+> Mens dere først er der: ingen av farekildene har norsk navn, så samme fil kan legge
+> til `nameNb` på alle — da slipper neste mal denne oversettingen."
+
+The same table goes in the rationale document §5. Do not write the vocabulary file from
+this command; `/bo:vocabulary` needs the export, which this session does not have.
+
 **Phase 3 ends when:** every distinct term has a decision: mapped, deliberately blank, or
-to-be-added-first.
+to-be-added-first — and the to-be-added-first terms are in the hand-off table.
 
 ---
 
@@ -548,6 +570,17 @@ quietly ship it:
 > importerer med tom farekilde, og risikoene havner da utenfor porteføljegrupperingen. Vil
 > du legge dem til i bedriftsvokabularet før import, eller skal de stå tomme?"
 
+If the user has already prepared the vocabulary file with `/bo:vocabulary` but not yet
+imported it, the checker can take it as an overlay and report which terms resolve only
+through it:
+
+```bash
+node scripts/check-ra-vocabulary.mjs <slug>.ra.json <their-manifest>.json <slug>.vocabularies.json
+```
+
+Exit 0 with the overlay means import-ready *once the vocabulary import has run*; the
+warning names the terms that depend on it, and the closing message must say the order.
+
 ### Step 3 — generate the two files
 
 **File 1: `<slug>.ra.json`** — the validated template, 2-space indentation, in a fenced
@@ -589,6 +622,10 @@ End with the two behaviours that surprise everyone once:
 > 6. Legg rationale-dokumentet i maldokumentasjonen. Det forklarer kalibreringen,
 >    ordvalgene, og hva regnearket inneholdt som ikke kunne følge med — nyttig ved revisjon
 >    og når noen overtar malen.
+> 7. {{Only when phase 3 produced a hand-off table:}} **Ordlistene først.** Importer
+>    filen fra `/bo:vocabulary` under Konfigurasjon › Ordlister, last ned manifestet på
+>    nytt, og importer malen etterpå. Importeres malen først, blir de {{n}} ordene i
+>    tabellen stående til manuell avstemming.
 >
 > Oversettelsen fra *Tiltak*-kolonnen til barrierebiblioteket er dokumentert i
 > rationale-dokumentet §9, sammen med kildeteksten — så det er sporbart hvorfor akkurat
@@ -636,7 +673,8 @@ Registers of 200+ rows are normal. When one is large:
 - Rationale document template: @assets/risk/rationale-template.md
 - Calibration example — an authored template that needs zero reconciliation against the manifest beside it: @assets/risk/examples/ra-template.example.json
 - Reference-tenant manifest — **shape reference only, never author against it**: @assets/risk/examples/ra-vocabulary-manifest.example.json
-- Pre-flight checker: `scripts/check-ra-vocabulary.mjs` (see `test/risk/README.md`)
+- Pre-flight checker: `scripts/check-ra-vocabulary.mjs` (see `test/risk/README.md`); takes a `/bo:vocabulary` file as an optional third argument
+- Vocabulary maintenance — where the "add these first" terms go: @commands/vocabulary.md
 - Related module guidance: @skills/bo-khms/SKILL.md (QHSE, avvik, kvalitetsstyring)
 - Norwegian user manual — risk management: @docs/brukermanual/khms/risikostyring.md. Covers
   matrix configuration (5x5 / 6x6 / 8x8), effect categories, and probability/consequence

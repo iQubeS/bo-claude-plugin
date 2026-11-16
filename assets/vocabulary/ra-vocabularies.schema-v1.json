@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://business-online.no/schemas/ra-vocabularies.v1.json",
+  "title": "bo-ra-vocabularies v1 — vocabulary maintenance exchange for the BO risk-assessment web part",
+  "description": "PROVISIONAL. Derived by hand from the handoff for bo-ra's `Export all vocabularies` / `Import vocabularies` feature (branch feature/ra-vocabulary-import, read 2026-11-16) and checked against one real export. bo-ra will publish docs/ra-vocabularies.schema.json; replace this file with the vendored copy and add it to scripts/check-schema-sync.sh when that lands. Until then this schema describes well-formed rows in all seven sections. Only riskSources, barrierLibrary and complianceObligations can be written by the import; the other four are export-only context and are never dispatched to a writer. Absent sections and empty arrays mean no operations, never deletion.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "vocabularies"],
+  "properties": {
+    "format": { "const": "bo-ra-vocabularies" },
+    "version": { "const": 1 },
+    "vocabularies": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Any subset of the seven sections. The import reads only the three writable ones.",
+      "properties": {
+        "riskSources": { "$ref": "#/definitions/riskSourceSection" },
+        "barrierLibrary": { "$ref": "#/definitions/barrierSection" },
+        "complianceObligations": { "$ref": "#/definitions/obligationSection" },
+        "exposureTargets": { "$ref": "#/definitions/exposureTargetSection" },
+        "frequencyLevels": { "$ref": "#/definitions/frequencyLevelSection" },
+        "exclusionReasons": { "$ref": "#/definitions/exclusionReasonSection" },
+        "significanceCriteria": { "$ref": "#/definitions/significanceCriterionSection" }
+      }
+    }
+  },
+  "definitions": {
+    "source": {
+      "type": "string",
+      "enum": ["stored", "seed"],
+      "description": "Provenance of an exported section. `seed` means the tenant still runs on package defaults for this list and must be populated in BO before the import can write to it. On a prepared import file write `stored`; the value never selects a destination."
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Stable identity of the entry. Matched exactly within its kind, including against inactive rows. Never regenerated from the name; a changed name keeps its key."
+    },
+    "text": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "nullableText": {
+      "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 255 }, { "type": "null" }],
+      "description": "Omit to preserve the destination value on an update. Explicit null clears it. An empty string is refused."
+    },
+    "nullableNote": {
+      "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 63999 }, { "type": "null" }]
+    },
+    "sortOrder": {
+      "type": "integer",
+      "description": "Exported faithfully; on import it is reference information only. Existing order is preserved and new rows append in file-array order."
+    },
+    "common": {
+      "key": { "$ref": "#/definitions/key" },
+      "name": { "$ref": "#/definitions/text" },
+      "nameNb": { "$ref": "#/definitions/nullableText" },
+      "active": {
+        "type": "boolean",
+        "description": "Defaults to true on a new row. Omitted on an update it preserves the destination value; present, it can deactivate or reactivate, but only after the change is shown and selected in the preview. Null is refused."
+      },
+      "sortOrder": { "$ref": "#/definitions/sortOrder" }
+    },
+
+    "riskSourceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" }
+      }
+    },
+    "riskSourceSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/riskSourceEntry" } }
+      }
+    },
+
+    "barrierEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name", "description"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 63999,
+          "description": "Required. The one sentence that lands on every risk referencing this barrier."
+        },
+        "suggestedType": {
+          "anyOf": [
+            { "type": "string", "enum": ["Elimination", "Substitution", "Technical", "Organisational", "Ppe"] },
+            { "type": "null" }
+          ]
+        },
+        "suggestedFunction": {
+          "anyOf": [{ "type": "string", "enum": ["Preventing", "Mitigating", "Both"] }, { "type": "null" }]
+        },
+        "performanceRequirement": { "$ref": "#/definitions/nullableNote" },
+        "verificationIntervalDays": {
+          "anyOf": [{ "type": "integer", "minimum": 1 }, { "type": "null" }],
+          "description": "A positive whole number of days, or null/unset for no interval. Zero and fractions are refused, never corrected."
+        },
+        "documentReference": { "$ref": "#/definitions/nullableText" }
+      }
+    },
+    "barrierSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/barrierEntry" } }
+      }
+    },
+
+    "obligationEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" },
+        "obligationType": {
+          "anyOf": [{ "type": "string", "enum": ["Legal", "Permit", "Contractual", "Voluntary"] }, { "type": "null" }]
+        },
+        "reference": { "$ref": "#/definitions/nullableText" },
+        "jurisdiction": { "$ref": "#/definitions/nullableText" }
+      }
+    },
+    "obligationSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/obligationEntry" } }
+      }
+    },
+
+    "exposureTargetEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" },
+        "harmsPeople": { "type": "boolean" }
+      }
+    },
+    "exposureTargetSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "description": "Export-only. Present in a file it is reported and never written.",
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/exposureTargetEntry" } }
+      }
+    },
+
+    "frequencyLevelEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" }
+      }
+    },
+    "frequencyLevelSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "description": "Export-only.",
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/frequencyLevelEntry" } }
+      }
+    },
+
+    "exclusionReasonEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" },
+        "requiresReference": { "type": "boolean" },
+        "requiresFreeText": { "type": "boolean" }
+      }
+    },
+    "exclusionReasonSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "description": "Export-only.",
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/exclusionReasonEntry" } }
+      }
+    },
+
+    "significanceCriterionEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/definitions/key" },
+        "name": { "$ref": "#/definitions/text" },
+        "nameNb": { "$ref": "#/definitions/nullableText" },
+        "active": { "type": "boolean" },
+        "sortOrder": { "$ref": "#/definitions/sortOrder" },
+        "environmental": { "type": "boolean" },
+        "threshold": { "anyOf": [{ "type": "string", "maxLength": 255 }, { "type": "number" }, { "type": "null" }] }
+      }
+    },
+    "significanceCriterionSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "entries"],
+      "description": "Export-only.",
+      "properties": {
+        "source": { "$ref": "#/definitions/source" },
+        "entries": { "type": "array", "items": { "$ref": "#/definitions/significanceCriterionEntry" } }
+      }
+    }
+  }
+}

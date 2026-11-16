@@ -1,0 +1,95 @@
+{
+  "format": "bo-ra-vocabularies",
+  "version": 1,
+  "vocabularies": {
+    "riskSources": {
+      "source": "stored",
+      "entries": [
+        { "key": "vibration", "name": "Hand-arm and whole-body vibration", "nameNb": "Vibrasjon" },
+        { "key": "noise", "name": "Noise", "nameNb": "Støy", "active": true },
+        { "key": "electrical", "name": "Electrical", "nameNb": null },
+        { "key": "hot-work", "name": "Hot work", "sortOrder": 50 },
+        { "key": "crushing-and-trapping", "name": "Crushing and trapping", "sortOrder": 200 },
+        { "key": "legacy-dust", "name": "Dust from legacy process", "active": false }
+      ]
+    },
+    "barrierLibrary": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "safe-job-analysis",
+          "name": "Safe job analysis before start-up",
+          "nameNb": "Sikker jobb-analyse før oppstart",
+          "description": "A safe job analysis is held with the crew before a non-routine operation starts, and the controls it names are in place before the first step.",
+          "suggestedType": "Organisational",
+          "suggestedFunction": "Preventing",
+          "performanceRequirement": "Signed by the crew and the supervisor before the operation starts, and kept with the job record.",
+          "verificationIntervalDays": 180,
+          "documentReference": "HMS-PRO-004"
+        },
+        {
+          "key": "permit-to-work",
+          "name": "Permit to work",
+          "description": "Work carried out under a permit to work with the stated precautions in force.",
+          "documentReference": null,
+          "verificationIntervalDays": null
+        },
+        {
+          "key": "physical-guarding",
+          "name": "Physical guarding",
+          "description": "Fixed guarding or barriers preventing access to the hazard during operation.",
+          "suggestedType": "Technical",
+          "suggestedFunction": "Preventing"
+        },
+        {
+          "key": "remote-operation",
+          "name": "Remote operation of the equipment",
+          "description": "Operate the equipment remotely so no one is stationed at it."
+        },
+        {
+          "key": "fire-watch",
+          "name": "Fire watch",
+          "description": "A named person watches the hot-work area during and after the work.",
+          "active": true
+        },
+        {
+          "key": "hearing-protection",
+          "name": "Hearing protection",
+          "description": "Hearing protection selected for the measured noise dose over the shift.",
+          "active": false
+        }
+      ]
+    },
+    "complianceObligations": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "hot-work-certificate",
+          "name": "Hot work certificate",
+          "nameNb": "Sertifikat for varme arbeider",
+          "obligationType": "Permit",
+          "reference": "Insurer's safety regulations for hot work",
+          "jurisdiction": "Norway"
+        },
+        {
+          "key": "working-environment-act",
+          "name": "Working Environment Act",
+          "obligationType": "Legal",
+          "reference": "LOV-2005-06-17-62",
+          "jurisdiction": "Norway"
+        },
+        {
+          "key": "customer-hse-requirements",
+          "name": "Customer HSE requirements on site",
+          "jurisdiction": null
+        }
+      ]
+    },
+    "exposureTargets": {
+      "source": "stored",
+      "entries": [
+        { "key": "personnel", "name": "Personnel", "nameNb": "Personell", "harmsPeople": true, "sortOrder": 100 }
+      ]
+    }
+  }
+}

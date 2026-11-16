@@ -318,16 +318,17 @@ const flush = () => process.stdout.write(lines.join('\n') + '\n');
  * Main
  * ------------------------------------------------------------------ */
 
-const [templatePath, manifestPath] = process.argv.slice(2);
+const [templatePath, manifestPath, overlayPath] = process.argv.slice(2);
 if (!templatePath || !manifestPath) {
   process.stderr.write(
-    '\n  usage: node scripts/check-ra-vocabulary.mjs <template.ra.json> <ra-vocabulary-manifest.json>\n\n'
+    '\n  usage: node scripts/check-ra-vocabulary.mjs <template.ra.json> <ra-vocabulary-manifest.json> [<file.vocabularies.json>]\n\n'
   );
   process.exit(2);
 }
 
 const file = readJson(templatePath, 'template');
 const manifest = readJson(manifestPath, 'manifest');
+const overlay = overlayPath ? readJson(overlayPath, 'vocabulary file') : undefined;
 
 say();
 say(`RA pre-flight -- ${basename(templatePath)} against ${basename(manifestPath)}`);
@@ -369,6 +370,43 @@ if (manifestProblems.length > 0) {
   process.exit(1);
 }
 
+/* ---- Optional overlay: a /bo:vocabulary file the tenant has not imported yet ---- */
+
+// The pristine lists are kept so a term that resolves only because of the overlay can
+// be named: those are the terms that reconcile by hand if the vocabulary import is
+// skipped, and the manager should know which ones before choosing the order.
+const pristine = {
+  riskSources: (manifest.riskSources ?? []).map((c) => ({ ...c })),
+  barrierLibrary: (manifest.barrierLibrary ?? []).map((c) => ({ ...c })),
+};
+let overlayRows = 0;
+if (overlay !== undefined) {
+  if (overlay.format !== 'bo-ra-vocabularies' || overlay.version !== 1 || typeof overlay.vocabularies !== 'object') {
+    fail(`The overlay at ${overlayPath} is not a bo-ra-vocabularies v1 file (the output of /bo:vocabulary).`);
+  }
+  for (const kind of ['riskSources', 'barrierLibrary']) {
+    const rows = overlay.vocabularies?.[kind]?.entries ?? [];
+    if (rows.length > 0 && !Array.isArray(manifest[kind])) manifest[kind] = [];
+    for (const row of rows) {
+      if (typeof row?.key !== 'string') continue;
+      const existing = manifest[kind].find((c) => c.key === row.key);
+      if (existing === undefined) {
+        manifest[kind].push({
+          key: row.key,
+          name: row.name,
+          nameNb: typeof row.nameNb === 'string' ? row.nameNb : undefined,
+          suggestedType: typeof row.suggestedType === 'string' ? row.suggestedType : undefined,
+        });
+      } else {
+        // A sparse update: only the fields the row carries change the candidate.
+        if (typeof row.name === 'string') existing.name = row.name;
+        if (typeof row.nameNb === 'string') existing.nameNb = row.nameNb;
+      }
+      overlayRows += 1;
+    }
+  }
+}
+
 const cats = categoryCandidates(manifest.effectCategories);
 const sharedStandards = new Set(
   manifest.effectCategories
@@ -391,6 +429,9 @@ mark(
     `${(manifest.exposureTargets ?? []).length} exposure targets, ` +
     `${hasLibrary ? `${library.length} barriers` : 'no barrierLibrary'}`
 );
+if (overlay !== undefined) {
+  mark('ok', `overlay: ${overlayRows} row(s) from ${basename(overlayPath)} treated as if already imported`);
+}
 
 /* ---- Structure ---- */
 
@@ -440,6 +481,7 @@ let unbarrieredRisks = 0;
 let redundantTypes = 0;
 let ignoredDescriptions = 0;
 const proposedNew = new Set();
+const overlayOnly = new Set();
 
 file.activities.forEach((activity, ai) => {
   const at = `activities[${ai}]`;
@@ -468,6 +510,8 @@ file.activities.forEach((activity, ai) => {
     if (risk.riskSource === undefined) blankRiskSource += 1;
     else if (resolveExact(risk.riskSource, manifest.riskSources ?? []) === undefined) {
       bump('riskSource', risk.riskSource);
+    } else if (overlay !== undefined && resolveExact(risk.riskSource, pristine.riskSources) === undefined) {
+      overlayOnly.add(`riskSource ${q(risk.riskSource)}`);
     }
 
     if (risk.exposureTarget === undefined) blankExposureTarget += 1;
@@ -489,6 +533,9 @@ file.activities.forEach((activity, ai) => {
     barriers.forEach((barrier, bi) => {
       const bt = `${rt}.barriers[${bi}]`;
       const hit = resolveExact(barrier.name, library);
+      if (hit !== undefined && overlay !== undefined && resolveExact(barrier.name, pristine.barrierLibrary) === undefined) {
+        overlayOnly.add(`barrier ${q(barrier.name)}`);
+      }
       if (hit === undefined) {
         bump('barrier', barrier.name);
         proposedNew.add(normalise(barrier.name));
@@ -623,6 +670,11 @@ if (ignoredDescriptions > 0) {
 if (redundantTypes > 0) {
   warnings.push(
     `${redundantTypes} barrier(s) set a type identical to the library's suggestedType -- omit it unless you mean to override`
+  );
+}
+if (overlayOnly.size > 0) {
+  warnings.push(
+    `${overlayOnly.size} term(s) resolve only through the overlay ${basename(overlayPath)} -- run Import vocabularies with that file before importing the template, or these reconcile by hand: ${[...overlayOnly].join(', ')}`
   );
 }
 if (proposedNew.size >= 5) {

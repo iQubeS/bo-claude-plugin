@@ -1,0 +1,54 @@
+{
+  "format": "bo-ra-vocabularies",
+  "version": 1,
+  "vocabularies": {
+    "riskSources": {
+      "source": "stored",
+      "entries": [
+        { "key": "Varmt arbeid", "name": "Hot work" },
+        { "key": "hot-work", "name": "Hot work", "sortOrder": 50 },
+        { "key": "hot-work", "name": "Hot work again" },
+        { "key": "noise", "name": "" },
+        { "key": "electrical", "name": "Electrical", "active": null },
+        { "key": "vibration", "name": "Vibration", "harmsPeople": true },
+        { "key": "dust", "name": "Dust", "colour": "grey" },
+        { "key": "falling-load", "name": "Falling or shifting load" }
+      ]
+    },
+    "barrierLibrary": {
+      "source": "stored",
+      "entries": [
+        { "key": "fire-watch", "name": "Fire watch" },
+        {
+          "key": "gas-detection",
+          "name": "Gas detection",
+          "description": "Continuous gas detection with alarm set below the exposure limit.",
+          "suggestedType": "Administrative",
+          "verificationIntervalDays": 0
+        },
+        {
+          "key": "toolbox-talk",
+          "name": "Toolbox talk",
+          "description": "Toolbox talk covering this operation and its controls before work starts.",
+          "suggestedFunction": "Preventive",
+          "verificationIntervalDays": 1.5
+        }
+      ]
+    },
+    "complianceObligations": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "working-environment-act",
+          "name": "Working Environment Act",
+          "obligationType": "Law",
+          "reference": "LOV-2005-06-17-62"
+        }
+      ]
+    },
+    "effectCategories": {
+      "source": "stored",
+      "entries": [{ "key": "health", "name": "Health" }]
+    }
+  }
+}

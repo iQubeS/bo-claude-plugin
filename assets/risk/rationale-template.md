@@ -127,8 +127,18 @@ import; anything left blank is recorded here with its consequence.
 | {{"M"}} | {{Health}} | {{how the ambiguous letter was resolved}} |
 
 {{If any term was left blank, state the consequence plainly: a risk with no risk source
-appears under no portfolio grouping. If any term is to be added to the company vocabulary
-before import, list those separately — that is an action for someone, not a note.}}
+appears under no portfolio grouping.}}
+
+### Terms to add to the vocabulary first
+
+{{Omit if none. Otherwise this is an action, not a note: the table `/bo:vocabulary` takes
+as input, together with the tenant's `Export all vocabularies` file. Import that file
+before this template, then download a fresh manifest.}}
+
+| List | Name (EN) | nameNb | Uses | Type / description |
+|---|---|---|---|---|
+| {{Risk source}} | {{Chemical exposure}} | {{Kjemikalier}} | {{7}} | — |
+| {{Barrier}} | {{Safe job analysis before start-up}} | {{Sikker jobb-analyse før oppstart}} | {{4}} | {{Organisational · "…"}} |
 
 ---
 
@@ -249,6 +259,9 @@ If everything proposed was incorporated, state "Alle forslag ble inkludert."}}
 6. {{If any vocabulary was left unresolved: "At import you will be asked about {{n}}
    terms. §5 records the decision already taken for each — reconcile to match, or the
    register will disagree with this document."}}
+7. {{If §5 lists terms to add first: "Import the `/bo:vocabulary` file under
+   Configuration › Vocabularies before this template, and download a fresh manifest
+   afterwards. Imported in the other order, the {{n}} terms in §5 reconcile by hand."}}
 
 ---
 

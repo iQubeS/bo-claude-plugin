@@ -1,0 +1,30 @@
+{
+  "format": "bo-ra-vocabularies",
+  "version": 1,
+  "vocabularies": {
+    "riskSources": {
+      "source": "seed",
+      "entries": [
+        { "key": "falling-or-shifting-load", "active": true, "name": "Falling or shifting load", "sortOrder": 100 },
+        { "key": "electrical", "active": true, "name": "Electrical", "sortOrder": 200 }
+      ]
+    },
+    "barrierLibrary": {
+      "source": "seed",
+      "entries": [
+        {
+          "key": "physical-guarding",
+          "active": true,
+          "name": "Physical guarding",
+          "description": "Fixed guarding or barriers preventing access to the hazard during operation.",
+          "suggestedType": "Technical",
+          "sortOrder": 100
+        }
+      ]
+    },
+    "complianceObligations": {
+      "source": "stored",
+      "entries": []
+    }
+  }
+}
