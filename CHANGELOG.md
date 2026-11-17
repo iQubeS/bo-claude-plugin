@@ -6,6 +6,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-11-17
+
 ### Added
 - **`/bo:vocabulary` — risk vocabulary maintenance.** A fifth design command that
   prepares a `bo-ra-vocabularies` v1 file for the new **Import vocabularies** action in
