@@ -6,6 +6,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+### Added
+- **`/bo:vocabulary` — risk vocabulary maintenance.** A fifth design command that
+  prepares a `bo-ra-vocabularies` v1 file for the new **Import vocabularies** action in
+  the RA configuration (Configuration › Vocabularies). It writes the three lists the
+  import can write — risk sources, barrier library, compliance obligations — and never
+  the four export-only ones. Gate: the tenant's `Export all vocabularies` file, which is
+  not the `/bo:risk` manifest and is refused by name when handed in instead. Three ways
+  in: the "add these first" terms from a `/bo:risk` session, a document (hazard list,
+  control catalogue, legal register), or the export itself edited row by row, including a
+  one-time Norwegian-name backfill so `/bo:risk` stops translating by hand. Rules carried:
+  keys are copied from the export or minted once and never changed; `key` and `name` on
+  every row and `description` on every barrier row; omit to preserve, `null` to clear,
+  no empty strings; `active: false` only on an explicit retirement; no invented Lovdata
+  identifiers. Ships with a provisional schema (`assets/vocabulary/`, derived from the
+  bo-ra handoff while the feature is in peer review), two synthetic examples, a lexicon
+  for the three lists, artifact and rationale templates, and
+  `scripts/check-ra-vocabularies.mjs`, which validates the file and, given the export,
+  predicts the preview: creates, updates with field-level diffs, identical rows, renames,
+  reactivations, name clashes and a seed destination. Fixtures in `test/vocabulary/`.
+- **`/bo:risk` hands off to `/bo:vocabulary`.** Phase 3 collects every
+  "to-be-added-first" term into one hand-off table (also in the rationale §5), the
+  closing message says to import vocabularies first and re-download the manifest, and
+  `scripts/check-ra-vocabulary.mjs` takes a not-yet-imported `.vocabularies.json` as an
+  optional third argument, reporting which terms resolve only through it.
+
 ## [0.7.0] — 2026-11-03
 
 ### Added

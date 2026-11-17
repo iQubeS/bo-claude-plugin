@@ -1,0 +1,87 @@
+{
+  "format": "bo-ra-vocabularies",
+  "version": 1,
+  "vocabularies": {
+    "riskSources": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "vibration",
+          "name": "Hand-arm and whole-body vibration",
+          "nameNb": "Vibrasjon"
+        },
+        {
+          "key": "confined-space",
+          "name": "Confined space",
+          "nameNb": "Trange rom"
+        },
+        {
+          "key": "falling-or-shifting-load",
+          "name": "Falling or shifting load",
+          "nameNb": "Fallende eller forskyvende last"
+        },
+        {
+          "key": "crushing-and-trapping",
+          "name": "Crushing and trapping",
+          "nameNb": "Klemfare"
+        },
+        {
+          "key": "hot-work",
+          "name": "Hot work",
+          "nameNb": "Varmt arbeid"
+        },
+        {
+          "key": "working-at-height",
+          "name": "Working at height",
+          "nameNb": "Arbeid i høyden"
+        }
+      ]
+    },
+    "barrierLibrary": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "safe-job-analysis",
+          "name": "Safe job analysis before start-up",
+          "nameNb": "Sikker jobb-analyse før oppstart",
+          "description": "A safe job analysis is held with the crew before a non-routine operation starts, and the controls it names are in place before the first step.",
+          "suggestedType": "Organisational",
+          "suggestedFunction": "Preventing",
+          "performanceRequirement": "Signed by the crew and the supervisor before the operation starts, and kept with the job record.",
+          "documentReference": "HMS-PRO-004"
+        },
+        {
+          "key": "fire-watch",
+          "name": "Fire watch",
+          "description": "A named person watches the hot-work area during and after the work.",
+          "active": true,
+          "performanceRequirement": "The watch continues for at least one hour after the hot work ends, and the end time is recorded on the permit."
+        },
+        {
+          "key": "toolbox-talk",
+          "name": "Toolbox talk",
+          "nameNb": "Verktøykassemøte",
+          "description": "Toolbox talk covering this operation and its controls before work starts."
+        }
+      ]
+    },
+    "complianceObligations": {
+      "source": "stored",
+      "entries": [
+        {
+          "key": "hot-work-certificate",
+          "name": "Hot work certificate",
+          "nameNb": "Sertifikat for varme arbeider",
+          "obligationType": "Permit",
+          "reference": "Insurer's safety regulations for hot work",
+          "jurisdiction": "Norway"
+        },
+        {
+          "key": "customer-hse-requirements",
+          "name": "Customer HSE requirements on site",
+          "reference": "Frame agreement 2026, appendix C"
+        }
+      ]
+    }
+  }
+}

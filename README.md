@@ -46,6 +46,7 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 /bo:checklist           # Design a checklist/form template → .checklist.json
 /bo:risk                # Design or migrate a risk assessment template → .ra.json
 /bo:process             # Design, migrate or continue a process diagram → .diagram.json
+/bo:vocabulary          # Maintain risk sources, barrier library, obligations → .vocabularies.json
 /bo:bo-crm              # CRM operations guide
 /bo:bo-project          # Project management guide
 /bo:bo-hr               # HR module guide
@@ -55,14 +56,15 @@ To keep the plugin automatically updated when changes are pushed to this repo:
 
 ### Design commands
 
-Four guided consultants turn a conversation into an import-ready file:
+Five guided consultants turn a conversation into an import-ready file:
 
 - **`/bo:qcp`** — a business-process consultant. It interviews you about a process, challenges cargo-cult steps, references domain-relevant standards (ISO, GDPR, ITIL…), and produces a `<Title>.txt` in the exact shape **QCPAdmin** stores (plus a process-rationale doc carrying the binding), uploaded into the QCP document library over the empty file QCPAdmin creates for a new QCP.
 - **`/bo:checklist`** — a forms/data-collection consultant. It interviews you about a checklist or form, challenges weak questions and wrong field types, and produces a `.checklist.json` (plus an import-guide with the name/code/category/project-type metadata) ready to import into the **Template Manager**.
 - **`/bo:risk`** — a risk-assessment consultant. Most sessions start with a customer's Excel register: it reads the workbook, calibrates their scale against your tenant's, translates their vocabulary, challenges weak hazard entries, and produces a `.ra.json` (plus a rationale doc) ready to import into the **QHSE risk-assessment template manager**.
 - **`/bo:process`** — a process-diagram consultant. It draws out one process as a swimlane diagram (roles as lanes, stages as phases, steps, decisions, hand-offs), from a conversation, from an existing procedure document, BPMN export, drawing or meeting notes, or as a continuation of a diagram exported from **BO Atlas**. Produces a `.diagram.json` (plus a rationale doc) ready to import on the **Diagram tab in Atlas Studio**, and on request a short process description in plain Markdown for pasting into the UI.
+- **`/bo:vocabulary`** — a risk-vocabulary consultant. It maintains the three lists the RA import can write — risk sources, the barrier library and compliance obligations — from the "add these first" terms a `/bo:risk` session found, from a hazard list, control catalogue or legal register, or from the tenant's own export edited row by row. Produces a `.vocabularies.json` (plus a rationale doc that says what the import preview will show) ready for **Import vocabularies** in the QHSE risk-assessment configuration.
 
-All four support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists; Excel/CSV/Word/PDF registers for risk; procedures, BPMN, drawings and meeting notes for process diagrams — and render a live preview as you build. `/bo:process` additionally supports **continuation**: start from a file Atlas exported, change it, and import it back without losing what Atlas holds on the steps.
+All five support **greenfield** design (consultative interview) and **migration** from existing documents — BPMN/Word/PDF/screenshots for QCP; Word/PDF/Excel/photos of paper forms for checklists; Excel/CSV/Word/PDF registers for risk; procedures, BPMN, drawings and meeting notes for process diagrams; hazard lists, control catalogues and legal registers for vocabularies — and render a live preview as you build. `/bo:process` and `/bo:vocabulary` additionally support **continuation**: start from a file the product exported, change it, and import it back without losing what the product holds.
 
 #### `/bo:risk` needs one extra input
 
@@ -93,6 +95,38 @@ Before importing, you can check a file resolves cleanly:
 ```bash
 node scripts/check-ra-vocabulary.mjs my-template.ra.json my-manifest.json
 ```
+
+#### `/bo:vocabulary` maintains the words `/bo:risk` resolves against
+
+The RA feature has two exports that look alike and are not interchangeable. The
+**template-authoring manifest** is what `/bo:risk` reads; it cannot be imported. The
+**Export all vocabularies** file (`bo-ra-vocabularies` v1) is what `/bo:vocabulary` reads
+and what **Import vocabularies** accepts back, edited down to the three lists it can
+write. The import is additive: it matches on stable keys, creates what is new, shows every
+field-level change and leaves updates unselected until the administrator ticks them, and
+never deletes.
+
+Three uses. When a `/bo:risk` session ends with hazard terms or controls the tenant lacks,
+the command turns that hand-off table into the import file. When a company's hazard list,
+control catalogue or legal register lives in Excel, it becomes configuration. And since most
+tenants' risk sources and barriers carry no Norwegian names, a one-time backfill of
+`nameNb` lets Norwegian terms resolve in `/bo:risk` without translation.
+
+Two things it will not do. It never regenerates or changes a key, because the key is how
+the import knows an entry is the same one. And it never writes a Lovdata identifier the
+user has not supplied or confirmed.
+
+Before importing, you can check a file and see what the preview will show; and a template
+can be checked with a not-yet-imported vocabulary file as an overlay:
+
+```bash
+node scripts/check-ra-vocabularies.mjs my-change.vocabularies.json ra-vocabularies.json
+node scripts/check-ra-vocabulary.mjs my-template.ra.json my-manifest.json my-change.vocabularies.json
+```
+
+The schema under `assets/vocabulary/` is provisional: it was derived from bo-ra's handoff
+document while the feature was in peer review, and is replaced by the vendored upstream
+copy when that lands.
 
 #### `/bo:process` and BO Atlas
 
@@ -145,22 +179,27 @@ bo-claude-plugin/
 │   ├── qcp.md               # /bo:qcp — QCP template designer
 │   ├── checklist.md         # /bo:checklist — checklist template designer
 │   ├── risk.md              # /bo:risk — risk assessment template designer
-│   └── process.md           # /bo:process — process diagram designer (BO Atlas)
+│   ├── process.md           # /bo:process — process diagram designer (BO Atlas)
+│   └── vocabulary.md        # /bo:vocabulary — risk vocabulary maintenance
 ├── assets/
 │   ├── qcp/                 # QCP schema, examples, artifact & rationale templates
 │   ├── checklist/           # Checklist schema, examples, artifact & import-guide templates
 │   ├── risk/                # RA schemas (vendored + manifest), examples, artifact,
 │   │                        #   rationale template, Norwegian column lexicon
-│   └── process/             # Atlas diagram schema (vendored), example, modelling lexicon,
-│                            #   artifact & rationale templates
+│   ├── process/             # Atlas diagram schema (vendored), example, modelling lexicon,
+│   │                        #   artifact & rationale templates
+│   └── vocabulary/          # Vocabulary maintenance schema (provisional), synthetic examples,
+│                            #   lexicon, artifact & rationale templates
 ├── scripts/
 │   ├── check-schema-sync.sh      # Vendored schemas still match upstream?
 │   ├── check-ra-vocabulary.mjs   # Will this .ra.json import without reconciliation?
+│   ├── check-ra-vocabularies.mjs # Will this .vocabularies.json import as described, and what will the preview show?
 │   └── check-process-diagram.mjs # Will this .diagram.json import as the diagram it describes?
 ├── test/
 │   ├── checklist/           # Schema-coverage fixture for /bo:checklist
 │   ├── risk/                # Coverage + known-bad fixtures for /bo:risk
-│   └── process/             # Coverage, known-bad and continuation fixtures for /bo:process
+│   ├── process/             # Coverage, known-bad and continuation fixtures for /bo:process
+│   └── vocabulary/          # Coverage, known-bad and seed-destination fixtures for /bo:vocabulary
 ├── docs/
 │   ├── brukermanual/        # Norwegian user manual (63 files)
 │   └── qa/                  # Manual QA logs for the design commands

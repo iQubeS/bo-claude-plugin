@@ -25,6 +25,13 @@ SCHEMAS=(
 # Not checked here, because there is nothing upstream to check against:
 #
 #   assets/risk/ra-vocabulary-manifest.schema-v1.json
+#   assets/vocabulary/ra-vocabularies.schema-v1.json
+#
+# The second is PROVISIONAL: bo-ra's vocabulary-maintenance feature
+# (docs/ra-vocabularies.schema.json, src/services/vocabularyTransfer.ts) was in peer
+# review when it was written from the handoff document on 2026-11-16. When it lands on
+# bo-ra main, vendor the real schema over ours and add a pinned entry above; then re-run
+# scripts/check-ra-vocabularies.mjs over test/vocabulary/ and fix whatever disagrees.
 #
 # bo-ra publishes no schema for the vocabulary manifest, so ours is derived by hand from
 # the VocabularyManifest interface in src/services/templateJson.ts. If the RA schema
